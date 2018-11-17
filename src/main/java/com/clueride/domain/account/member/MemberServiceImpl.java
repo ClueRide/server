@@ -17,15 +17,30 @@
  */
 package com.clueride.domain.account.member;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
- * TODO: Description.
+ * Implementation of {@link MemberService}.
  */
 public class MemberServiceImpl implements MemberService {
+    private final MemberStore memberStore;
+
+    @Inject
+    public MemberServiceImpl(MemberStore memberStore) {
+        this.memberStore = memberStore;
+    }
+
     @Override
     public List<Member> getAllMembers() {
-        return Collections.EMPTY_LIST;
+        List<Member.Builder> builders = memberStore.getAllMembers();
+        List<Member> members = new ArrayList<>();
+        for (Member.Builder builder : builders) {
+            members.add(builder.build());
+        }
+        return members;
     }
+
 }
