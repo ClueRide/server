@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 /**
  * Implementation of {@link MemberService}.
@@ -41,6 +43,13 @@ public class MemberServiceImpl implements MemberService {
             members.add(builder.build());
         }
         return members;
+    }
+
+    @Override
+    public Member getMemberByEmail(String emailAddress) throws AddressException {
+        InternetAddress email = new InternetAddress(emailAddress);
+        Member.Builder builder = memberStore.getMemberByEmail(email);
+        return builder.build();
     }
 
 }
