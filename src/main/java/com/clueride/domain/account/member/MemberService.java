@@ -19,6 +19,8 @@ package com.clueride.domain.account.member;
 
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+
 /**
  * Provides business-layer services for Members and their Badges.
  */
@@ -29,5 +31,12 @@ public interface MemberService {
      * @return List of the Members currently defined.
      */
     List<Member> getAllMembers();
+
+    /**
+     * Retrieve Member instances by Email Address (Principal).
+     * @param emailAddress String representation of what should be a valid email address.
+     * @return Matching instance of Member.
+     */
+    Member getMemberByEmail(String emailAddress) throws AddressException;
 
 }

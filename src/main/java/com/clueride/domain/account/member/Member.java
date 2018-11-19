@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.account.member;
 
+import java.io.Serializable;
 import java.util.Collections;
 
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import static java.util.Objects.requireNonNull;
 
-public class Member {
+public class Member implements Serializable {
     private Integer id;
     private String displayName;
     private String firstName;

@@ -39,7 +39,7 @@ public interface MemberStore {
      * @param id - Unique ID for the Member.
      * @return Unique matching instance.
      */
-    Member getMemberById(Integer id);
+    Member.Builder getMemberById(Integer id);
 
     /**
      * Retrieves the list of {@link Member} whose name matches.
@@ -48,15 +48,19 @@ public interface MemberStore {
      * @param name - String account name for the Member.
      * @return All matching instances.
      */
-    List<Member> getMemberByName(String name);
+    List<Member.Builder> getMemberByName(String name);
 
     /**
      * Retrieves the {@link Member} instance matching the emailAddress.
      * @param emailAddress - InternetAddress for the member.
      * @return Unique matching instance.
      */
-    Member getMemberByEmail(InternetAddress emailAddress);
+    Member.Builder getMemberByEmail(InternetAddress emailAddress);
 
+    /**
+     * Updates an existing record with the contents of this Member instance.
+     * @param member Instance with new information.
+     */
     void update(Member member);
 
     /**

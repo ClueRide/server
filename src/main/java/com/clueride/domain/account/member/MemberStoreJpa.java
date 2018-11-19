@@ -40,18 +40,17 @@ public class MemberStoreJpa implements MemberStore {
     }
 
     @Override
-    public Member getMemberById(Integer id) {
-        Member.Builder memberBuilder = entityManager.find(Member.Builder.class, id);
-        return memberBuilder.build();
+    public Member.Builder getMemberById(Integer id) {
+        return entityManager.find(Member.Builder.class, id);
     }
 
     @Override
-    public List<Member> getMemberByName(String name) {
+    public List<Member.Builder> getMemberByName(String name) {
         return null;
     }
 
     @Override
-    public Member getMemberByEmail(InternetAddress emailAddress) {
+    public Member.Builder getMemberByEmail(InternetAddress emailAddress) {
         Member.Builder memberBuilder;
             memberBuilder = entityManager
                     .createQuery(
@@ -61,7 +60,7 @@ public class MemberStoreJpa implements MemberStore {
                     .setParameter("emailAddress", emailAddress.toString())
                     .getSingleResult();
 
-        return memberBuilder.build();
+        return memberBuilder;
     }
 
     @Override
@@ -73,4 +72,5 @@ public class MemberStoreJpa implements MemberStore {
     public List<Member.Builder> getAllMembers() {
         return entityManager.createQuery("SELECT m FROM member m").getResultList();
     }
+
 }
