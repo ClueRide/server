@@ -13,34 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 11/12/18.
+ * Created by jett on 11/21/18.
  */
-package com.clueride.domain.account.member;
+package com.clueride.auth.access;
 
-import java.util.List;
-
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
-import com.clueride.auth.Secured;
+import org.slf4j.Logger;
 
 /**
- * REST API for Members.
+ * TODO: Temporary implementation for proof-of-concept.
  */
-@Path("/member")
-@RequestScoped
-public class MemberWebService {
-    @Inject
-    private MemberService memberService;
+public class AccessTokenServiceImpl implements AccessTokenService {
 
-    @GET
-    @Secured
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Member> getAllMembers() {
-        return memberService.getAllMembers();
+    @Inject
+    private Logger LOGGER;
+
+    @Override
+    public String getPrincipalString(String token) {
+        LOGGER.debug("Looking up Principal by Access Token");
+        return "Placeholder";
     }
+
+    @Override
+    public void emptyCache() {
+        LOGGER.debug("Clearing the Access Token Cache");
+    }
+
 }

@@ -24,10 +24,15 @@ import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.slf4j.Logger;
+
 /**
  * Implementation of {@link MemberService}.
  */
 public class MemberServiceImpl implements MemberService {
+    @Inject
+    private Logger LOGGER;
+
     private final MemberStore memberStore;
 
     @Inject
@@ -37,6 +42,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> getAllMembers() {
+        LOGGER.debug("Requesting All Members");
         List<Member.Builder> builders = memberStore.getAllMembers();
         List<Member> members = new ArrayList<>();
         for (Member.Builder builder : builders) {
@@ -47,6 +53,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member getMemberByEmail(String emailAddress) throws AddressException {
+        LOGGER.debug("Requesting Member by email " + emailAddress);
         InternetAddress email = new InternetAddress(emailAddress);
         Member.Builder builder = memberStore.getMemberByEmail(email);
         return builder.build();
