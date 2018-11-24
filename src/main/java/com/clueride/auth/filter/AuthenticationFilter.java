@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 
 import com.clueride.auth.Secured;
 import com.clueride.auth.access.AccessTokenService;
+import com.clueride.config.ConfigService;
 
 /**
  * Allows picking up Authorization headers and extracting the Principal.
@@ -56,37 +57,22 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Inject
     private AccessTokenService accessTokenService;
 
-    private final String testToken;
-    private final String testAccount;
+    @Inject
+    private ConfigService configService;
 
     /**
      * Using the @Provider annotation is forcing this to use the no-parameter constructor.
+     *
+     * Injected components are not available when this is constructed.
      */
     @Inject
-    public AuthenticationFilter(
-//            Provider<SessionPrincipal> sessionPrincipalProvider,
-//            PrincipalService principalService,
-    ) {
+    public AuthenticationFilter() {
         super();
-
-        /* Injected components are not available when this is constructed. */
-//        LOGGER.debug("Instantiating");
-
-        // TODO: I don't know where this ends up.
-        System.out.println("Instantiating and maybe not logging?");
-//        this.sessionPrincipalProvider = sessionPrincipalProvider;
-//        this.principalService = principalService;
-
-        // TODO: Add a ConfigService.
-        /* From config */
-//        this.testToken = configService.getTestToken();
-        this.testToken = "Change this to your secret test token";
-//        this.testAccount = configService.getTestAccount();
-        this.testAccount = "bike.angel.atl@gmail.com";
     }
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+
         if (requestContext.getMethod().equals(HttpMethod.OPTIONS)) {
             /* Free pass for OPTIONS requests? */
             LOGGER.debug("Allowing OPTIONS request");
@@ -101,14 +87,15 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             LOGGER.error("Authorization Header missing or malformed");
             requestContext.abortWith(
                     Response.status(Response.Status.UNAUTHORIZED).build());
+            return;
         }
 
         // Extract the token from the HTTP Authorization header
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
         String candidatePrincipalName = "Not logged in";
-        if (token.equals(testToken)) {
-            candidatePrincipalName = testAccount;
+        if (token.equals(configService.getTestToken())) {
+            candidatePrincipalName = configService.getTestAccount();
         } else {
             candidatePrincipalName = accessTokenService.getPrincipalString(token);
         }
