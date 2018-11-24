@@ -193,6 +193,15 @@
             <artifactId>javax.mail-api</artifactId>
             <version>1.6.0</version>
         </dependency>
+
+        <!-- Type Safe Config -->
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+
+        <!-- Support for CDI Unit Testing -->
         <dependency>
             <groupId>org.jglue.cdi-unit</groupId>
             <artifactId>cdi-unit</artifactId>
