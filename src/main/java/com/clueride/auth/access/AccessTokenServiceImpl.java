@@ -17,12 +17,26 @@
  */
 package com.clueride.auth.access;
 
+import java.util.concurrent.ExecutionException;
+
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.slf4j.Logger;
 
+import com.clueride.RecordNotFoundException;
+import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.identity.IdentityStore;
+
 /**
- * TODO: Temporary implementation for proof-of-concept.
+ * Default implementation of AccessTokenService.
+ *
+ * Provides caching of the results as well as retrieval of results
+ * that are not in the cache.
  */
 public class AccessTokenServiceImpl implements AccessTokenService {
 
@@ -30,14 +44,52 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     private Logger LOGGER;
 
     @Override
-    public String getPrincipalString(String token) {
-        LOGGER.debug("Looking up Principal by Access Token");
-        return "Placeholder";
+    public void emptyCache() {
+        LOGGER.debug("Clearing the Access Token Cache");
+    }
+    private static IdentityStore identityStore;
+
+    // TODO: CA-381 Expire Tokens
+    private static LoadingCache<String, ClueRideIdentity> identityCache =
+            CacheBuilder.newBuilder()
+                    .build(
+                            new CacheLoader<String, ClueRideIdentity>() {
+                                @Override
+                                public ClueRideIdentity load(@Nonnull String key) throws Exception {
+                                    return identityStore.getIdentity(key);
+                                }
+                            }
+                    );
+
+    /**
+     * Injectable constructor.
+     *
+     * @param identityStoreInjected Service for retrieval of User Info from an access token.
+     */
+    @Inject
+    public AccessTokenServiceImpl(
+            @Nonnull IdentityStore identityStoreInjected
+    ) {
+        identityStore = identityStoreInjected;
     }
 
     @Override
-    public void emptyCache() {
-        LOGGER.debug("Clearing the Access Token Cache");
+    public ClueRideIdentity getIdentity(AccessToken accessToken) {
+        return getIdentity(accessToken.getToken());
+    }
+
+    @Override
+    public ClueRideIdentity getIdentity(String token) {
+        try {
+            return identityCache.get(token);
+        } catch (ExecutionException | UncheckedExecutionException e) {
+            throw new RecordNotFoundException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String getPrincipalString(String token) {
+        return String.valueOf(getIdentity(token).getEmail());
     }
 
 }
