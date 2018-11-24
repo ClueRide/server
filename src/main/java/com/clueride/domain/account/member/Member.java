@@ -22,7 +22,10 @@ import java.util.Collections;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -41,8 +44,6 @@ public class Member implements Serializable {
     // TODO: CA-272 Bring in support for Phone Numbers
 //    private Phonenumber.PhoneNumber phone;
     private String phoneNumber;
-    // TODO: Bring in my Badge Definition
-//    private List<Badge> badges;
 
     /** Supporting Jackson. */
     public Member() {}
@@ -58,8 +59,6 @@ public class Member implements Serializable {
         this.lastName = builder.getLastName();
         this.emailAddress = builder.getEmailAddress();
         this.phoneNumber = builder.getPhone();
-        // TODO: Bring in my Badge Definition
-//        this.badges = builder.getBadges();
     }
 
     public Integer getId() {
@@ -94,11 +93,6 @@ public class Member implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    // TODO: Bring in my Badge Definition
-//    public List<Badge> getBadges() {
-//        return badges;
-//    }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -117,6 +111,8 @@ public class Member implements Serializable {
     @Entity(name="member")
     public static class Builder {
         @Id
+        @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="member_pk_sequence")
+        @SequenceGenerator(name="member_pk_sequence",sequenceName="member_id_seq", allocationSize=1)
         private Integer id;
 
         @Column(name="display_name") private String displayName;
@@ -126,9 +122,6 @@ public class Member implements Serializable {
         //        private InternetAddress emailAddress;
         @Column private String phone;
         //        private Phonenumber.PhoneNumber phone;
-        // TODO: Bring in my Badge Definition
-//        @Transient
-//        private List<Badge> badges = Collections.emptyList();
 
         public Builder() {
         }
@@ -150,8 +143,6 @@ public class Member implements Serializable {
                     .withLastName(member.lastName)
                     .withDisplayName(member.getDisplayName())
                     .withEmailAddress(member.emailAddress);
-                    // TODO: Bring in my Badge Definition
-//                    .withBadges(member.getBadges());
         }
 
         public Integer getId() {
@@ -232,22 +223,6 @@ public class Member implements Serializable {
             this.phone = phone;
             return this;
         }
-
-        // TODO: Bring in my Badge Definition
-//        public List<Badge> getBadges() {
-//            return badges;
-//        }
-
-        // TODO: Bring in my Badge Definition
-//        public void setBadges(List<Badge> badges) {
-//            this.badges = badges;
-//        }
-
-        // TODO: Bring in my Badge Definition
-//        public Builder withBadges(List<Badge> badges) {
-//            this.badges = badges;
-//            return this;
-//        }
 
         @Override
         public String toString() {
