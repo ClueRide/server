@@ -17,6 +17,10 @@
  */
 package com.clueride.auth.access;
 
+import java.util.concurrent.ExecutionException;
+
+import com.clueride.auth.identity.ClueRideIdentity;
+
 /**
  * Describes the features provided for Access Tokens.
  */
@@ -35,8 +39,7 @@ public interface AccessTokenService {
      * @param token token as provided by the client requesting access.
      * @return ClueRideIdentity containing identifying details for this user -- particularly the email address.
      */
-    // TODO: Worry about what gets returned later
-//    ClueRideIdentity getIdentity(String token);
+    ClueRideIdentity getIdentity(String token);
 
     /**
      * Convenience method for working with the more complete AccessToken instance.
@@ -44,8 +47,7 @@ public interface AccessTokenService {
      * @param accessToken instance of type {@link AccessToken}.
      * @return ClueRideIdentity containing identifying details for this user -- particularly the email address.
      */
-    // TODO: Worry about what gets returned later
-//    ClueRideIdentity getIdentity(AccessToken accessToken) throws ExecutionException;
+    ClueRideIdentity getIdentity(AccessToken accessToken) throws ExecutionException;
 
     /**
      * Given an Access Token as provided by the client, return the Principal string matching that token (generally,
