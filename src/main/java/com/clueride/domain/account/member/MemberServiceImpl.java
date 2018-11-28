@@ -26,6 +26,9 @@ import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 
+/* TODO: Testing only; not an actual call that needs BadgeCapture. */
+import com.clueride.aop.badge.BadgeCapture;
+
 /**
  * Implementation of {@link MemberService}.
  */
@@ -41,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @BadgeCapture
     public List<Member> getAllMembers() {
         LOGGER.debug("Requesting All Members");
         List<Member.Builder> builders = memberStore.getAllMembers();
