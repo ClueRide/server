@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import com.clueride.auth.Secured;
 import com.clueride.auth.access.AccessTokenService;
 import com.clueride.config.ConfigService;
+import com.clueride.domain.account.principal.PrincipalService;
+import com.clueride.domain.session.SessionPrincipal;
 
 /**
  * Allows picking up Authorization headers and extracting the Principal.
@@ -50,10 +52,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Inject
     private Logger LOGGER;
 
-    // TODO: Maybe provided by CDI?
-//    private final Provider<SessionPrincipal> sessionPrincipalProvider;
-    // TODO: Perhaps a better place for this? What functionality does this provide?
-//    private final PrincipalService principalService;
+    @Inject
+    private SessionPrincipal sessionPrincipal;
+
+    @Inject
+    private PrincipalService principalService;
+
     @Inject
     private AccessTokenService accessTokenService;
 
@@ -104,7 +108,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         LOGGER.info("Logged in as " + principalName);
 
         /* This one is used for Method Interceptors for Badge Capture. */
-//        setSessionPrincipal(principalName);
+        setSessionPrincipal(principalName);
 
         /* This one is used for Jersey Calls. */
         setSecurityContextPrincipal(requestContext, principalName);
@@ -148,12 +152,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     /** Name the user's principal as the SessionPrincipal. */
-//    private void setSessionPrincipal(String principalName) {
-//        sessionPrincipalProvider.get().setSessionPrincipal(
-//                principalService.getPrincipalForEmailAddress(
-//                        principalName
-//                )
-//        );
-//    }
+    private void setSessionPrincipal(String principalName) {
+        sessionPrincipal.setSessionPrincipal(
+                principalService.getPrincipalForEmailAddress(
+                        principalName
+                )
+        );
+    }
 
 }
