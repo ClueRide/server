@@ -17,27 +17,15 @@
  */
 package com.clueride.domain.badge.event;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
-//import com.clueride.infrastructure.db.ClueRide;
+import javax.persistence.PersistenceContext;
 
 /**
  * Implementation of Badge Event Store for JPA.
  */
 public class BadgeEventStoreJpa implements BadgeEventStore {
-
-    private final EntityManager entityManager;
-
-    @Inject
-    public BadgeEventStoreJpa(
-            @Nonnull
-//            @ClueRide
-                    EntityManager entityManager
-    ) {
-        this.entityManager = entityManager;
-    }
+    @PersistenceContext(unitName = "clueride")
+    private EntityManager entityManager;
 
     @Override
     public Integer add(BadgeEvent.Builder badgeEventBuilder) {
