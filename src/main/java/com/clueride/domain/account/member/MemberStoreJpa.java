@@ -21,16 +21,16 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * JPA Implementation of the MemberStore (DAO) interface.
  */
 @ApplicationScoped
 public class MemberStoreJpa implements MemberStore {
-    @Inject
+    @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
     @Override

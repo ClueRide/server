@@ -39,8 +39,12 @@ import org.slf4j.LoggerFactory;
 public class Resources {
 
     @Produces
-    @PersistenceContext
-    private EntityManager em;
+    @PersistenceContext(unitName = "clueride")
+    private EntityManager emClueRide;
+
+    @Produces
+    @PersistenceContext(unitName = "badgeOS")
+    private EntityManager emWordPress;
 
     @Produces
     public Logger produceLog(InjectionPoint injectionPoint) {
