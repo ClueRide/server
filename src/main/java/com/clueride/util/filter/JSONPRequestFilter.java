@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.clueride.util;
+package com.clueride.util.filter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * @author balunasj
  * 
  */
-@WebFilter("/rest/*")
+@WebFilter(filterName = "rest-filter", urlPatterns = "/rest/*")
 public class JSONPRequestFilter implements Filter {
     // The callback method to use
     private static final String CALLBACK_METHOD = "jsonpcallback";
