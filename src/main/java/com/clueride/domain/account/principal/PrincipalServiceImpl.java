@@ -18,83 +18,25 @@
 package com.clueride.domain.account.principal;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
-
-import com.clueride.domain.account.member.Member;
-import com.clueride.domain.account.member.MemberService;
 
 /**
  * Exploratory implementation.
  */
 public class PrincipalServiceImpl implements PrincipalService {
-    @Inject
-    private Logger LOGGER;
-
-    private static List<Principal> principals = null;
-    private final MemberService memberService;
-    /* TODO: Temporary removal of the BadgeOsPrincipal; bring in later. */
-//    private final BadgeOsPrincipalService badgeOsPrincipalService;
+    private final BadgeOsPrincipalService badgeOsPrincipalService;
 
     @Inject
     public PrincipalServiceImpl(
-            MemberService memberService
-//            BadgeOsPrincipalService badgeOsPrincipalService
+            BadgeOsPrincipalService badgeOsPrincipalService
     ) {
-        this.memberService = memberService;
-//        this.badgeOsPrincipalService = badgeOsPrincipalService;
-    }
-
-    @Override
-    public Principal getNewPrincipal() {
-        refreshPrincipalCache();
-        Principal newPrincipal = new EmailPrincipal("guest.dummy@clueride.com");
-        principals.add(newPrincipal);
-        return newPrincipal;
-    }
-
-    @Override
-    public void validate(String email) {
-        refreshPrincipalCache();
-
-        try {
-            Principal principal = new EmailPrincipal(email);
-            /* Test existence within the database */
-            memberService.getMemberByEmail(email);
-            principals.add(principal);
-        }  catch (Exception e) {
-            LOGGER.warn("Problem validating email", e);
-            throw new RuntimeException("Unable to verify email: " + email);
-        }
+        this.badgeOsPrincipalService = badgeOsPrincipalService;
     }
 
     @Override
     public Principal getPrincipalForEmailAddress(String emailAddress) {
-//        Principal badgeOsPrincipal = badgeOsPrincipalService.getBadgeOsPrincipal(emailAddress);
-//        return badgeOsPrincipal;
-        Principal emailPrincipal = new EmailPrincipal(emailAddress);
-        return emailPrincipal;
-    }
-
-    private void refreshPrincipalCache() {
-        if (principals == null || principals.size() == 0) {
-            principals = new ArrayList<>();
-            getCount();
-        }
-    }
-
-    public int getCount() {
-        principals.clear();
-        LOGGER.debug("Refreshing from DB");
-        for (Member member : memberService.getAllMembers()) {
-            principals.add(new EmailPrincipal(member.getEmailAddress()));
-        }
-        LOGGER.debug("Found " + principals.size() + " records");
-        return principals.size();
+        return badgeOsPrincipalService.getBadgeOsPrincipal(emailAddress);
     }
 
 }

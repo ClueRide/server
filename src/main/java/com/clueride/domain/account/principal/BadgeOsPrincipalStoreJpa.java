@@ -36,22 +36,18 @@ public class BadgeOsPrincipalStoreJpa implements BadgeOsPrincipalStore {
     public BadgeOsPrincipal.Builder getBadgeOsPrincipalForEmailAddress(InternetAddress emailAddress) {
         requireNonNull(emailAddress);
 
-        BadgeOsPrincipal.Builder principalBuilder = BadgeOsPrincipal.Builder.builder();
-//        try {
-//            entityManager.getTransaction().begin();
-//
-//            principalBuilder = entityManager
-//                    .createQuery(
-//                            "from badgeos_principal p where p.emailAddressString = :emailAddress",
-//                            BadgeOsPrincipal.Builder.class
-//                    )
-//                    .setParameter("emailAddress", emailAddress.toString())
-//                    .getSingleResult();
-//            entityManager.getTransaction().commit();
-//        } catch (Exception e) {
-//            entityManager.getTransaction().rollback();
-//            throw e;
-//        }
+        BadgeOsPrincipal.Builder principalBuilder;
+        try {
+            principalBuilder = entityManager
+                    .createQuery(
+                            "SELECT p from badgeos_principal p where p.emailAddressString = :emailAddress",
+                            BadgeOsPrincipal.Builder.class
+                    )
+                    .setParameter("emailAddress", emailAddress.toString())
+                    .getSingleResult();
+        } catch (Exception e) {
+            throw e;
+        }
 
         return principalBuilder;
     }

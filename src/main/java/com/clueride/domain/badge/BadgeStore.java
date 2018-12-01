@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Jett Marks
+ * Copyright 2018 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 7/31/17.
+ * Created by jett on 8/26/18.
  */
-package com.clueride.domain.account.principal;
+package com.clueride.domain.badge;
 
-import java.security.Principal;
+import java.util.List;
 
 /**
- * Logic behind the obtaining of Principals.
+ * Defines the DAO for Badges.
  *
- * This is a rather naive interface at this time since I'm still exploring how to best use these.
+ * Badges are created and maintained within the BadgeOS system and for that reason,
+ * when we read Badges from the database, we're reading from the BadgeOS / WordPress
+ * database.
  */
-public interface PrincipalService {
-
+public interface BadgeStore {
     /**
-     * Given an email address, return the matching Principal.
-     * @param emailAddress
-     * @return Unique Principal representing the holder of the given Email Address.
+     * Retrieves list of currently awarded badges for the session's user.
+     * @return List of Badges for display.
      */
-    Principal getPrincipalForEmailAddress(String emailAddress);
+    List<Badge.Builder> getAwardedBadgesForUser(Integer userId);
 
 }
