@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Jett Marks
+ * Copyright 2018 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 7/31/17.
+ * Created by jett on 1/16/18.
  */
-package com.clueride.domain.account.principal;
+package com.clueride.domain.badge;
 
-import java.security.Principal;
+import java.util.List;
 
 /**
- * Logic behind the obtaining of Principals.
- *
- * This is a rather naive interface at this time since I'm still exploring how to best use these.
+ * Defines what operations are provided for Badges.
  */
-public interface PrincipalService {
+public interface BadgeService {
 
     /**
-     * Given an email address, return the matching Principal.
-     * @param emailAddress
-     * @return Unique Principal representing the holder of the given Email Address.
+     * Based on the user's session, return the list of badges accumulated
+     * by this user.
+     * @return List of user's Badges.
      */
-    Principal getPrincipalForEmailAddress(String emailAddress);
-
+    List<Badge> getBadges();
 }

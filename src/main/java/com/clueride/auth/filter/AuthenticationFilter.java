@@ -108,9 +108,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         LOGGER.info("Logged in as " + principalName);
 
         /* This one is used for Method Interceptors for Badge Capture. */
+        // TODO: Replace with firing of the event.
         setSessionPrincipal(principalName);
 
         /* This one is used for Jersey Calls. */
+        // TODO: May be able to back off this since
+        // a) I'm not using Jersey and
+        // b) this only provides a string-based Principal
         setSecurityContextPrincipal(requestContext, principalName);
     }
 

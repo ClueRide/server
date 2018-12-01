@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Jett Marks
+ * Copyright 2018 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 7/31/17.
+ * Created by jett on 8/27/18.
  */
-package com.clueride.domain.account.principal;
-
-import java.security.Principal;
+package com.clueride.domain.badge;
 
 /**
- * Logic behind the obtaining of Principals.
- *
- * This is a rather naive interface at this time since I'm still exploring how to best use these.
+ * Maps from a Badge to a Badge Type.
  */
-public interface PrincipalService {
+public interface BadgeTypeService {
 
     /**
-     * Given an email address, return the matching Principal.
-     * @param emailAddress
-     * @return Unique Principal representing the holder of the given Email Address.
+     * Given a Badge, determine the BadgeType.
+     * @param builder instance of Builder populated from source that doesn't know about ClueRide's Badge Types.
+     * @return Enumeration of the BadgeType which provides authorization for certain activities.
      */
-    Principal getPrincipalForEmailAddress(String emailAddress);
+    BadgeType getTypeOfBadge(Badge.Builder builder);
 
 }
