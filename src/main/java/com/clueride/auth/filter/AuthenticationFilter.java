@@ -18,26 +18,30 @@
 package com.clueride.auth.filter;
 
 import java.io.IOException;
-import java.security.Principal;
+import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.util.Date;
 
 import javax.annotation.Priority;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.ws.rs.HttpMethod;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
 import org.slf4j.Logger;
 
+import com.clueride.RecordNotFoundException;
+import com.clueride.auth.ClueRideSession;
 import com.clueride.auth.Secured;
 import com.clueride.auth.access.AccessTokenService;
+import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.config.ConfigService;
 import com.clueride.domain.account.principal.PrincipalService;
-import com.clueride.domain.session.SessionPrincipal;
 
 /**
  * Allows picking up Authorization headers and extracting the Principal.
@@ -53,7 +57,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private Logger LOGGER;
 
     @Inject
-    private SessionPrincipal sessionPrincipal;
+    @ClueRideSession
+    private Event<String> accessTokenEvent;
 
     @Inject
     private PrincipalService principalService;
@@ -76,17 +81,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
-        if (requestContext.getMethod().equals(HttpMethod.OPTIONS)) {
-            /* Free pass for OPTIONS requests? */
-            LOGGER.debug("Allowing OPTIONS request");
-            return;
-        }
-        // Get the HTTP Authorization header from the request
+        /* Get the HTTP Authorization header from the request. */
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-        // Check if the HTTP Authorization header is present and formatted correctly
+        /* Check if the HTTP Authorization header is present and formatted correctly. */
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             LOGGER.error("Authorization Header missing or malformed");
             requestContext.abortWith(
@@ -94,74 +93,51 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             return;
         }
 
-        // Extract the token from the HTTP Authorization header
+        /* Extract the token from the HTTP Authorization header. */
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
-        String candidatePrincipalName = "Not logged in";
+        String candidatePrincipalName;
         if (token.equals(configService.getTestToken())) {
             candidatePrincipalName = configService.getTestAccount();
+            buildClueRideIdentity(token, candidatePrincipalName);
         } else {
-            candidatePrincipalName = accessTokenService.getPrincipalString(token);
+            try {
+                candidatePrincipalName = accessTokenService.getPrincipalString(token);
+            } catch (RecordNotFoundException rnfe) {
+                LOGGER.info("Authorization Header (\"{}\") not validated by Identity Provider", token);
+                requestContext.abortWith(
+                        Response.status(Response.Status.UNAUTHORIZED).build());
+                return;
+            }
         }
 
-        final String principalName = candidatePrincipalName;
-        LOGGER.info("Logged in as " + principalName);
-
-        /* This one is used for Method Interceptors for Badge Capture. */
-        // TODO: Replace with firing of the event.
-        setSessionPrincipal(principalName);
-
-        /* This one is used for Jersey Calls. */
-        // TODO: May be able to back off this since
-        // a) I'm not using Jersey and
-        // b) this only provides a string-based Principal
-        setSecurityContextPrincipal(requestContext, principalName);
+        LOGGER.debug("Logged in as {}", candidatePrincipalName);
+        accessTokenEvent.fire(token);
     }
 
-    /** Add user to the Context for this invocation; used by JAX-RS & Jersey calls. */
-    private void setSecurityContextPrincipal(
-            ContainerRequestContext requestContext,
-            final String principalName
-    ) {
-        final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
-        requestContext.setSecurityContext(new SecurityContext() {
-
-            @Override
-            public Principal getUserPrincipal() {
-
-                return new Principal() {
-
-                    @Override
-                    public String getName() {
-                        return principalName;
-                    }
-                };
-            }
-
-            @Override
-            public boolean isUserInRole(String role) {
-                return true;
-            }
-
-            @Override
-            public boolean isSecure() {
-                return currentSecurityContext.isSecure();
-            }
-
-            @Override
-            public String getAuthenticationScheme() {
-                return "Bearer";
-            }
-        });
-    }
-
-    /** Name the user's principal as the SessionPrincipal. */
-    private void setSessionPrincipal(String principalName) {
-        sessionPrincipal.setSessionPrincipal(
-                principalService.getPrincipalForEmailAddress(
-                        principalName
-                )
-        );
+    /**
+     * Given a token (expected to match this environment's "test" token), create a
+     * matching ClueRideIdentity for use during testing.
+     * @param token as configured.
+     * @param candidatePrincipalName also as configured.
+     * @throws MalformedURLException not expected to occur since the URL is hardcoded here.
+     */
+    private void buildClueRideIdentity(String token, String candidatePrincipalName) throws MalformedURLException {
+        ClueRideIdentity clueRideIdentity;
+        try {
+            clueRideIdentity = ClueRideIdentity.Builder.builder()
+                    .withSub("")
+                    .withDisplayName("Test Account")
+                    .withNickName("scarf")
+                    .withPictureUrl("https://clueride.com")
+                    .withLocale("en")
+                    .withUpdatedAt(new Date())
+                    .withEmailVerified(true)
+                    .withEmailString(candidatePrincipalName).build();
+            accessTokenService.addIdentity(token, clueRideIdentity);
+        } catch (ParseException | AddressException e) {
+            e.printStackTrace();
+        }
     }
 
 }

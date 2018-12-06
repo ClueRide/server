@@ -165,6 +165,22 @@ public class ClueRideIdentity {
             return new Builder();
         }
 
+        public static Builder from(ClueRideIdentity clueRideIdentity) {
+            return builder()
+                    .withSub(clueRideIdentity.getSub())
+                    .withEmailString(clueRideIdentity.getEmail().toString())
+                    .withEmailVerified(clueRideIdentity.getEmailVerified())
+                    .withDisplayName(clueRideIdentity.getDisplayName())
+                    .withGivenName(clueRideIdentity.getGivenName().orNull())
+                    .withFamilyName(clueRideIdentity.getFamilyName().orNull())
+                    .withNickName(clueRideIdentity.getNickName())
+                    .withPictureUrl(clueRideIdentity.getPictureUrl().toString())
+                    .withGender(clueRideIdentity.getGender().orNull())
+                    .withLocale(clueRideIdentity.getLocale())
+                    .withUpdatedAt(clueRideIdentity.getUpdatedAt())
+                    ;
+        }
+
         public ClueRideIdentity build() throws MalformedURLException, ParseException, AddressException {
             return new ClueRideIdentity(this);
         }

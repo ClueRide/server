@@ -18,6 +18,7 @@
 package com.clueride.auth.identity;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
@@ -27,15 +28,19 @@ import javax.mail.internet.AddressException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.clueride.RecordNotFoundException;
 import com.clueride.auth.AuthenticationConnection;
 import com.clueride.config.ConfigService;
-import com.clueride.RecordNotFoundException;
 
 /**
  * Implementation of Identity Store that is backed by Auth0 as the identity provider.
  */
 public class IdentityStoreAuth0 implements IdentityStore {
+    private static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private ObjectMapper objectMapper = new ObjectMapper();
     private final AuthenticationConnection authenticationConnection;
     private final ConfigService configService;
@@ -51,6 +56,7 @@ public class IdentityStoreAuth0 implements IdentityStore {
 
     @Override
     public ClueRideIdentity getIdentity(String accessToken) {
+        LOGGER.debug("Retrieving Identity from 3rd-party providers");
         List<String> issuers = configService.getAuthIssuers();
 
         /* Walk through the configured list of Issuers. */
@@ -74,7 +80,12 @@ public class IdentityStoreAuth0 implements IdentityStore {
                 String jsonResponse = authenticationConnection.getJsonResponse();
                 try {
                     /* Parse response from Identity Provider. */
-                    return objectMapper.readValue(jsonResponse, ClueRideIdentity.Builder.class).build();
+                    ClueRideIdentity.Builder builder = objectMapper.readValue(
+                            jsonResponse,
+                            ClueRideIdentity.Builder.class
+                    );
+                    LOGGER.info("Retrieved 3rd-party Identity for {}", builder.getEmailString());
+                    return builder.build();
                 } catch (IOException | ParseException | AddressException e) {
                     e.printStackTrace();
                 }
