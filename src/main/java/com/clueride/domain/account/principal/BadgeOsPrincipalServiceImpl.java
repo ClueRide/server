@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.account.principal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implementation that simply maps between what is in BadgeOS for a given email address.
  */
-public class BadgeOsPrincipalServiceImpl implements BadgeOsPrincipalService {
+public class BadgeOsPrincipalServiceImpl implements BadgeOsPrincipalService, Serializable {
     @Inject
     private Logger LOGGER;
 

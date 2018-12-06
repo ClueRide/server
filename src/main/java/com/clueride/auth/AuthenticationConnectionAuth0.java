@@ -50,18 +50,23 @@ public class AuthenticationConnectionAuth0 implements AuthenticationConnection {
         /* Retrieve response */
         responseCode = connection.getResponseCode();
         responseMessage = connection.getResponseMessage();
-        if (responseCode == 200) {
-            InputStream inputStr = connection.getInputStream();
-            String encoding = connection.getContentEncoding() == null ? "UTF-8"
-                    : connection.getContentEncoding();
-            jsonResponse = IOUtils.toString(inputStr, encoding);
-            LOGGER.debug(String.format("Raw JSON Response:\n%s", jsonResponse));
-        } else {
-            LOGGER.error(String.format(
-                    "Unable to read response: %d %s",
-                    responseCode,
-                    responseMessage)
-            );
+        switch (responseCode) {
+            case 200:
+                InputStream inputStr = connection.getInputStream();
+                String encoding = connection.getContentEncoding() == null ? "UTF-8"
+                        : connection.getContentEncoding();
+                jsonResponse = IOUtils.toString(inputStr, encoding);
+                LOGGER.debug(String.format("Raw JSON Response:\n%s", jsonResponse));
+                break;
+            case 401:
+                break;
+            default:
+                LOGGER.error(String.format(
+                        "Unable to read response: %d %s",
+                        responseCode,
+                        responseMessage)
+                );
+                break;
         }
         return responseCode;
     }

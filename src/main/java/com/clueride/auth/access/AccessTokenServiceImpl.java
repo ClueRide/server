@@ -17,6 +17,7 @@
  */
 package com.clueride.auth.access;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nonnull;
@@ -38,18 +39,19 @@ import com.clueride.auth.identity.IdentityStore;
  * Provides caching of the results as well as retrieval of results
  * that are not in the cache.
  */
-public class AccessTokenServiceImpl implements AccessTokenService {
+public class AccessTokenServiceImpl implements AccessTokenService, Serializable {
 
     @Inject
     private Logger LOGGER;
 
     @Override
+    // TODO: CA-381 Expire Tokens
     public void emptyCache() {
         LOGGER.debug("Clearing the Access Token Cache");
     }
+
     private static IdentityStore identityStore;
 
-    // TODO: CA-381 Expire Tokens
     private static LoadingCache<String, ClueRideIdentity> identityCache =
             CacheBuilder.newBuilder()
                     .build(
@@ -90,6 +92,16 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     public String getPrincipalString(String token) {
         return String.valueOf(getIdentity(token).getEmail());
+    }
+
+    @Override
+    public void addIdentity(String token, ClueRideIdentity identity) {
+        identityCache.put(token, identity);
+    }
+
+    @Override
+    public boolean isSessionActive(String token) {
+        return identityCache.asMap().containsKey(token);
     }
 
 }

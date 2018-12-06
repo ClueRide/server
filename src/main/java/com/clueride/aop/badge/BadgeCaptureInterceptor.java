@@ -19,6 +19,7 @@ package com.clueride.aop.badge;
 
 import java.util.Date;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -26,9 +27,11 @@ import javax.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.badge.event.BadgeEvent;
 import com.clueride.domain.badge.event.BadgeEventService;
-import com.clueride.domain.session.SessionPrincipal;
 
 /**
  * Method Interceptor responsible for capturing events that count toward the awarding of badges.
@@ -43,7 +46,9 @@ public class BadgeCaptureInterceptor {
     private BadgeEventService badgeEventService;
 
     @Inject
-    private SessionPrincipal sessionPrincipalService;
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
 
     @AroundInvoke
     public Object invoke(InvocationContext invocation) throws Exception {
@@ -53,12 +58,12 @@ public class BadgeCaptureInterceptor {
                 .withTimestamp(new Date())
                 .withMethodName(invocation.getMethod().getName())
                 .withMethodClass(invocation.getMethod().getDeclaringClass())
-                .withPrincipal(sessionPrincipalService.getSessionPrincipal());
+                .withPrincipal(clueRideSessionDto.getBadgeOsPrincipal());
 
         Object returnValue = invocation.proceed();
         badgeEventBuilder.withReturnValue(returnValue);
         badgeEventService.send(badgeEventBuilder);
-        LOGGER.trace(badgeEventBuilder.toString());
+        LOGGER.debug(badgeEventBuilder.toString());
         return returnValue;
     }
 

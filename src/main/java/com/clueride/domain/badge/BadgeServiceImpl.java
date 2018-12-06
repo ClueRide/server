@@ -20,12 +20,14 @@ package com.clueride.domain.badge;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
-import com.clueride.domain.session.SessionPrincipal;
 
 /**
  * Default Implementation of BadgeService.
@@ -34,25 +36,20 @@ public class BadgeServiceImpl implements BadgeService {
     @Inject
     private Logger LOGGER;
 
-    private final BadgeStore badgeStore;
-    private final BadgeTypeService badgeTypeService;
-    private final SessionPrincipal sessionPrincipal;
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
 
     @Inject
-    public BadgeServiceImpl(
-            BadgeStore badgeStore,
-            BadgeTypeService badgeTypeService,
-            // TODO: This is actually a service, but we may be able to inject actual principal.
-            SessionPrincipal sessionPrincipal
-    ) {
-        this.badgeStore = badgeStore;
-        this.badgeTypeService = badgeTypeService;
-        this.sessionPrincipal = sessionPrincipal;
-    }
+    private BadgeStore badgeStore;
+
+    @Inject
+    private BadgeTypeService badgeTypeService;
 
     @Override
     public List<Badge> getBadges() {
-        BadgeOsPrincipal badgeOsPrincipal = (BadgeOsPrincipal) sessionPrincipal.getSessionPrincipal();
+        BadgeOsPrincipal badgeOsPrincipal = clueRideSessionDto.getBadgeOsPrincipal();
         Integer userId = badgeOsPrincipal.getBadgeOsUserId();
         List<Badge> badgeList = new ArrayList<>();
         LOGGER.info("Looking up Badges for User ID " + userId);

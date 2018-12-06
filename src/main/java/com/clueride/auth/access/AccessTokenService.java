@@ -65,4 +65,14 @@ public interface AccessTokenService {
      */
     void emptyCache();
 
+    void addIdentity(String token, ClueRideIdentity identity);
+
+    /** Returns true if this session is known to be active.
+     *
+     * @param token opaque access token representing a validated session as issued by
+     *              3rd-party identity provider.
+     * @return true if the represented session is active.
+     */
+    boolean isSessionActive(String token);
+
 }

@@ -50,4 +50,5 @@ public class Resources {
     public Logger produceLog(InjectionPoint injectionPoint) {
         return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
+
 }

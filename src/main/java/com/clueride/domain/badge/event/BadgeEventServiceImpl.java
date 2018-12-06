@@ -17,22 +17,22 @@
  */
 package com.clueride.domain.badge.event;
 
-import java.security.Principal;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.mail.internet.AddressException;
-
+import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 
-//import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.member.MemberService;
+import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.PrincipalService;
+
+//import com.clueride.domain.account.member.Member;
 
 /**
  * Implementation of Badge Event service which dispatches events from a queue that is populated by clients.
@@ -83,6 +83,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
         return badgeEventBuilder.build();
     }
 
+    // TODO: Tie this into the database to create the event records
 //    private void fillDbBuilder(BadgeEvent.Builder badgeEventBuilder) {
 //        Member member = memberService.getMember(badgeEventBuilder.getMemberId());
 //        badgeEventBuilder.withPrincipal(
@@ -93,9 +94,9 @@ public class BadgeEventServiceImpl implements BadgeEventService {
 //    }
 
     private void fillClientBuilder(BadgeEvent.Builder badgeEventBuilder) throws AddressException {
-        Principal principal = badgeEventBuilder.getPrincipal();
+        BadgeOsPrincipal principal = (BadgeOsPrincipal) badgeEventBuilder.getPrincipal();
         Integer memberId = memberService.getMemberByEmail(
-                principal.getName()
+                principal.getEmailAddress().toString()
         ).getId();
 
         badgeEventBuilder.withMemberId(memberId);
@@ -115,6 +116,11 @@ public class BadgeEventServiceImpl implements BadgeEventService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     runnable = false;
+                } catch (NoResultException nre) {
+                    LOGGER.error("Unable to find {} as a Member",
+                            ((BadgeOsPrincipal)badgeEventBuilder.getPrincipal()).getEmailAddress()
+                    );
+                    throw nre;
                 } catch (RuntimeException rte) {
                     LOGGER.error("Problem Storing Badge Event: " + badgeEventBuilder.getTimestamp(), rte);
                     throw(rte);

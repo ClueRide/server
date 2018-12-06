@@ -42,14 +42,12 @@ import com.clueride.aop.AopDummyService;
 import com.clueride.aop.AopServiceConsumerImpl;
 import com.clueride.domain.badge.event.BadgeEvent;
 import com.clueride.domain.badge.event.BadgeEventService;
-import com.clueride.domain.session.SessionPrincipal;
 import com.clueride.util.Resources;
 import com.clueride.util.TestOnly;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -64,10 +62,6 @@ import static org.testng.Assert.assertNotNull;
         BadgeCaptureInterceptor.class
 })
 public class BadgeCaptureInterceptorTest extends NgCdiRunner {
-    @Produces
-    @Mock
-    private SessionPrincipal sessionPrincipal;
-
     @Inject
     @TestOnly
     private Principal principal;
@@ -123,20 +117,21 @@ public class BadgeCaptureInterceptorTest extends NgCdiRunner {
     }
 
     /* Failing test;  */
+    /* And now its worse because I'm not using the Session Principal at all. */
 //    @Test
     public void testInjection() throws Exception {
         /* setup test */
         Integer expected = 123;
 
         /* train mocks */
-        when(sessionPrincipal.getSessionPrincipal()).thenReturn(principal);
+//        when(sessionPrincipal.getSessionPrincipal()).thenReturn(principal);
 
         /* make call */
         Integer actual = toTest.performService(expected);
 
         /* verify results */
         assertEquals(actual, expected);
-        verify(sessionPrincipal).getSessionPrincipal();
+//        verify(sessionPrincipal).getSessionPrincipal();
     }
 
 //    @Test
