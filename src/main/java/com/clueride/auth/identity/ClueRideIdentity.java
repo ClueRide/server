@@ -71,7 +71,7 @@ public class ClueRideIdentity {
     private final InternetAddress email;
     private final Boolean emailVerified;
 
-    public ClueRideIdentity(Builder builder) throws MalformedURLException, ParseException, AddressException {
+    public ClueRideIdentity(Builder builder) {
         this.sub = requireNonNull(builder.getSub(), "sub is required");
         this.givenName = requireNonNull(builder.getGivenName(), "given name expects an Optional");
         this.familyName = requireNonNull(builder.getFamilyName(), "family name expects an Optional");
@@ -181,8 +181,12 @@ public class ClueRideIdentity {
                     ;
         }
 
-        public ClueRideIdentity build() throws MalformedURLException, ParseException, AddressException {
+        public ClueRideIdentity build() {
             return new ClueRideIdentity(this);
+        }
+
+        public void validate() throws MalformedURLException {
+            // TODO Would like better control over when we check the inputs; instead of during build().
         }
 
         public String getSub() {
@@ -238,14 +242,23 @@ public class ClueRideIdentity {
             return pictureUrlString;
         }
 
-        public URL getPictureUrl() throws MalformedURLException {
-            pictureUrl = new URL(pictureUrlString);
+        public URL getPictureUrl() {
+            try {
+                pictureUrl = new URL(pictureUrlString);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             return pictureUrl;
         }
 
         @JsonProperty("picture")
         public Builder withPictureUrl(String pictureUrl) {
             this.pictureUrlString = pictureUrl;
+            return this;
+        }
+
+        public Builder withPictureUrl(URL pictureUrl) {
+            this.pictureUrl = pictureUrl;
             return this;
         }
 
@@ -267,7 +280,7 @@ public class ClueRideIdentity {
             return this;
         }
 
-        public Date getUpdatedAt() throws ParseException {
+        public Date getUpdatedAt() {
             return updatedAt;
         }
 
@@ -282,14 +295,23 @@ public class ClueRideIdentity {
             return emailString;
         }
 
-        public InternetAddress getEmail() throws AddressException {
-            email = new InternetAddress(emailString);
+        public InternetAddress getEmail() {
+            try {
+                email = new InternetAddress(emailString);
+            } catch (AddressException e) {
+                e.printStackTrace();
+            }
             return email;
         }
 
         @JsonProperty("email")
         public Builder withEmailString(String emailString) {
             this.emailString = emailString;
+            return this;
+        }
+
+        public Builder withEmail(InternetAddress emailAddress) {
+            this.email = emailAddress;
             return this;
         }
 

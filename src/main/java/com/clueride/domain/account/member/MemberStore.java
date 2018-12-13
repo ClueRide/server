@@ -17,7 +17,6 @@
  */
 package com.clueride.domain.account.member;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.mail.internet.InternetAddress;
@@ -27,12 +26,11 @@ import javax.mail.internet.InternetAddress;
  */
 public interface MemberStore {
     /**
-     * Accepts fully-constructed {@link Member} to the store and returns the ID.
-     * @param member - instance to be persisted.
-     * @return Unique Integer ID for the new Member.
-     * @throws IOException if trouble persisting.
+     * Accepts fully-populated {@link Member.Builder} to the store and returns the Member record with DB-assigned ID.
+     * @param memberBuilder - instance to be persisted.
+     * @return Same record as passed in with DB-assigned ID.
      */
-    Integer addNew(Member member) throws IOException;
+    Member.Builder addNew(Member.Builder memberBuilder);
 
     /**
      * Retrieves the {@link Member} instance matching the ID.

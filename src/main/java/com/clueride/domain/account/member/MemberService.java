@@ -20,6 +20,9 @@ package com.clueride.domain.account.member;
 import java.util.List;
 
 import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import com.clueride.auth.identity.ClueRideIdentity;
 
 /**
  * Provides business-layer services for Members and their Badges.
@@ -38,5 +41,19 @@ public interface MemberService {
      * @return Matching instance of Member.
      */
     Member getMemberByEmail(String emailAddress) throws AddressException;
+
+    /**
+     * Retrieve Member instances by Email Address (Principal).
+     * @param emailAddress InternetAddress representation of the Principal's email address.
+     * @return Matching instance of Member.
+     */
+    Member getMemberByEmail(InternetAddress emailAddress);
+
+    /**
+     * Creates a new Member record based on the ClueRideIdentity that comes from the Identity Provider.
+     * @param clueRideIdentity personal data provided by Identity Provider.
+     * @return Member instance built from ClueRideIdentity.
+     */
+    Member createNewMember(ClueRideIdentity clueRideIdentity);
 
 }
