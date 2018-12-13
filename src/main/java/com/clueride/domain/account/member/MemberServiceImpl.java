@@ -23,11 +23,13 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 
-/* TODO: Testing only; not an actual call that needs BadgeCapture. */
+import com.clueride.RecordNotFoundException;
 import com.clueride.aop.badge.BadgeCapture;
+import com.clueride.auth.identity.ClueRideIdentity;
 
 /**
  * Implementation of {@link MemberService}.
@@ -45,6 +47,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @BadgeCapture
+    /* TODO: Testing only; not an actual call that needs BadgeCapture. */
     public List<Member> getAllMembers() {
         LOGGER.debug("Requesting All Members");
         List<Member.Builder> builders = memberStore.getAllMembers();
@@ -61,6 +64,25 @@ public class MemberServiceImpl implements MemberService {
         InternetAddress email = new InternetAddress(emailAddress);
         Member.Builder builder = memberStore.getMemberByEmail(email);
         return builder.build();
+    }
+
+    @Override
+    public Member getMemberByEmail(InternetAddress emailAddress) {
+        try {
+            Member.Builder builder = memberStore.getMemberByEmail(emailAddress);
+            return builder.build();
+        } catch (NoResultException nre) {
+            throw new RecordNotFoundException("criteria: " + emailAddress.getAddress());
+        }
+    }
+
+    @Override
+    // TODO: CA-405 connect this more tightly
+    public Member createNewMember(ClueRideIdentity clueRideIdentity) {
+        Member.Builder memberBuilder = memberStore.addNew(
+                Member.Builder.from(clueRideIdentity)
+        );
+        return memberBuilder.build();
     }
 
 }

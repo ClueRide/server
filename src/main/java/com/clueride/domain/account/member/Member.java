@@ -31,6 +31,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.clueride.auth.identity.ClueRideIdentity;
 import static java.util.Objects.requireNonNull;
 
 public class Member implements Serializable {
@@ -145,6 +146,16 @@ public class Member implements Serializable {
                     .withEmailAddress(member.emailAddress);
         }
 
+        public static Builder from(ClueRideIdentity clueRideIdentity) {
+            requireNonNull(clueRideIdentity);
+            return builder()
+                    .withFirstName(clueRideIdentity.getGivenName().get())
+                    .withLastName(clueRideIdentity.getFamilyName().get())
+                    .withEmailAddress(clueRideIdentity.getEmail().toString())
+                    .withDisplayName(clueRideIdentity.getDisplayName())
+                    ;
+        }
+
         public Integer getId() {
             return id;
         }
@@ -240,4 +251,5 @@ public class Member implements Serializable {
         }
 
     }
+
 }

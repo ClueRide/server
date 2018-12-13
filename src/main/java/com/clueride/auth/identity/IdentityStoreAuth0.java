@@ -20,11 +20,9 @@ package com.clueride.auth.identity;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.mail.internet.AddressException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
@@ -86,7 +84,7 @@ public class IdentityStoreAuth0 implements IdentityStore {
                     );
                     LOGGER.info("Retrieved 3rd-party Identity for {}", builder.getEmailString());
                     return builder.build();
-                } catch (IOException | ParseException | AddressException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

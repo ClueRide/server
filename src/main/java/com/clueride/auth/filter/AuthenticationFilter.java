@@ -48,6 +48,8 @@ import com.clueride.domain.account.principal.PrincipalService;
  *
  * This is also responsible for inserting the Principal into the Session.
  * The @Secured annotation on Jersey endpoints is what triggers this to be called.
+ *
+ * TODO: Consider moving some of this logic over to the AccessState service.
  */
 @Provider
 @Secured
@@ -120,24 +122,19 @@ public class AuthenticationFilter implements ContainerRequestFilter {
      * matching ClueRideIdentity for use during testing.
      * @param token as configured.
      * @param candidatePrincipalName also as configured.
-     * @throws MalformedURLException not expected to occur since the URL is hardcoded here.
      */
     private void buildClueRideIdentity(String token, String candidatePrincipalName) throws MalformedURLException {
         ClueRideIdentity clueRideIdentity;
-        try {
-            clueRideIdentity = ClueRideIdentity.Builder.builder()
-                    .withSub("")
-                    .withDisplayName("Test Account")
-                    .withNickName("scarf")
-                    .withPictureUrl("https://clueride.com")
-                    .withLocale("en")
-                    .withUpdatedAt(new Date())
-                    .withEmailVerified(true)
-                    .withEmailString(candidatePrincipalName).build();
-            accessTokenService.addIdentity(token, clueRideIdentity);
-        } catch (ParseException | AddressException e) {
-            e.printStackTrace();
-        }
+        clueRideIdentity = ClueRideIdentity.Builder.builder()
+                .withSub("")
+                .withDisplayName("Test Account")
+                .withNickName("scarf")
+                .withPictureUrl("https://clueride.com")
+                .withLocale("en")
+                .withUpdatedAt(new Date())
+                .withEmailVerified(true)
+                .withEmailString(candidatePrincipalName).build();
+        accessTokenService.addIdentity(token, clueRideIdentity);
     }
 
 }

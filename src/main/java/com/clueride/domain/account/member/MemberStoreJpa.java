@@ -17,13 +17,19 @@
  */
 package com.clueride.domain.account.member;
 
-import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  * JPA Implementation of the MemberStore (DAO) interface.
@@ -33,10 +39,20 @@ public class MemberStoreJpa implements MemberStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @Override
-    public Integer addNew(Member member) throws IOException {
-        entityManager.persist(Member.Builder.from(member));
-        return member.getId();
+    public Member.Builder addNew(Member.Builder memberBuilder) {
+        // TODO: CA-405
+        try {
+            userTransaction.begin();
+            entityManager.persist(memberBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | HeuristicMixedException | RollbackException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
+        return memberBuilder;
     }
 
     @Override
