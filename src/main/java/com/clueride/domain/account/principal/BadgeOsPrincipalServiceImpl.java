@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -28,6 +29,8 @@ import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -36,6 +39,11 @@ import static java.util.Objects.requireNonNull;
 public class BadgeOsPrincipalServiceImpl implements BadgeOsPrincipalService, Serializable {
     @Inject
     private Logger LOGGER;
+
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
 
     private final BadgeOsPrincipalStore badgeOsPrincipalStore;
 
@@ -78,4 +86,10 @@ public class BadgeOsPrincipalServiceImpl implements BadgeOsPrincipalService, Ser
         }
         return principals;
     }
+
+    @Override
+    public BadgeOsPrincipal getCurrentSessionPrincipal() {
+        return clueRideSessionDto.getBadgeOsPrincipal();
+    }
+
 }

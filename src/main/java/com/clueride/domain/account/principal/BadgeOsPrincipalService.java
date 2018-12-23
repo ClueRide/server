@@ -36,4 +36,10 @@ public interface BadgeOsPrincipalService {
 
     List<BadgeOsPrincipal> getFilteredPrincipals(BadgeOsPrincipalFilter filter);
 
+    /**
+     * Retrieves the existing principal for this session.
+     * @return BadgeOsPrincipal for the current validated (@Secured) session.
+     */
+    BadgeOsPrincipal getCurrentSessionPrincipal();
+
 }
