@@ -45,4 +45,12 @@ public class BadgeOsPrincipalWebService {
         return principalService.getFilteredPrincipals(new BadgeOsPrincipalFilter());
     }
 
+    @GET
+    @Path("current")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public BadgeOsPrincipal getCurrentSessionPrincipal() {
+        return principalService.getCurrentSessionPrincipal();
+    }
+
 }
