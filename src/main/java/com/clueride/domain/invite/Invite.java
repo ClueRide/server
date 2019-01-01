@@ -54,7 +54,7 @@ public class Invite {
         this.id = builder.getId();
         this.outingId = builder.getOutingId();
         this.memberId = builder.getMemberId();
-        this.state = (builder.getState() != null) ? builder.getState() : InviteState.INITIAL;
+        this.state = (builder.getState() != null) ? builder.getState() : InviteState.PROVISIONAL;
     }
 
     public String getToken() {
