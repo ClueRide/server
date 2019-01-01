@@ -17,6 +17,9 @@
  */
 package com.clueride.domain.invite;
 
+import java.util.List;
+
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -30,12 +33,22 @@ import com.clueride.auth.Secured;
 @Path("/invite")
 public class InviteWebService {
 
+    @Inject
+    private InviteService inviteService;
+
+    @GET
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Invite> getSessionInvites() {
+        return inviteService.getSessionInvites();
+    }
+
     @GET
     @Secured
     @Path("current-state")
     @Produces(MediaType.APPLICATION_JSON)
     public SessionInviteState getSessionInviteState() {
-        return SessionInviteState.ACCEPTED_INVITE;
+        return inviteService.getSessionInviteState();
     }
 
 }

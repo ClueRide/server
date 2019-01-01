@@ -18,6 +18,7 @@
 package com.clueride.config;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Defines interaction with configuration information.
@@ -47,5 +48,8 @@ public interface ConfigService {
 
     /** Account to be used during testing. */
     String getTestAccount();
+
+    /** Provides a Map between tokens and the matching email address which resides in Member table. */
+    Map<String, String> getTestAccountMap();
 
 }

@@ -1,5 +1,6 @@
-package com.clueride.domain.invite;/*
- * Copyright 2018 Jett Marks
+package com.clueride.domain.invite;
+/*
+ * Copyright 2016 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +14,21 @@ package com.clueride.domain.invite;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 12/24/18.
+ * Created by jett on 5/29/16.
  */
 
-public enum SessionInviteState {
-    ACCEPTED_INVITE,
-    DECLINED_INVITES,
-    OPEN_INVITE,
-    NO_INVITES,
-    MULTIPLE_INVITES,
+/**
+ * State of an Invite:
+ * <ul>
+ *     <li>INITIAL: After creation and through the sending of the invite</li>
+ *     <li>ACTIVE: Accepted and session established</li>
+ *     <li>DECLINED: Invite declined; may be reversed by guest</li>
+ *     <li>EXPIRED: Outing has completed; no longer valid.</li>
+ * </ul>
+ */
+public enum InviteState {
+    INITIAL,
+    ACTIVE,
+    DECLINED,
+    EXPIRED
 }
