@@ -59,6 +59,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member getMember(Integer id) {
+        LOGGER.debug("Requesting member with ID: {}", id);
+        return memberStore.getMemberById(id).build();
+    }
+
+    @Override
     public Member getMemberByEmail(String emailAddress) throws AddressException {
         LOGGER.debug("Requesting Member by email " + emailAddress);
         InternetAddress email = new InternetAddress(emailAddress);

@@ -28,12 +28,20 @@ import com.clueride.auth.identity.ClueRideIdentity;
  * Provides business-layer services for Members and their Badges.
  */
 public interface MemberService {
+
     /**
      * Returns the entire list of members contained within the store.
      * TODO: This won't be sustainable once we have a significant number of members, but it's sufficient for testing.
      * @return List of the Members currently defined.
      */
     List<Member> getAllMembers();
+
+    /**
+     * Given a Member's ID, retrieve the matching record.
+     * @param id Unique ID for the Member.
+     * @return matching Member.
+     */
+    Member getMember(Integer id);
 
     /**
      * Retrieve Member instances by Email Address (Principal).
