@@ -56,7 +56,8 @@ public class InviteStoreJpa implements InviteStore {
         List<Invite.Builder> builders;
         // TODO: Ordering and State should be part of the query
         builders = entityManager.createQuery(
-                "SELECT i FROM invite i where i.memberId = :memberId"
+                "SELECT i FROM invite i where i.memberId = :memberId AND i.inviteState " +
+                        "IN ('SENT', 'ACCEPTED', 'DECLINED')"
         ).setParameter("memberId", memberId)
                 .getResultList();
         return builders;

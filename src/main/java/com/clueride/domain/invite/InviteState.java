@@ -20,15 +20,17 @@ package com.clueride.domain.invite;
 /**
  * State of an Invite:
  * <ul>
- *     <li>INITIAL: After creation and through the sending of the invite</li>
- *     <li>ACTIVE: Accepted and session established</li>
+ *     <li>PROVISIONAL: After creation but prior to committing the team</li>
+ *     <li>SENT: After committing and sending the email</li>
+ *     <li>ACCEPTED: Accepted</li>
  *     <li>DECLINED: Invite declined; may be reversed by guest</li>
  *     <li>EXPIRED: Outing has completed; no longer valid.</li>
  * </ul>
  */
 public enum InviteState {
-    INITIAL,
-    ACTIVE,
+    PROVISIONAL,
+    SENT,
+    ACCEPTED,
     DECLINED,
-    EXPIRED
+    EXPIRED,
 }

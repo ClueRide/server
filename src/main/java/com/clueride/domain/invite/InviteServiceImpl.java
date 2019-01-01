@@ -93,11 +93,11 @@ public class InviteServiceImpl implements InviteService {
         }
         Invite.Builder soleInvite = sessionInvites.get(0);
         switch (soleInvite.getState()) {
-            case ACTIVE:
+            case ACCEPTED:
                 return SessionInviteState.ACCEPTED_INVITE;
             case DECLINED:
                 return SessionInviteState.DECLINED_INVITES;
-            case INITIAL:
+            case SENT:
                 return SessionInviteState.OPEN_INVITE;
             case EXPIRED:
                 return SessionInviteState.NO_INVITES;
