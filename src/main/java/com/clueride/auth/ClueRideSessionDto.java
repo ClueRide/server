@@ -20,6 +20,7 @@ package com.clueride.auth;
 import java.io.Serializable;
 
 import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 
 /**
@@ -28,6 +29,7 @@ import com.clueride.domain.account.principal.BadgeOsPrincipal;
 public class ClueRideSessionDto implements Serializable {
     private ClueRideIdentity clueRideIdentity = null;
     private BadgeOsPrincipal badgeOsPrincipal = null;
+    private Member member = null;
 
     public void setClueRideIdentity(ClueRideIdentity clueRideIdentity) {
         this.clueRideIdentity = clueRideIdentity;
@@ -45,4 +47,11 @@ public class ClueRideSessionDto implements Serializable {
         return badgeOsPrincipal;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

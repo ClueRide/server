@@ -18,7 +18,9 @@
 package com.clueride.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -65,6 +67,19 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public String getTestAccount() {
         return get("clueride.test.account");
+    }
+
+    @Override
+    public Map<String, String> getTestAccountMap() {
+        Map<String, String> testAccountMap = new HashMap<>();
+        List<? extends Config> testAccountConfigs = config.getConfigList("clueride.test.users");
+        for (Config config : testAccountConfigs) {
+            testAccountMap.put(
+                    config.getString("token"),
+                    config.getString("account")
+                    );
+        }
+        return testAccountMap;
     }
 
 }

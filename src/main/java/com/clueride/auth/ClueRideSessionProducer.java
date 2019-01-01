@@ -27,8 +27,11 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.clueride.RecordNotFoundException;
 import com.clueride.auth.access.AccessTokenService;
 import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.domain.account.member.Member;
+import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipalService;
 
 /**
@@ -44,6 +47,9 @@ public class ClueRideSessionProducer implements Serializable {
 
     @Inject
     private BadgeOsPrincipalService badgeOsPrincipalService;
+
+    @Inject
+    private MemberService memberService;
 
     private String accessToken;
 
@@ -66,11 +72,22 @@ public class ClueRideSessionProducer implements Serializable {
     @ClueRideSession
     /* Invoked once per session. */
     private ClueRideSessionDto produceClueRideSessionDto() {
-        ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(accessToken);
         ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
+
+        ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(accessToken);
         clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
+
         String emailAddressString = clueRideIdentity.getEmail().toString();
         clueRideSessionDto.setBadgeOSPrincipal(badgeOsPrincipalService.getBadgeOsPrincipal(emailAddressString));
+
+        try {
+            Member member = memberService.getMemberByEmail(clueRideIdentity.getEmail());
+            clueRideSessionDto.setMember(member);
+        } catch (RecordNotFoundException rnfe) {
+            // TODO: CA-409
+            LOGGER.error("Unable to find member record for email: {}", emailAddressString);
+        }
+
         return clueRideSessionDto;
     }
 

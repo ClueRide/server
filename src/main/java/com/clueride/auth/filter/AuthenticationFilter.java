@@ -19,13 +19,12 @@ package com.clueride.auth.filter;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
 
 import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.mail.internet.AddressException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -49,7 +48,7 @@ import com.clueride.domain.account.principal.PrincipalService;
  * This is also responsible for inserting the Principal into the Session.
  * The @Secured annotation on Jersey endpoints is what triggers this to be called.
  *
- * TODO: Consider moving some of this logic over to the AccessState service.
+ * TODO: CA-410 Consider moving some of this logic over to the AccessState service.
  */
 @Provider
 @Secured
@@ -70,6 +69,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
     private ConfigService configService;
+
+    private static Map<String, String> testAccountMap = null;
 
     /**
      * Using the @Provider annotation is forcing this to use the no-parameter constructor.
@@ -98,9 +99,17 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         /* Extract the token from the HTTP Authorization header. */
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
+        /* Lazy init */
+        if (testAccountMap == null) {
+            testAccountMap = configService.getTestAccountMap();
+        }
+
         String candidatePrincipalName;
         if (token.equals(configService.getTestToken())) {
             candidatePrincipalName = configService.getTestAccount();
+            buildClueRideIdentity(token, candidatePrincipalName);
+        } else if (testAccountMap.containsKey(token)) {
+            candidatePrincipalName = testAccountMap.get(token);
             buildClueRideIdentity(token, candidatePrincipalName);
         } else {
             try {

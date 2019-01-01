@@ -69,6 +69,10 @@ public class AccessStateServiceImpl implements AccessStateService {
                 LOGGER.info("Allowing Test Token");
                 return true;
             }
+            if (configService.getTestAccountMap().containsKey(token)) {
+                LOGGER.info("Allowing Configurable Test Token");
+                return true;
+            }
             try {
                 ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(token);
                 createOrUpdatePrincipal(clueRideIdentity);
@@ -102,7 +106,7 @@ public class AccessStateServiceImpl implements AccessStateService {
             throw(new RecordNotFoundException());
         }
 
-        // TODO: CA-405 connect new identities with updated records & test coverage.
+        // TODO: CA-409 connect new identities with updated records & test coverage.
         /* Check to see if we have a Member Record. */
         Member member = null;
         try {

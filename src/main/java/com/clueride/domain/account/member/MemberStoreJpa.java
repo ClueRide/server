@@ -44,7 +44,7 @@ public class MemberStoreJpa implements MemberStore {
 
     @Override
     public Member.Builder addNew(Member.Builder memberBuilder) {
-        // TODO: CA-405
+        // TODO: CA-405/CA-409
         try {
             userTransaction.begin();
             entityManager.persist(memberBuilder);
