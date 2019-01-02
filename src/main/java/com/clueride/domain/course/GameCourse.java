@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.course;
 
+import java.net.URL;
 import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
@@ -68,6 +69,11 @@ public class GameCourse implements Course {
 
     @Override
     public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public URL getUrl() {
         return null;
     }
 

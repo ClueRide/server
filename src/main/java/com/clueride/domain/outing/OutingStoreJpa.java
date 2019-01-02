@@ -22,6 +22,8 @@ import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * JPA-based implementation of OutingStore.
  */
@@ -36,6 +38,7 @@ public class OutingStoreJpa implements OutingStore {
 
     @Override
     public Outing.Builder getOutingById(Integer outingId) {
+        requireNonNull(outingId, "Must specify an outing ID");
         return entityManager.find(Outing.Builder.class, outingId);
     }
 
