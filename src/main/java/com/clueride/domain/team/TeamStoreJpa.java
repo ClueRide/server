@@ -38,36 +38,28 @@ public class TeamStoreJpa implements TeamStore {
     @Override
     public Team.Builder addNew(Team.Builder teamBuilder) {
         LOGGER.info("Creating a new Team: " + teamBuilder.getName());
-        entityManager.getTransaction().begin();
         entityManager.persist(teamBuilder);
-        entityManager.getTransaction().commit();
         return teamBuilder;
     }
 
     @Override
     public List<Team.Builder> getTeams() {
         LOGGER.info("Retrieving full list of Teams");
-        entityManager.getTransaction().begin();
         List<Team.Builder> builders = entityManager.createQuery("SELECT t FROM teamBuilder t").getResultList();
-        entityManager.getTransaction().commit();
         return builders;
     }
 
     @Override
     public Team.Builder getTeamById(Integer teamId) {
         LOGGER.info("Retrieving Team by ID: " + teamId);
-        entityManager.getTransaction().begin();
         Team.Builder builder = entityManager.find(Team.Builder.class, teamId);
-        entityManager.getTransaction().commit();
         return builder;
     }
 
     @Override
     public Team.Builder updateTeam(Team.Builder teamBuilder) {
         LOGGER.info("Updating an existing Team: " + teamBuilder.getId());
-        entityManager.getTransaction().begin();
         entityManager.merge(teamBuilder);
-        entityManager.getTransaction().commit();
         return teamBuilder;
     }
 

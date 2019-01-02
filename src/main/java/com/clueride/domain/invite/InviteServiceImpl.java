@@ -26,6 +26,14 @@ import javax.inject.Inject;
 
 import com.clueride.auth.ClueRideSession;
 import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.domain.account.member.Member;
+import com.clueride.domain.account.member.MemberService;
+import com.clueride.domain.course.Course;
+import com.clueride.domain.course.CourseService;
+import com.clueride.domain.outing.Outing;
+import com.clueride.domain.outing.OutingService;
+import com.clueride.domain.team.Team;
+import com.clueride.domain.team.TeamService;
 
 /**
  * Implementation of the {@link InviteService}.
@@ -36,8 +44,11 @@ public class InviteServiceImpl implements InviteService {
     @ClueRideSession
     private ClueRideSessionDto clueRideSessionDto;
 
-    @Inject
-    private InviteStore inviteStore;
+    @Inject private InviteStore inviteStore;
+    @Inject private OutingService outingService;
+    @Inject private MemberService memberService;
+    @Inject private TeamService teamService;
+    @Inject private CourseService courseService;
 
     @Override
     public List<Invite> getInvitationsForOuting(Integer outingId) {
@@ -61,8 +72,24 @@ public class InviteServiceImpl implements InviteService {
         Integer memberId = clueRideSessionDto.getMember().getId();
         List<Invite.Builder> inviteBuilders = inviteStore.getUpcomingInvitationsByMemberId(memberId);
         for (Invite.Builder builder : inviteBuilders) {
+
+            // TODO: CA-376 Consider plopping this down in the Session DTO instead of creating this here.
+            Outing outing = outingService.getById(builder.getOutingId());
+            builder.withScheduledTime(outing.getScheduledTime());
+
+            Member guide = memberService.getMember(outing.getGuideMemberId());
+            builder.withGuideName(guide.getDisplayName());
+
+            Team team = teamService.getTeam(outing.getTeamId());
+            builder.withTeamName(team.getName());
+
+            Course course = courseService.getById(outing.getCourseId());
+            builder.withCourseName(course.getName());
+            builder.withCourseUrl(course.getUrl());
+
             invites.add(builder.build());
         }
+
         return invites;
     }
 

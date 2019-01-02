@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.annotation.concurrent.Immutable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -82,7 +83,8 @@ public class Team {
 
         private String name;
 
-        @ManyToMany(cascade = CascadeType.ALL)
+        /* Without FetchType.EAGER, transaction ended before records were pulled. */
+        @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
         @JoinTable(
                 name="team_membership",
                 joinColumns = {@JoinColumn(name="team_id")},

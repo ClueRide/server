@@ -17,6 +17,9 @@
  */
 package com.clueride.domain.invite;
 
+import java.net.URL;
+import java.util.Date;
+
 import javax.annotation.concurrent.Immutable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,11 +41,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Immutable
 public class Invite {
-    private String token;
     private Integer memberId;
     private Integer outingId;
     private Integer id = null;
     private InviteState state;
+
+    /* Derived Fields */
+    private String guideName;
+    private String teamName;
+    private String courseName;
+    private URL courseUrl;
+    private Date scheduledTime;
 
     /**
      * Builds immutable instance of Invite from Builder instance.
@@ -50,15 +59,15 @@ public class Invite {
      * @param builder - Builder with all the data needed to construct Invite instance.
      */
     public Invite(Builder builder) {
-        this.token = builder.getToken();
         this.id = builder.getId();
         this.outingId = builder.getOutingId();
         this.memberId = builder.getMemberId();
         this.state = (builder.getState() != null) ? builder.getState() : InviteState.PROVISIONAL;
-    }
-
-    public String getToken() {
-        return token;
+        this.guideName = builder.getGuideName();
+        this.teamName = builder.getTeamName();
+        this.courseName = builder.getCourseName();
+        this.courseUrl = builder.getCourseUrl();
+        this.scheduledTime = builder.getScheduledTime();
     }
 
     public Integer getMemberId() {
@@ -73,16 +82,28 @@ public class Invite {
         return id;
     }
 
-    public void setState(InviteState state) {
-        this.state = state;
-    }
-
     public InviteState getState() {
         return state;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getGuideName() {
+        return guideName;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public URL getCourseUrl() {
+        return courseUrl;
+    }
+
+    public Date getScheduledTime() {
+        return scheduledTime;
     }
 
     @Override
@@ -104,17 +125,20 @@ public class Invite {
 
         @Column(name="member_id")
         private Integer memberId;
-        @Column(name="outing_id")       // TODO: Outing is not yet persisted in the JPA store.
+        @Column(name="outing_id")
         private Integer outingId;
-        @Column(name="team_id")         // TODO: Team is not yet persisted in the JPA store.
+        @Column(name="team_id")
         private Integer teamId;
 
         @Column(name="state")
         @Enumerated(EnumType.STRING)
         private InviteState inviteState;
 
-        @Transient
-        private String token;
+        @Transient private String guideName;
+        @Transient private String teamName;
+        @Transient private String courseName;
+        @Transient private URL courseUrl;
+        @Transient private Date scheduledTime;
 
         public static Builder builder() {
             return new Builder();
@@ -126,7 +150,12 @@ public class Invite {
                     .withOutingId(instance.getOutingId())
                     .withMemberId(instance.memberId)
                     .withState(instance.state)
-                    .withToken(instance.token);
+                    .withGuideName(instance.guideName)
+                    .withTeamName(instance.teamName)
+                    .withCourseName(instance.courseName)
+                    .withCourseUrl(instance.courseUrl)
+                    .withScheduledTime(instance.scheduledTime)
+                    ;
         }
 
         public Invite build() {
@@ -143,15 +172,6 @@ public class Invite {
 
         public Builder withMemberId(Integer memberId) {
             this.memberId = memberId;
-            return this;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public Builder withToken(String token) {
-            this.token = token;
             return this;
         }
 
@@ -185,6 +205,51 @@ public class Invite {
 
         public Builder withState(InviteState inviteState) {
             this.inviteState = inviteState;
+            return this;
+        }
+
+        public String getGuideName() {
+            return guideName;
+        }
+
+        public Builder withGuideName(String guideName) {
+            this.guideName = guideName;
+            return this;
+        }
+
+        public String getTeamName() {
+            return teamName;
+        }
+
+        public Builder withTeamName(String teamName) {
+            this.teamName = teamName;
+            return this;
+        }
+
+        public String getCourseName() {
+            return courseName;
+        }
+
+        public Builder withCourseName(String courseName) {
+            this.courseName = courseName;
+            return this;
+        }
+
+        public URL getCourseUrl() {
+            return courseUrl;
+        }
+
+        public Builder withCourseUrl(URL courseUrl) {
+            this.courseUrl = courseUrl;
+            return this;
+        }
+
+        public Date getScheduledTime() {
+            return scheduledTime;
+        }
+
+        public Builder withScheduledTime(Date scheduledTime) {
+            this.scheduledTime = scheduledTime;
             return this;
         }
 

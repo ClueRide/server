@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.course;
 
+import java.net.URL;
 import java.util.List;
 
 import com.clueride.domain.location.Location;
@@ -30,6 +31,7 @@ public interface Course {
     Integer getId();
     String getName();
     String getDescription();
+    URL getUrl();
     Integer getCourseTypeId();
     List<Step> getSteps();
     List<Integer> getPathIds();
