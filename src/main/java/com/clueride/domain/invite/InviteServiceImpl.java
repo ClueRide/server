@@ -34,6 +34,7 @@ import com.clueride.domain.outing.Outing;
 import com.clueride.domain.outing.OutingService;
 import com.clueride.domain.team.Team;
 import com.clueride.domain.team.TeamService;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of the {@link InviteService}.
@@ -52,16 +53,20 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public List<Invite> getInvitationsForOuting(Integer outingId) {
+        requireNonNull(outingId, "Outing ID must be supplied");
         return null;
     }
 
     @Override
     public Invite createNew(Integer outingId, Integer memberId) throws IOException {
+        requireNonNull(outingId, "Outing ID must be supplied");
+        requireNonNull(memberId, "Member ID must be supplied");
         return null;
     }
 
     @Override
     public List<Invite> send(Integer outingId) {
+        requireNonNull(outingId, "Outing ID must be supplied");
         return null;
     }
 
@@ -95,16 +100,19 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public Invite accept(Integer inviteId) {
-        return null;
+        requireNonNull(inviteId, "Invite ID must be supplied");
+        return inviteStore.accept(inviteId).build();
     }
 
     @Override
     public Invite decline(Integer inviteId) {
-        return null;
+        requireNonNull(inviteId, "Invite ID must be supplied");
+        return inviteStore.decline(inviteId).build();
     }
 
     @Override
     public Invite expire(Integer teamId) {
+        requireNonNull(teamId, "Team ID must be supplied");
         return null;
     }
 

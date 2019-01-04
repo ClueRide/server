@@ -21,7 +21,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -49,6 +51,22 @@ public class InviteWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public SessionInviteState getSessionInviteState() {
         return inviteService.getSessionInviteState();
+    }
+
+    @POST
+    @Secured
+    @Path("accept/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Invite acceptInvite(@PathParam("id") Integer inviteId) {
+        return inviteService.accept(inviteId);
+    }
+
+    @POST
+    @Secured
+    @Path("decline/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Invite declineInvite(@PathParam("id") Integer inviteId) {
+        return inviteService.decline(inviteId);
     }
 
 }
