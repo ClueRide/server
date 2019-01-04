@@ -20,9 +20,16 @@ package com.clueride.domain.invite;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.slf4j.Logger;
 
@@ -37,11 +44,12 @@ public class InviteStoreJpa implements InviteStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @Override
     public Integer addNew(Invite.Builder builder) throws IOException {
-        entityManager.getTransaction().begin();
         entityManager.persist(builder);
-        entityManager.getTransaction().commit();
         return builder.getId();
     }
 
@@ -54,10 +62,14 @@ public class InviteStoreJpa implements InviteStore {
     public List<Invite.Builder> getUpcomingInvitationsByMemberId(Integer memberId) {
         LOGGER.debug("Retrieving invitations for member ID " + memberId);
         List<Invite.Builder> builders;
-        // TODO: Ordering and State should be part of the query
+        // TODO: Ordering should be part of the query
         builders = entityManager.createQuery(
                 "SELECT i FROM invite i where i.memberId = :memberId AND i.inviteState " +
-                        "IN ('SENT', 'ACCEPTED', 'DECLINED')"
+                        "IN (" +
+                          "com.clueride.domain.invite.InviteState.SENT," +
+                          "com.clueride.domain.invite.InviteState.ACCEPTED," +
+                          "com.clueride.domain.invite.InviteState.DECLINED" +
+                        ")"
         ).setParameter("memberId", memberId)
                 .getResultList();
         return builders;
@@ -65,17 +77,36 @@ public class InviteStoreJpa implements InviteStore {
 
     @Override
     public Invite.Builder getInvitationById(Integer inviteId) {
-        entityManager.getTransaction().begin();
-        Invite.Builder builder = entityManager.find(Invite.Builder.class, inviteId);
-        entityManager.getTransaction().commit();
-        return builder;
+        return entityManager.find(Invite.Builder.class, inviteId);
     }
 
     @Override
     public Invite.Builder save(Invite.Builder builder) {
-        entityManager.getTransaction().begin();
         entityManager.persist(builder);
-        entityManager.getTransaction().commit();
+        return builder;
+    }
+
+    @Override
+    public Invite.Builder accept(Integer inviteId) {
+        return updateState(inviteId, InviteState.ACCEPTED);
+    }
+
+    @Override
+    public Invite.Builder decline(Integer inviteId) {
+        return updateState(inviteId, InviteState.DECLINED);
+    }
+
+    private Invite.Builder updateState(Integer inviteId, InviteState state) {
+        Invite.Builder builder = null;
+        try {
+            userTransaction.begin();
+            builder = getInvitationById(inviteId);
+            builder.withState(state);
+            entityManager.merge(builder);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | HeuristicRollbackException | HeuristicMixedException | RollbackException e) {
+            e.printStackTrace();
+        }
         return builder;
     }
 

@@ -61,4 +61,20 @@ public interface InviteStore {
      */
     Invite.Builder save(Invite.Builder builder);
 
+    /**
+     * Accept the invitation identified by the given inviteId.
+     * @param inviteId unique identifier for this invite (each player gets a separate invite although
+     *                 the invite will have much in common with other invites).
+     * @return The updated instance of the Invite.
+     */
+    Invite.Builder accept(Integer inviteId);
+
+    /**
+     * Decline the invitation identified by the given inviteId.
+     * @param inviteId unique identifier for this invite (each player gets a separate invite although
+     *                 the invite will have much in common with other invites).
+     * @return The updated instance of the Invite.
+     */
+    Invite.Builder decline(Integer inviteId);
+
 }
