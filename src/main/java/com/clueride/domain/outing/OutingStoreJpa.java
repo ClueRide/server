@@ -42,4 +42,10 @@ public class OutingStoreJpa implements OutingStore {
         return entityManager.find(Outing.Builder.class, outingId);
     }
 
+    @Override
+    public OutingView.Builder getOutingViewById(Integer outingId) {
+        requireNonNull(outingId, "Must specify an outing ID");
+        return entityManager.find(OutingView.Builder.class, outingId);
+    }
+
 }

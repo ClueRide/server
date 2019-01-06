@@ -28,4 +28,11 @@ public interface OutingService {
      */
     Outing getById(Integer outingId);
 
+    /**
+     * Given an ID, retrieve the {@link OutingView} identified by that ID.
+     * @param outingId Unique integer representing the OutingView.
+     * @return Matching OutingView.
+     */
+    OutingView getViewById(Integer outingId);
+
 }

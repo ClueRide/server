@@ -39,4 +39,11 @@ public interface OutingStore {
      */
     Outing.Builder getOutingById(Integer outingId);
 
+    /**
+     * Given a specific Outing Identifier, return the matching {@link OutingView} instance.
+     * @param outingId - Integer ID for the OutingView.
+     * @return Matching OutingView.
+     */
+    OutingView.Builder getOutingViewById(Integer outingId);
+
 }

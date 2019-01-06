@@ -42,4 +42,13 @@ public class OutingWebService {
         return outingService.getById(outingId);
     }
 
+    @GET
+    @Secured
+    @Path("view/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public OutingView getOutingViewById(@PathParam("id") Integer outingId) {
+        return outingService.getViewById(outingId);
+    }
+
+
 }
