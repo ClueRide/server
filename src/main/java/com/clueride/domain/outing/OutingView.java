@@ -53,6 +53,7 @@ public class OutingView {
     private final String courseDescription;
     private final URL courseUrl;
     private final String guideName;
+    private final Integer guideMemberId;
     private final String teamName;
 
     public OutingView(Builder builder) {
@@ -63,6 +64,7 @@ public class OutingView {
         this.courseDescription = builder.getCourseDescription();
         this.courseUrl = builder.getCourseUrl();
         this.guideName = builder.getGuideName();
+        this.guideMemberId = builder.getGuideMemberId();
         this.teamName = builder.getTeamName();
     }
 
@@ -94,6 +96,10 @@ public class OutingView {
         return guideName;
     }
 
+    public Integer getGuideMemberId() {
+        return guideMemberId;
+    }
+
     public String getTeamName() {
         return teamName;
     }
@@ -123,6 +129,7 @@ public class OutingView {
         @Column(name="course_description") private String courseDescription;
         @Column(name="course_url") private String courseUrlAsString;
         @Column(name="guide_name") private String guideName;
+        @Column(name="guide_id") private Integer guideMemberId;
         @Column(name="team_name") private String teamName;
         @Column(name="node_id") private Integer nodeId;
         @Column(name="lat") private Double lat;
@@ -150,6 +157,7 @@ public class OutingView {
                     .withCourseDescription(instance.getCourseDescription())
                     .withCourseUrl(instance.getCourseUrl())
                     .withGuideName(instance.getGuideName())
+                    .withGuideMemberId(instance.getGuideMemberId())
                     .withTeamName(instance.getTeamName())
                     ;
         }
@@ -239,6 +247,15 @@ public class OutingView {
             return this;
         }
 
+        public Integer getGuideMemberId() {
+            return guideMemberId;
+        }
+
+        public Builder withGuideMemberId(Integer guideMemberId) {
+            this.guideMemberId = guideMemberId;
+            return this;
+        }
+
         public String getTeamName() {
             return teamName;
         }
@@ -292,6 +309,7 @@ public class OutingView {
         public String toString() {
             return ToStringBuilder.reflectionToString(this);
         }
+
     }
 
 }
