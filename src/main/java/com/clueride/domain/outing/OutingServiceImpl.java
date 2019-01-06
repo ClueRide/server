@@ -33,8 +33,14 @@ public class OutingServiceImpl implements OutingService {
 
     @Override
     public Outing getById(Integer outingId) {
-        LOGGER.info("Retrieving outing for ID: {}", outingId);
+        LOGGER.debug("Retrieving outing for ID: {}", outingId);
         return outingStore.getOutingById(outingId).build();
+    }
+
+    @Override
+    public OutingView getViewById(Integer outingId) {
+        LOGGER.debug("Retrieving outing view for ID: {}", outingId);
+        return outingStore.getOutingViewById(outingId).build();
     }
 
 }
