@@ -20,6 +20,8 @@ package com.clueride.domain.invite;
 import java.io.IOException;
 import java.util.List;
 
+import com.clueride.domain.account.member.Member;
+
 /**
  * Service supporting the Invite Model which ties together an Outing and a Member.
  */
@@ -47,7 +49,7 @@ public interface InviteService {
      * is needed.
      * TODO: Inviting an entire team makes more sense.
      * @param outingId The identifier for the Outing which we're inviting people to attend.
-     * @param memberId Unique identifier for the person who we invite.
+     * @param memberId Unique identifier for the person ({@link Member}) who we invite.
      * @return Fully-populated Invite instance.
      */
     Invite createNew(Integer outingId, Integer memberId) throws IOException;
@@ -67,6 +69,20 @@ public interface InviteService {
      * @return List of Invitations for the Session's Principal.
      */
     List<Invite> getSessionInvites();
+
+    /**
+     * Once the session is established, we know what the next invite is and have placed it within the session; this
+     * retrieves that Invite.
+     * @return the next Invite coming up.
+     */
+    Invite getNextInvite();
+
+    /**
+     * Given a Member ID, we're able to list the invitations that are available for that Member.
+     * @param memberId unique identifier for a {@link Member}.
+     * @return Matching list of Invites for the given Member ID.
+     */
+    List<Invite> getMemberInvites(Integer memberId);
 
     /**
      * Invoked when the user wants to Accept (or re-Accept) an invitation.
@@ -96,4 +112,14 @@ public interface InviteService {
      */
     SessionInviteState getSessionInviteState();
 
+    /**
+     * For a given Member ID, tell us what the state of invitations would be.
+     *
+     * This is the work done by {@link this.getSessionInviteState()} once the Member ID
+     * is pulled from the session. If we don't have a session, but we do have the Member ID,
+     * then we can call this method directly.
+     * @param memberId unique identifier for the Member we're interested in.
+     * @return Enumeration summarizing the state of all invites for this Member.
+     */
+    SessionInviteState getInviteState(Integer memberId);
 }

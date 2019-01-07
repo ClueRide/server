@@ -36,6 +36,14 @@ public class OutingWebService {
 
     @GET
     @Secured
+    @Path("active")
+    @Produces(MediaType.APPLICATION_JSON)
+    public OutingView getActiveOuting() {
+        return outingService.getActiveOutingView();
+    }
+
+    @GET
+    @Secured
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Outing getOutingById(@PathParam("id") Integer outingId) {

@@ -35,4 +35,11 @@ public interface OutingService {
      */
     OutingView getViewById(Integer outingId);
 
+    /**
+     * Once the session is established, we'll know which Outing the player will be engaging; this retrieves that
+     * {@link OutingView}.
+     * @return the Active Outing which is the one within the player's session.
+     */
+    OutingView getActiveOutingView();
+
 }

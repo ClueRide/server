@@ -18,6 +18,7 @@
 package com.clueride.auth;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
@@ -33,9 +34,15 @@ import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipalService;
+import com.clueride.domain.invite.Invite;
+import com.clueride.domain.invite.InviteService;
+import com.clueride.domain.outing.OutingService;
+import com.clueride.domain.outing.OutingView;
 
 /**
  * Responds to the Event that requests placing Principal instances into user's session.
+ *
+ * Design on the Wiki: http://bikehighways.wikidot.com/principal-into-session.
  */
 @RequestScoped
 public class ClueRideSessionProducer implements Serializable {
@@ -49,18 +56,15 @@ public class ClueRideSessionProducer implements Serializable {
     private BadgeOsPrincipalService badgeOsPrincipalService;
 
     @Inject
+    private InviteService inviteService;
+
+    @Inject
     private MemberService memberService;
 
-    private String accessToken;
+    @Inject
+    private OutingService outingService;
 
-//    @Inject
-//    public ClueRideSessionProducer(
-//            AccessTokenService accessTokenService,
-//            BadgeOsPrincipalService badgeOsPrincipalService
-//    ) {
-//        this.accessTokenService = accessTokenService;
-//        this.badgeOsPrincipalService = badgeOsPrincipalService;
-//    }
+    private String accessToken;
 
     /* Records the key info each time a request is made. */
     public void handleUserRegisteredEvent(@Observes @ClueRideSession String accessToken) {
@@ -72,23 +76,54 @@ public class ClueRideSessionProducer implements Serializable {
     @ClueRideSession
     /* Invoked once per session. */
     private ClueRideSessionDto produceClueRideSessionDto() {
+        LOGGER.debug("Instantiating a Session DTO for auth token {}", accessToken);
+
         ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
 
         ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(accessToken);
         clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
 
-        String emailAddressString = clueRideIdentity.getEmail().toString();
-        clueRideSessionDto.setBadgeOSPrincipal(badgeOsPrincipalService.getBadgeOsPrincipal(emailAddressString));
+        String emailAddressString = addBadgeOsPrincipal(clueRideSessionDto, clueRideIdentity);
 
-        try {
-            Member member = memberService.getMemberByEmail(clueRideIdentity.getEmail());
-            clueRideSessionDto.setMember(member);
-        } catch (RecordNotFoundException rnfe) {
-            // TODO: CA-409
-            LOGGER.error("Unable to find member record for email: {}", emailAddressString);
+        Integer memberId = addMember(clueRideSessionDto, clueRideIdentity, emailAddressString);
+
+        if (memberId != null) {
+            addInviteAndOuting(clueRideSessionDto, memberId);
         }
 
         return clueRideSessionDto;
+    }
+
+    private String addBadgeOsPrincipal(ClueRideSessionDto clueRideSessionDto, ClueRideIdentity clueRideIdentity) {
+        String emailAddressString = clueRideIdentity.getEmail().toString();
+        clueRideSessionDto.setBadgeOSPrincipal(badgeOsPrincipalService.getBadgeOsPrincipal(clueRideIdentity.getEmail()));
+        return emailAddressString;
+    }
+
+    private Integer addMember(ClueRideSessionDto clueRideSessionDto, ClueRideIdentity clueRideIdentity, String emailAddressString) {
+        Integer memberId = null;
+        try {
+            Member member = memberService.getMemberByEmail(clueRideIdentity.getEmail());
+            clueRideSessionDto.setMember(member);
+            memberId = member.getId();
+        } catch (RecordNotFoundException rnfe) {
+            // TODO: CA-409 (maybe throw RuntimeException about data records amiss?)
+            LOGGER.error("Unable to find member record for email: {}", emailAddressString);
+        }
+        return memberId;
+    }
+
+    private void addInviteAndOuting(ClueRideSessionDto clueRideSessionDto, Integer memberId) {
+        List<Invite> invites = inviteService.getMemberInvites(memberId);
+        if (invites.size() > 0) {
+            /* The session only cares about the next one coming up. */
+            Invite invite = invites.get(0);
+            clueRideSessionDto.setInvite(invite);
+
+            /* Check if we can retrieve the Outing. */
+            OutingView outingView = outingService.getViewById(invite.getOutingId());
+            clueRideSessionDto.setOutingView(outingView);
+        }
     }
 
 }
