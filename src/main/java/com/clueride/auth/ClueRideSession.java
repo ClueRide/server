@@ -28,7 +28,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Marker Annotation for the ConversationScoped classes supporting a ClueRideSession.
+ * Marker Annotation for the Events supporting a ClueRideSession.
  */
 @Qualifier
 @Retention(RUNTIME)

@@ -72,13 +72,22 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public List<Invite> getSessionInvites() {
+        Integer memberId = clueRideSessionDto.getMember().getId();
+        return getMemberInvites(memberId);
+    }
+
+    @Override
+    public Invite getNextInvite() {
+        return clueRideSessionDto.getInvite();
+    }
+
+    @Override
+    public List<Invite> getMemberInvites(Integer memberId) {
         List<Invite> invites = new ArrayList<>();
 
-        Integer memberId = clueRideSessionDto.getMember().getId();
         List<Invite.Builder> inviteBuilders = inviteStore.getUpcomingInvitationsByMemberId(memberId);
         for (Invite.Builder builder : inviteBuilders) {
 
-            // TODO: CA-376 Consider plopping this down in the Session DTO instead of creating this here.
             Outing outing = outingService.getById(builder.getOutingId());
             builder.withScheduledTime(outing.getScheduledTime());
 
@@ -119,6 +128,11 @@ public class InviteServiceImpl implements InviteService {
     @Override
     public SessionInviteState getSessionInviteState() {
         Integer memberId = clueRideSessionDto.getMember().getId();
+        return getInviteState(memberId);
+    }
+
+    @Override
+    public SessionInviteState getInviteState(Integer memberId) {
         List<Invite.Builder> sessionInvites = inviteStore.getUpcomingInvitationsByMemberId(memberId);
         if (sessionInvites.size() == 0) {
             return SessionInviteState.NO_INVITES;

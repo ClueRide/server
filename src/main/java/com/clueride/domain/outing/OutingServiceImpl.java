@@ -17,9 +17,13 @@
  */
 package com.clueride.domain.outing;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
+
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
 
 /**
  * Implementation of OutingService.
@@ -27,6 +31,11 @@ import org.slf4j.Logger;
 public class OutingServiceImpl implements OutingService {
     @Inject
     private Logger LOGGER;
+
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
 
     @Inject
     private OutingStore outingStore;
@@ -41,6 +50,11 @@ public class OutingServiceImpl implements OutingService {
     public OutingView getViewById(Integer outingId) {
         LOGGER.debug("Retrieving outing view for ID: {}", outingId);
         return outingStore.getOutingViewById(outingId).build();
+    }
+
+    @Override
+    public OutingView getActiveOutingView() {
+        return clueRideSessionDto.getOutingView();
     }
 
 }

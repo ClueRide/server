@@ -47,6 +47,14 @@ public class InviteWebService {
 
     @GET
     @Secured
+    @Path("next")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Invite getNextInvite() {
+        return inviteService.getNextInvite();
+    }
+
+    @GET
+    @Secured
     @Path("current-state")
     @Produces(MediaType.APPLICATION_JSON)
     public SessionInviteState getSessionInviteState() {
