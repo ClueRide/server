@@ -75,7 +75,7 @@ public class MemberServiceImplTest extends NgCdiRunner {
     public void testGetMemberByEmail() throws Exception {
         Member expected = member;
         assertNotNull(memberStore);
-        when(memberStore.getMemberByEmail(any(InternetAddress.class))).thenReturn(Member.Builder.from(expected));
+        when(memberStore.getMemberByEmail(any(InternetAddress.class))).thenReturn(MemberBuilder.from(expected));
 
         Member actual = toTest.getMemberByEmail(goodAddress.getAddress());
         assertEquals(actual, expected);

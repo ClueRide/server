@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 
 import com.clueride.aop.AopDummyService;
 import com.clueride.aop.AopServiceConsumerImpl;
-import com.clueride.domain.badge.event.BadgeEvent;
+import com.clueride.domain.badge.event.BadgeEventBuilder;
 import com.clueride.domain.badge.event.BadgeEventService;
 import com.clueride.util.Resources;
 import com.clueride.util.TestOnly;
@@ -165,7 +165,7 @@ public class BadgeCaptureInterceptorTest extends NgCdiRunner {
         }
 
         /* verify results */
-        verify(badgeEventService, times(0)).send(any(BadgeEvent.Builder.class));
+        verify(badgeEventService, times(0)).send(any(BadgeEventBuilder.class));
     }
 
 }

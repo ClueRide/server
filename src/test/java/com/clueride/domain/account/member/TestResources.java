@@ -29,7 +29,7 @@ public class TestResources {
     @Produces
     @TestOnly
     Member produceMember() {
-        return Member.Builder.builder()
+        return MemberBuilder.builder()
                 .withEmailAddress("test.email@clueride.com")
                 .build();
     }

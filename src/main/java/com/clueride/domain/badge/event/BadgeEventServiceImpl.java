@@ -44,7 +44,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     @Inject
     private Logger LOGGER;
 
-    private static BlockingQueue<BadgeEvent.Builder> eventQueue = new LinkedTransferQueue<>();
+    private static BlockingQueue<BadgeEventBuilder> eventQueue = new LinkedTransferQueue<>();
     private static Thread workerThread = null;
     private boolean runnable = true;
 
@@ -66,7 +66,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     }
 
     @Override
-    public void send(BadgeEvent.Builder badgeEvent) {
+    public void send(BadgeEventBuilder badgeEvent) {
         try {
             synchronized(eventQueue) {
                 eventQueue.put(badgeEvent);
@@ -78,7 +78,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
 
     @Override
     public BadgeEvent getBadgeEventById(Integer badgeEventId) {
-        BadgeEvent.Builder badgeEventBuilder = badgeEventStore.getById(badgeEventId);
+        BadgeEventBuilder badgeEventBuilder = badgeEventStore.getById(badgeEventId);
 //        fillDbBuilder(badgeEventBuilder);
         return badgeEventBuilder.build();
     }
@@ -93,7 +93,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
 //        );
 //    }
 
-    private void fillClientBuilder(BadgeEvent.Builder badgeEventBuilder) throws AddressException {
+    private void fillClientBuilder(BadgeEventBuilder badgeEventBuilder) throws AddressException {
         BadgeOsPrincipal principal = (BadgeOsPrincipal) badgeEventBuilder.getPrincipal();
         Integer memberId = memberService.getMemberByEmail(
                 principal.getEmailAddress().toString()
@@ -107,7 +107,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
         @Override
         public void run() {
             while (runnable) {
-                BadgeEvent.Builder badgeEventBuilder = null;
+                BadgeEventBuilder badgeEventBuilder = null;
                 try {
                     badgeEventBuilder = eventQueue.take();
                     fillClientBuilder(badgeEventBuilder);

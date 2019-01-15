@@ -36,8 +36,8 @@ public class BadgeStoreJpa implements BadgeStore {
     private EntityManager entityManager;
 
     @Override
-    public List<Badge.Builder> getAwardedBadgesForUser(Integer userId) {
-        List<Badge.Builder> builderList;
+    public List<BadgeBuilder> getAwardedBadgesForUser(Integer userId) {
+        List<BadgeBuilder> builderList;
         builderList = entityManager.createQuery(
                     "SELECT b FROM badge_display_per_user b WHERE b.userId = :userId"
         )

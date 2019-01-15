@@ -50,9 +50,9 @@ public class MemberServiceImpl implements MemberService {
     /* TODO: Testing only; not an actual call that needs BadgeCapture. */
     public List<Member> getAllMembers() {
         LOGGER.debug("Requesting All Members");
-        List<Member.Builder> builders = memberStore.getAllMembers();
+        List<MemberBuilder> builders = memberStore.getAllMembers();
         List<Member> members = new ArrayList<>();
-        for (Member.Builder builder : builders) {
+        for (MemberBuilder builder : builders) {
             members.add(builder.build());
         }
         return members;
@@ -68,14 +68,14 @@ public class MemberServiceImpl implements MemberService {
     public Member getMemberByEmail(String emailAddress) throws AddressException {
         LOGGER.debug("Requesting Member by email " + emailAddress);
         InternetAddress email = new InternetAddress(emailAddress);
-        Member.Builder builder = memberStore.getMemberByEmail(email);
+        MemberBuilder builder = memberStore.getMemberByEmail(email);
         return builder.build();
     }
 
     @Override
     public Member getMemberByEmail(InternetAddress emailAddress) {
         try {
-            Member.Builder builder = memberStore.getMemberByEmail(emailAddress);
+            MemberBuilder builder = memberStore.getMemberByEmail(emailAddress);
             return builder.build();
         } catch (NoResultException nre) {
             throw new RecordNotFoundException("criteria: " + emailAddress.getAddress());
@@ -85,8 +85,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     // TODO: CA-405 connect this more tightly
     public Member createNewMember(ClueRideIdentity clueRideIdentity) {
-        Member.Builder memberBuilder = memberStore.addNew(
-                Member.Builder.from(clueRideIdentity)
+        MemberBuilder memberBuilder = memberStore.addNew(
+                MemberBuilder.from(clueRideIdentity)
         );
         return memberBuilder.build();
     }

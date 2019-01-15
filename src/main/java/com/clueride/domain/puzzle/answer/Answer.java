@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.puzzle.Puzzle;
+import com.clueride.domain.puzzle.PuzzleBuilder;
 
 /**
  * Copyright 2015 Jett Marks
@@ -44,7 +44,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "puzzle_id")
-    private Puzzle.Builder puzzleBuilder;
+    private PuzzleBuilder puzzleBuilder;
 
     @Column(name = "answer_key") private AnswerKey answerKey;
     @Column(name = "answer") private String answer;
@@ -83,7 +83,7 @@ public class Answer {
         return this;
     }
 
-    public Answer withPuzzleBuilder(Puzzle.Builder puzzleBuilder) {
+    public Answer withPuzzleBuilder(PuzzleBuilder puzzleBuilder) {
         this.puzzleBuilder = puzzleBuilder;
         return this;
     }

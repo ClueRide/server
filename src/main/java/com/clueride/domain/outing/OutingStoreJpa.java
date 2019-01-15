@@ -32,20 +32,20 @@ public class OutingStoreJpa implements OutingStore {
     private EntityManager entityManager;
 
     @Override
-    public Integer addNew(Outing.Builder builder) throws IOException {
+    public Integer addNew(OutingViewBuilder builder) throws IOException {
         return null;
     }
 
     @Override
-    public Outing.Builder getOutingById(Integer outingId) {
+    public OutingViewBuilder getOutingById(Integer outingId) {
         requireNonNull(outingId, "Must specify an outing ID");
-        return entityManager.find(Outing.Builder.class, outingId);
+        return entityManager.find(OutingViewBuilder.class, outingId);
     }
 
     @Override
-    public OutingView.Builder getOutingViewById(Integer outingId) {
+    public OutingViewBuilder getOutingViewById(Integer outingId) {
         requireNonNull(outingId, "Must specify an outing ID");
-        return entityManager.find(OutingView.Builder.class, outingId);
+        return entityManager.find(OutingViewBuilder.class, outingId);
     }
 
 }

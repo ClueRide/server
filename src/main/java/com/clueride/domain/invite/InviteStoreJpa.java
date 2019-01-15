@@ -48,20 +48,20 @@ public class InviteStoreJpa implements InviteStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Integer addNew(Invite.Builder builder) throws IOException {
+    public Integer addNew(InviteBuilder builder) throws IOException {
         entityManager.persist(builder);
         return builder.getId();
     }
 
     @Override
-    public List<Invite.Builder> getInvitationsByOuting(Integer outingId) {
+    public List<InviteBuilder> getInvitationsByOuting(Integer outingId) {
         return null;
     }
 
     @Override
-    public List<Invite.Builder> getUpcomingInvitationsByMemberId(Integer memberId) {
+    public List<InviteBuilder> getUpcomingInvitationsByMemberId(Integer memberId) {
         LOGGER.debug("Retrieving invitations for member ID " + memberId);
-        List<Invite.Builder> builders;
+        List<InviteBuilder> builders;
         // TODO: Ordering should be part of the query
         builders = entityManager.createQuery(
                 "SELECT i FROM invite i where i.memberId = :memberId AND i.inviteState " +
@@ -76,28 +76,28 @@ public class InviteStoreJpa implements InviteStore {
     }
 
     @Override
-    public Invite.Builder getInvitationById(Integer inviteId) {
-        return entityManager.find(Invite.Builder.class, inviteId);
+    public InviteBuilder getInvitationById(Integer inviteId) {
+        return entityManager.find(InviteBuilder.class, inviteId);
     }
 
     @Override
-    public Invite.Builder save(Invite.Builder builder) {
+    public InviteBuilder save(InviteBuilder builder) {
         entityManager.persist(builder);
         return builder;
     }
 
     @Override
-    public Invite.Builder accept(Integer inviteId) {
+    public InviteBuilder accept(Integer inviteId) {
         return updateState(inviteId, InviteState.ACCEPTED);
     }
 
     @Override
-    public Invite.Builder decline(Integer inviteId) {
+    public InviteBuilder decline(Integer inviteId) {
         return updateState(inviteId, InviteState.DECLINED);
     }
 
-    private Invite.Builder updateState(Integer inviteId, InviteState state) {
-        Invite.Builder builder = null;
+    private InviteBuilder updateState(Integer inviteId, InviteState state) {
+        InviteBuilder builder = null;
         try {
             userTransaction.begin();
             builder = getInvitationById(inviteId);

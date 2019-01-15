@@ -43,7 +43,7 @@ public class OutingServiceImpl implements OutingService {
     @Override
     public Outing getById(Integer outingId) {
         LOGGER.debug("Retrieving outing for ID: {}", outingId);
-        return outingStore.getOutingById(outingId).build();
+        return new Outing(outingStore.getOutingById(outingId));
     }
 
     @Override

@@ -53,8 +53,8 @@ public class BadgeServiceImpl implements BadgeService {
         Integer userId = badgeOsPrincipal.getBadgeOsUserId();
         List<Badge> badgeList = new ArrayList<>();
         LOGGER.info("Looking up Badges for User ID " + userId);
-        List<Badge.Builder> builderList = badgeStore.getAwardedBadgesForUser(userId);
-        for (Badge.Builder builder : builderList) {
+        List<BadgeBuilder> builderList = badgeStore.getAwardedBadgesForUser(userId);
+        for (BadgeBuilder builder : builderList) {
             builder.withBadgeType(badgeTypeService.getTypeOfBadge(builder));
             badgeList.add(builder.build());
         }

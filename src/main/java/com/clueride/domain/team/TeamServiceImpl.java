@@ -50,8 +50,8 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<Team> getTeams() {
         List<Team> teams = new ArrayList<>();
-        List<Team.Builder> builders = teamStore.getTeams();
-        for (Team.Builder builder : builders) {
+        List<TeamBuilder> builders = teamStore.getTeams();
+        for (TeamBuilder builder : builders) {
             teams.add(builder.build());
         }
         return teams;
@@ -66,14 +66,14 @@ public class TeamServiceImpl implements TeamService {
     public Team addMember(Integer teamId, Member newMember) {
         Member member = memberService.getMember(newMember.getId());
         LOGGER.info("Adding Member " + member.getDisplayName() + " to team " + teamId);
-        Team.Builder teamBuilder = teamStore.getTeamById(teamId);
+        TeamBuilder teamBuilder = teamStore.getTeamById(teamId);
         teamBuilder.withNewMember(member);
         return teamStore.updateTeam(teamBuilder).build();
     }
 
     @Override
     public Team newTeam(String name) {
-        Team.Builder teamBuilder = Team.Builder.builder()
+        TeamBuilder teamBuilder = TeamBuilder.builder()
                 .withName(name);
         return teamStore.addNew(teamBuilder).build();
     }

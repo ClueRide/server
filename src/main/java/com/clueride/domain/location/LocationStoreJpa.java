@@ -45,7 +45,7 @@ public class LocationStoreJpa implements LocationStore {
     }
 
     @Override
-    public Integer addNew(Location.Builder locationBuilder) throws IOException {
+    public Integer addNew(LocationBuilder locationBuilder) throws IOException {
         entityManager.getTransaction().begin();
         entityManager.persist(locationBuilder);
         entityManager.getTransaction().commit();
@@ -58,9 +58,9 @@ public class LocationStoreJpa implements LocationStore {
     }
 
     @Override
-    public Location.Builder getLocationBuilderById(Integer id) {
+    public LocationBuilder getLocationBuilderById(Integer id) {
         entityManager.getTransaction().begin();
-        Location.Builder locationBuilder = entityManager.find(Location.Builder.class, id);
+        LocationBuilder locationBuilder = entityManager.find(LocationBuilder.class, id);
         entityManager.getTransaction().commit();
         return locationBuilder;
     }
@@ -68,8 +68,8 @@ public class LocationStoreJpa implements LocationStore {
     @Override
     public Collection<Location> getLocations() {
         Collection<Location> locations = new ArrayList<>();
-        Collection<Location.Builder> builderCollection = getLocationBuilders();
-        for (Location.Builder builder : builderCollection) {
+        Collection<LocationBuilder> builderCollection = getLocationBuilders();
+        for (LocationBuilder builder : builderCollection) {
             try {
                 locations.add(builder.build());
             } catch (IllegalStateException ise) {
@@ -80,10 +80,10 @@ public class LocationStoreJpa implements LocationStore {
     }
 
     @Override
-    public Collection<Location.Builder> getLocationBuilders() {
-        Collection<Location.Builder> builderCollection = new ArrayList<>();
+    public Collection<LocationBuilder> getLocationBuilders() {
+        Collection<LocationBuilder> builderCollection = new ArrayList<>();
         entityManager.getTransaction().begin();
-        List<Location.Builder> locationList = entityManager.createQuery(
+        List<LocationBuilder> locationList = entityManager.createQuery(
                 "SELECT l FROM location l"
         ).getResultList();
         entityManager.getTransaction().commit();
@@ -101,7 +101,7 @@ public class LocationStoreJpa implements LocationStore {
     }
 
     @Override
-    public void update(Location.Builder locationBuilder) {
+    public void update(LocationBuilder locationBuilder) {
         entityManager.getTransaction().begin();
         entityManager.persist(locationBuilder);
         entityManager.getTransaction().commit();

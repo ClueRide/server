@@ -33,15 +33,15 @@ public class BadgeOsPrincipalStoreJpa implements BadgeOsPrincipalStore {
     private EntityManager entityManager;
 
     @Override
-    public BadgeOsPrincipal.Builder getBadgeOsPrincipalForEmailAddress(InternetAddress emailAddress) {
+    public BadgeOsPrincipalBuilder getBadgeOsPrincipalForEmailAddress(InternetAddress emailAddress) {
         requireNonNull(emailAddress);
 
-        BadgeOsPrincipal.Builder principalBuilder;
+        BadgeOsPrincipalBuilder principalBuilder;
         try {
             principalBuilder = entityManager
                     .createQuery(
                             "SELECT p from badgeos_principal p where p.emailAddressString = :emailAddress",
-                            BadgeOsPrincipal.Builder.class
+                            BadgeOsPrincipalBuilder.class
                     )
                     .setParameter("emailAddress", emailAddress.toString())
                     .getSingleResult();
@@ -53,7 +53,7 @@ public class BadgeOsPrincipalStoreJpa implements BadgeOsPrincipalStore {
     }
 
     @Override
-    public List<BadgeOsPrincipal.Builder> getAll() {
+    public List<BadgeOsPrincipalBuilder> getAll() {
         return entityManager.createQuery("SELECT p FROM badgeos_principal p").getResultList();
     }
 

@@ -31,13 +31,13 @@ public interface BadgeOsPrincipalStore {
      * @param emailAddress supplied by the user's credentials.
      * @return Principal containing the User ID, Display Name, and the email address.
      */
-    BadgeOsPrincipal.Builder getBadgeOsPrincipalForEmailAddress(InternetAddress emailAddress);
+    BadgeOsPrincipalBuilder getBadgeOsPrincipalForEmailAddress(InternetAddress emailAddress);
 
     /**
      * Retrieves the full set of Principals.
      *
      * @return List of all {@link BadgeOsPrincipal}.
      */
-    List<BadgeOsPrincipal.Builder> getAll();
+    List<BadgeOsPrincipalBuilder> getAll();
 
 }

@@ -25,7 +25,7 @@ public interface BadgeEventService {
      * Passes captured Badge Event to the service thread that persists the event.
      * @param badgeEvent instance of captured Badge Event.
      */
-    void send(BadgeEvent.Builder badgeEvent);
+    void send(BadgeEventBuilder badgeEvent);
 
     /**
      * Given the unique identifier for a Badge Event, retrieve that badge event.

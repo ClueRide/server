@@ -20,18 +20,10 @@ package com.clueride.domain.account.member;
 import java.io.Serializable;
 import java.util.Collections;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.auth.identity.ClueRideIdentity;
 import static java.util.Objects.requireNonNull;
 
 public class Member implements Serializable {
@@ -53,7 +45,7 @@ public class Member implements Serializable {
         this.displayName = name;
     }
 
-    public Member(Builder builder) {
+    public Member(MemberBuilder builder) {
         this.id = builder.getId();
         this.displayName = builder.getDisplayName();
         this.firstName = builder.getFirstName();
@@ -78,20 +70,20 @@ public class Member implements Serializable {
         this.displayName = displayName;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    public void withEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public void withPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -107,149 +99,6 @@ public class Member implements Serializable {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Entity(name="member")
-    public static class Builder {
-        @Id
-        @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="member_pk_sequence")
-        @SequenceGenerator(name="member_pk_sequence",sequenceName="member_id_seq", allocationSize=1)
-        private Integer id;
-
-        @Column(name="display_name") private String displayName;
-        @Column(name="first_name") private String firstName;
-        @Column(name="last_name") private String lastName;
-        @Column(name="primary_email") private String emailAddress;
-        //        private InternetAddress emailAddress;
-        @Column private String phone;
-        //        private Phonenumber.PhoneNumber phone;
-
-        public Builder() {
-        }
-
-        public Member build() {
-            return new Member(this);
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public static Builder from(Member member) {
-            requireNonNull(member);
-            return builder()
-                    .withId(member.getId())
-                    .withPhone(member.getPhoneNumber())
-                    .withFirstName(member.firstName)
-                    .withLastName(member.lastName)
-                    .withDisplayName(member.getDisplayName())
-                    .withEmailAddress(member.emailAddress);
-        }
-
-        public static Builder from(ClueRideIdentity clueRideIdentity) {
-            requireNonNull(clueRideIdentity);
-            return builder()
-                    .withFirstName(clueRideIdentity.getGivenName().get())
-                    .withLastName(clueRideIdentity.getFamilyName().get())
-                    .withEmailAddress(clueRideIdentity.getEmail().toString())
-                    .withDisplayName(clueRideIdentity.getDisplayName())
-                    ;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public Builder setId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder withId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public Builder withDisplayName(String displayName) {
-            this.displayName = displayName;
-            return this;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public Builder withFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public Builder withLastName(String lastName) {
-            this.lastName = lastName;
-            return this;
-        }
-
-        public String getEmailAddress() {
-            return emailAddress;
-        }
-
-        public void setEmailAddress(String emailAddress) {
-            this.emailAddress = emailAddress;
-        }
-
-        public Builder withEmailAddress(String emailAddress) {
-            this.emailAddress = emailAddress;
-            return this;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public Builder withPhone(String phone) {
-            this.phone = phone;
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
     }
 
 }

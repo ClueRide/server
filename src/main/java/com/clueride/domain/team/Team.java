@@ -17,23 +17,9 @@
  */
 package com.clueride.domain.team;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.concurrent.Immutable;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -46,7 +32,7 @@ public class Team {
     private final String name;
     private final List<Member> members;
 
-    public Team(Builder builder) {
+    public Team(TeamBuilder builder) {
         this.id = requireNonNull(builder.getId());
         this.name = requireNonNull(builder.getName());
         this.members = requireNonNull(builder.getMembers());
@@ -73,71 +59,4 @@ public class Team {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Entity(name="teamBuilder")
-    @Table(name="team")
-    public static final class Builder {
-        @Id
-        @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="team_pk_sequence")
-        @SequenceGenerator(name="team_pk_sequence",sequenceName="team_id_seq", allocationSize = 1)
-        private Integer id;
-
-        private String name;
-
-        /* Without FetchType.EAGER, transaction ended before records were pulled. */
-        @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-        @JoinTable(
-                name="team_membership",
-                joinColumns = {@JoinColumn(name="team_id")},
-                inverseJoinColumns = {@JoinColumn(name="member_id")}
-        )
-        private Set<Member.Builder> memberBuilders = new HashSet<>();
-
-        /* Allows Jackson to construct. */
-        public Builder() {}
-
-        /* Normal pattern for constructing a Builder. */
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public Team build() {
-            return new Team(this);
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public Builder withId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public List<Member> getMembers() {
-            List<Member> members = new ArrayList<>();
-            for (Member.Builder builder: memberBuilders) {
-                members.add(builder.build());
-            }
-            return members;
-        }
-
-        public Builder withMembers(Set<Member.Builder> memberBuilders) {
-            this.memberBuilders = memberBuilders;
-            return this;
-        }
-
-        public Builder withNewMember(Member newMember) {
-            this.memberBuilders.add(Member.Builder.from(newMember));
-            return this;
-        }
-    }
 }

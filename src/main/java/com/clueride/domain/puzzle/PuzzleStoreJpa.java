@@ -22,7 +22,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.clueride.domain.location.Location;
+import com.clueride.domain.location.LocationBuilder;
 
 /**
  * Implementation of the Puzzle Store.
@@ -33,7 +33,7 @@ public class PuzzleStoreJpa implements PuzzleStore {
     private EntityManager entityManager;
 
     @Override
-    public Integer addNew(Puzzle.Builder puzzleBuilder) {
+    public Integer addNew(PuzzleBuilder puzzleBuilder) {
         entityManager.getTransaction().begin();
         entityManager.persist(puzzleBuilder);
         entityManager.getTransaction().commit();
@@ -41,17 +41,17 @@ public class PuzzleStoreJpa implements PuzzleStore {
     }
 
     @Override
-    public Puzzle.Builder getPuzzleById(Integer id) {
-        Puzzle.Builder puzzleBuilder;
+    public PuzzleBuilder getPuzzleById(Integer id) {
+        PuzzleBuilder puzzleBuilder;
         entityManager.getTransaction().begin();
-        puzzleBuilder = entityManager.find(Puzzle.Builder.class, id);
+        puzzleBuilder = entityManager.find(PuzzleBuilder.class, id);
         entityManager.getTransaction().commit();
         return puzzleBuilder;
     }
 
     @Override
-    public List<Puzzle.Builder> getPuzzlesForLocation(Location.Builder locationBuilder) {
-        List<Puzzle.Builder> puzzleBuilders;
+    public List<PuzzleBuilder> getPuzzlesForLocation(LocationBuilder locationBuilder) {
+        List<PuzzleBuilder> puzzleBuilders;
         entityManager.getTransaction().begin();
         puzzleBuilders = entityManager.createQuery(
                         "SELECT p FROM PuzzleBuilder p where p.locationBuilder = :locationBuilder"

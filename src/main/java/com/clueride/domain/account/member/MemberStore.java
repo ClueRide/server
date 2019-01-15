@@ -26,18 +26,18 @@ import javax.mail.internet.InternetAddress;
  */
 public interface MemberStore {
     /**
-     * Accepts fully-populated {@link Member.Builder} to the store and returns the Member record with DB-assigned ID.
+     * Accepts fully-populated {@link MemberBuilder} to the store and returns the Member record with DB-assigned ID.
      * @param memberBuilder - instance to be persisted.
      * @return Same record as passed in with DB-assigned ID.
      */
-    Member.Builder addNew(Member.Builder memberBuilder);
+    MemberBuilder addNew(MemberBuilder memberBuilder);
 
     /**
      * Retrieves the {@link Member} instance matching the ID.
      * @param id - Unique ID for the Member.
      * @return Unique matching instance.
      */
-    Member.Builder getMemberById(Integer id);
+    MemberBuilder getMemberById(Integer id);
 
     /**
      * Retrieves the list of {@link Member} whose name matches.
@@ -46,14 +46,14 @@ public interface MemberStore {
      * @param name - String account name for the Member.
      * @return All matching instances.
      */
-    List<Member.Builder> getMemberByName(String name);
+    List<MemberBuilder> getMemberByName(String name);
 
     /**
      * Retrieves the {@link Member} instance matching the emailAddress.
      * @param emailAddress - InternetAddress for the member.
      * @return Unique matching instance.
      */
-    Member.Builder getMemberByEmail(InternetAddress emailAddress);
+    MemberBuilder getMemberByEmail(InternetAddress emailAddress);
 
     /**
      * Updates an existing record with the contents of this Member instance.
@@ -66,6 +66,6 @@ public interface MemberStore {
      * TODO: This won't be sustainable once we have a significant number of members, but it's sufficient for testing.
      * @return List of the Members currently defined.
      */
-    List<Member.Builder> getAllMembers();
+    List<MemberBuilder> getAllMembers();
 
 }

@@ -28,7 +28,7 @@ public class BadgeEventStoreJpa implements BadgeEventStore {
     private EntityManager entityManager;
 
     @Override
-    public Integer add(BadgeEvent.Builder badgeEventBuilder) {
+    public Integer add(BadgeEventBuilder badgeEventBuilder) {
         entityManager.getTransaction().begin();
         entityManager.persist(badgeEventBuilder);
         entityManager.getTransaction().commit();
@@ -36,10 +36,10 @@ public class BadgeEventStoreJpa implements BadgeEventStore {
     }
 
     @Override
-    public BadgeEvent.Builder getById(Integer badgeEventId) {
-        BadgeEvent.Builder badgeEventBuilder;
+    public BadgeEventBuilder getById(Integer badgeEventId) {
+        BadgeEventBuilder badgeEventBuilder;
         entityManager.getTransaction().begin();
-        badgeEventBuilder = entityManager.find(BadgeEvent.Builder.class, badgeEventId);
+        badgeEventBuilder = entityManager.find(BadgeEventBuilder.class, badgeEventId);
         entityManager.getTransaction().commit();
         return badgeEventBuilder;
     }

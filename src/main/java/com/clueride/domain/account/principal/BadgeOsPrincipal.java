@@ -20,13 +20,7 @@ package com.clueride.domain.account.principal;
 import java.security.Principal;
 
 import javax.annotation.concurrent.Immutable;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -43,7 +37,7 @@ public class BadgeOsPrincipal implements Principal {
     private String name;
     private InternetAddress emailAddress;
 
-    private BadgeOsPrincipal(Builder builder) {
+    BadgeOsPrincipal(BadgeOsPrincipalBuilder builder) {
         this.name = requireNonNull(builder.getName());
         this.badgeOsUserId = requireNonNull(builder.getBadgeOsUserId());
         this.emailAddress = requireNonNull(builder.getEmailAddress());
@@ -75,97 +69,6 @@ public class BadgeOsPrincipal implements Principal {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Entity(name="badgeos_principal")
-    @Table(name="wp_users")
-    public static class Builder {
-        /**
-         * Builder for BadgeOsPrincipal.
-         */
-        @Id
-        private Integer id;
-
-        @Column(name="display_name")
-        private String name;
-
-        @Transient
-        private InternetAddress emailAddress;
-
-        @Column(name="user_email")
-        private String emailAddressString;
-
-        public BadgeOsPrincipal build() {
-            return new BadgeOsPrincipal(this);
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public InternetAddress getEmailAddress() {
-            emailStringToInternetAddress(emailAddressString);
-            return this.emailAddress;
-        }
-
-        public Builder withEmailAddress(InternetAddress emailAddress) {
-            this.emailAddressString = emailAddress.toString();
-            this.emailAddress = emailAddress;
-            return this;
-        }
-
-        public Builder withEmailAddressString(String emailAddressString) {
-            this.emailAddressString = emailAddressString;
-            emailStringToInternetAddress(emailAddressString);
-            return this;
-        }
-
-        private void emailStringToInternetAddress(String emailAddressString) {
-            try {
-                this.emailAddress = new InternetAddress(emailAddressString);
-            } catch (AddressException e) {
-                this.emailAddress = null;
-                e.printStackTrace();
-            }
-        }
-
-        public Integer getBadgeOsUserId() {
-            return id;
-        }
-
-        public Builder withId(Integer badgeOsUserId) {
-            return withBadgeOsUserId(badgeOsUserId);
-        }
-
-        public Builder withBadgeOsUserId(Integer badgeOsUserId) {
-            this.id = badgeOsUserId;
-            return this;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
-
     }
 
 }

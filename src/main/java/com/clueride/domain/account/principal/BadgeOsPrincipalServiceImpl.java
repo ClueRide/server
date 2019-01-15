@@ -80,8 +80,8 @@ public class BadgeOsPrincipalServiceImpl implements BadgeOsPrincipalService, Ser
     @Override
     public List<BadgeOsPrincipal> getFilteredPrincipals(BadgeOsPrincipalFilter filter) {
         List<BadgeOsPrincipal> principals = new ArrayList<>();
-        List<BadgeOsPrincipal.Builder> builders = badgeOsPrincipalStore.getAll();
-        for (BadgeOsPrincipal.Builder builder : builders) {
+        List<BadgeOsPrincipalBuilder> builders = badgeOsPrincipalStore.getAll();
+        for (BadgeOsPrincipalBuilder builder : builders) {
             principals.add(builder.build());
         }
         return principals;

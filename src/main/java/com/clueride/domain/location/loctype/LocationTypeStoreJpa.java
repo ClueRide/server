@@ -34,12 +34,12 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
     public List<LocationType> getLocationTypes() {
         List<LocationType> locationTypes = new ArrayList<>();
         entityManager.getTransaction().begin();
-        List<LocationType.Builder> locTypeBuilders =
+        List<LocationTypeBuilder> locTypeBuilders =
                 entityManager.createQuery(
                         "SELECT lt from location_type lt"
                 ).getResultList();
 
-        for (LocationType.Builder locTypeBuilder : locTypeBuilders) {
+        for (LocationTypeBuilder locTypeBuilder : locTypeBuilders) {
             locationTypes.add(locTypeBuilder.build());
         }
         entityManager.getTransaction().commit();
@@ -50,7 +50,7 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
     public LocationType getLocationTypeByName(String locationTypeName) {
         entityManager.getTransaction().begin();
 
-        List<LocationType.Builder> builders = entityManager.createQuery(
+        List<LocationTypeBuilder> builders = entityManager.createQuery(
                 "SELECT lt FROM location_type lt WHERE lt.name = :locTypeName"
         ).setParameter("locTypeName", locationTypeName)
                 .getResultList();
@@ -67,7 +67,7 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
     public LocationType getLocationTypeById(Integer locationTypeId) {
         entityManager.getTransaction().begin();
         LocationType locationType = entityManager.find(
-                LocationType.Builder.class,
+                LocationTypeBuilder.class,
                 locationTypeId
         ).build();
         entityManager.getTransaction().commit();

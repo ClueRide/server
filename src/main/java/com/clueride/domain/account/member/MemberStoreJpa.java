@@ -43,7 +43,7 @@ public class MemberStoreJpa implements MemberStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Member.Builder addNew(Member.Builder memberBuilder) {
+    public MemberBuilder addNew(MemberBuilder memberBuilder) {
         // TODO: CA-405/CA-409
         try {
             userTransaction.begin();
@@ -56,22 +56,22 @@ public class MemberStoreJpa implements MemberStore {
     }
 
     @Override
-    public Member.Builder getMemberById(Integer id) {
-        return entityManager.find(Member.Builder.class, id);
+    public MemberBuilder getMemberById(Integer id) {
+        return entityManager.find(MemberBuilder.class, id);
     }
 
     @Override
-    public List<Member.Builder> getMemberByName(String name) {
+    public List<MemberBuilder> getMemberByName(String name) {
         return null;
     }
 
     @Override
-    public Member.Builder getMemberByEmail(InternetAddress emailAddress) {
-        Member.Builder memberBuilder;
+    public MemberBuilder getMemberByEmail(InternetAddress emailAddress) {
+        MemberBuilder memberBuilder;
             memberBuilder = entityManager
                     .createQuery(
                             "select m from member m where m.emailAddress = :emailAddress",
-                            Member.Builder.class
+                            MemberBuilder.class
                     )
                     .setParameter("emailAddress", emailAddress.toString())
                     .getSingleResult();
@@ -85,7 +85,7 @@ public class MemberStoreJpa implements MemberStore {
     }
 
     @Override
-    public List<Member.Builder> getAllMembers() {
+    public List<MemberBuilder> getAllMembers() {
         return entityManager.createQuery("SELECT m FROM member m").getResultList();
     }
 

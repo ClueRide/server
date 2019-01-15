@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
-import com.clueride.domain.location.Location;
+import com.clueride.domain.location.LocationBuilder;
 
 /**
  * Implementation of the PuzzleService interface.
@@ -48,8 +48,8 @@ public class PuzzleServiceImpl implements PuzzleService {
     @Override
     public List<Puzzle> getByLocation(Integer locationId) {
         List<Puzzle> puzzles = new ArrayList<>();
-        Location.Builder locationBuilder = Location.Builder.builder().withId(locationId);
-        for (Puzzle.Builder puzzleBuilder : puzzleStore.getPuzzlesForLocation(locationBuilder)) {
+        LocationBuilder locationBuilder = LocationBuilder.builder().withId(locationId);
+        for (PuzzleBuilder puzzleBuilder : puzzleStore.getPuzzlesForLocation(locationBuilder)) {
             try {
                 puzzles.add(puzzleBuilder.build());
             } catch (IllegalStateException ise) {
@@ -61,7 +61,7 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle addNew(Puzzle.Builder puzzleBuilder, Location.Builder locationBuilder) {
+    public Puzzle addNew(PuzzleBuilder puzzleBuilder, LocationBuilder locationBuilder) {
         return null;
     }
 }

@@ -19,13 +19,6 @@ package com.clueride.domain.outing;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-
 import com.clueride.domain.course.Course;
 import com.clueride.domain.team.Team;
 
@@ -40,8 +33,8 @@ public class Outing {
     private Date scheduledTime;
     private Integer guideMemberId;
 
-    public Outing(Builder builder) {
-        this.id = builder.id;
+    Outing(OutingViewBuilder builder) {
+        this.id = builder.getId();
         this.teamId = builder.getTeamId();
         this.courseId = builder.getCourseId();
         this.scheduledTime = builder.getScheduledTime();
@@ -72,87 +65,4 @@ public class Outing {
         return guideMemberId;
     }
 
-    @Entity(name="outing")
-    public static final class Builder {
-        @Id
-        @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="outing_pk_sequence")
-        @SequenceGenerator(name="outing_pk_sequence",sequenceName="outing_id_seq", allocationSize=1)
-        private Integer id;
-
-        @Column(name="team_id") private Integer teamId;
-        @Column(name="course_id") private Integer courseId;
-        @Column(name="scheduled_time") private Date scheduledTime;
-        @Column(name="guide_id") private Integer guideMemberId;
-
-        /**
-         * Builder pattern implements interface to allow construction of a given type.
-         */
-        /* For other users of an Outing. */
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public static Builder from(Outing outing) {
-            return builder()
-                    .withId(outing.getId())
-                    .withTeamId(outing.getTeamId())
-                    .withCourseId(outing.getCourseId());
-        }
-
-        public Outing build() {
-            if (scheduledTime == null) {
-                scheduledTime = new Date();
-            }
-            return new Outing(this);
-        }
-
-        public Integer getCourseId() {
-            return courseId;
-        }
-
-        public Builder withCourseId(Integer courseId) {
-            this.courseId = courseId;
-            return this;
-        }
-
-        public Integer getTeamId() {
-            return teamId;
-        }
-
-        public Builder withTeamId(Integer teamId) {
-            this.teamId = teamId;
-            return this;
-        }
-
-        /* ID is interesting because it can pick-up from a new instance (assigned), or have been persisted for existing
-         * instances. */
-        public Integer getId() {
-            return id;
-        }
-
-        /* Also for Jackson when accepting a fully-populated Outing (ID already assigned). */
-        public Builder withId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public Date getScheduledTime() {
-            return scheduledTime;
-        }
-
-        public Builder withScheduledTime(Date scheduledTime) {
-            this.scheduledTime = scheduledTime;
-            return this;
-        }
-
-        public Integer getGuideMemberId() {
-            return guideMemberId;
-        }
-
-        public Builder withGuideMemberId(Integer guideMemberId) {
-            this.guideMemberId = guideMemberId;
-            return this;
-        }
-
-    }
 }

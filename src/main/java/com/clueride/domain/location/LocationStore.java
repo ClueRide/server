@@ -39,7 +39,7 @@ public interface LocationStore {
      * @param locationBuilder newly proposed Location, ready to persist.
      * @return ID of the new Location.
      */
-    Integer addNew(Location.Builder locationBuilder) throws IOException;
+    Integer addNew(LocationBuilder locationBuilder) throws IOException;
 
     /**
      * Returns the Location matching the ID from the store.
@@ -56,7 +56,7 @@ public interface LocationStore {
      * @param id unique identifier for the Location Builder.
      * @return fully-populated Location Builder.
      */
-    Location.Builder getLocationBuilderById(Integer id);
+    LocationBuilder getLocationBuilderById(Integer id);
 
     /**
      * Returns the list of Locations maintained by this store.
@@ -73,7 +73,7 @@ public interface LocationStore {
      * Returns the list of Location Builders maintained by this store.
      * @return Collection of all Locations in the store.
      */
-    Collection<Location.Builder> getLocationBuilders();
+    Collection<LocationBuilder> getLocationBuilders();
 
     /**
      * Accepts an existing Location and updates the persistent record with new information.
@@ -87,6 +87,6 @@ public interface LocationStore {
      * Accepts an existing Location and updates the persistent record with new information.
      * @param locationBuilder to be updated.
      */
-    void update(Location.Builder locationBuilder);
+    void update(LocationBuilder locationBuilder);
 
 }
