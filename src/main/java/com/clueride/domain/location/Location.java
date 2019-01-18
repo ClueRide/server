@@ -19,20 +19,10 @@ package com.clueride.domain.location;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.concurrent.Immutable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -43,7 +33,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.clueride.domain.course.Step;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
-import com.clueride.domain.puzzle.Puzzle;
+import com.clueride.domain.puzzle.PuzzleBuilder;
 
 /**
  * Holds the data for a Location, and provides some of the logic to provide derived properties.
@@ -61,7 +51,7 @@ public class Location implements Step {
     private final Integer googlePlaceId;
     private final LatLon latLon;
     private final ReadinessLevel readinessLevel;
-    private List<Puzzle.Builder> puzzleBuilders;
+    private List<PuzzleBuilder> puzzleBuilders;
     private final List<URL> imageUrls;
     private final Integer locationGroupId;
     private final String establishment;
@@ -73,7 +63,7 @@ public class Location implements Step {
      * Constructor accepting Builder instance.
      * @param builder instance carrying mutable Location.
      */
-    public Location(Builder builder) {
+    public Location(LocationBuilder builder) {
         id = builder.getId();
         nodeId = builder.getNodeId();
         latLon = builder.getLatLon();
@@ -136,6 +126,10 @@ public class Location implements Step {
 
     public String getLocationTypeName() {
         return locationType.getName();
+    }
+
+    public LocationType getLocationType() {
+        return locationType;
     }
 
     /**
@@ -209,14 +203,18 @@ public class Location implements Step {
     // TODO: CA-324 -- Move this logic into the service
     public void removePuzzle(Integer puzzleId) {
         synchronized(SYNCH_LOCK) {
-            List<Puzzle.Builder> remainingPuzzles = new ArrayList<>();
-            for (Puzzle.Builder builder : puzzleBuilders) {
+            List<PuzzleBuilder> remainingPuzzles = new ArrayList<>();
+            for (PuzzleBuilder builder : puzzleBuilders) {
                 if (!puzzleId.equals(builder.getId()) && builder != null) {
                     remainingPuzzles.add(builder);
                 }
             }
             this.puzzleBuilders = ImmutableList.copyOf(remainingPuzzles);
         }
+    }
+
+    public List<PuzzleBuilder> getPuzzleBuilders() {
+        return puzzleBuilders;
     }
 
     @Override
@@ -232,306 +230,6 @@ public class Location implements Step {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    /**
-     * Knows how to assemble the parts of a Location.
-     */
-    @Entity(name="location")
-    public static final class Builder {
-        @Id
-        @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="location_pk_sequence")
-        @SequenceGenerator(name="location_pk_sequence",sequenceName="location_id_seq", allocationSize=1)
-        private Integer id;
-
-        private String name;
-        private String description;
-
-        @Column(name= "location_type_id") private Integer locationTypeId;
-
-        @Column(name="node_id") private Integer nodeId;
-        @Column(name="featured_image_id") private Integer featuredImageId;
-
-        @OneToMany(mappedBy = "locationBuilder")
-        private List<Puzzle.Builder> puzzleBuilders;
-
-        // TODO: CA-325 - Coming out after we abandon the Json Clues
-        @Transient
-        private List<Integer> clueIds;
-
-        @Transient
-        private LocationType locationType;
-        @Transient
-        private String locationTypeName;
-        @Transient
-        private LatLon latLon;
-        @Transient
-        private List<URL> imageUrls;
-        @Transient
-        private URL featuredImage;
-        @Transient
-        private Integer googlePlaceId;
-
-        @Transient
-        private Integer establishmentId;
-        @Column(name="location_group_id") private Integer locationGroupId;
-
-        @Transient
-        private Map<String,Optional<Double>> tagScores = new HashMap<>();
-
-        @Transient
-        private String establishment;
-
-        @Transient
-        private ReadinessLevel readinessLevel;
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public static Builder from(Location location) {
-            return builder()
-                    .withId(location.id)
-                    .withName(location.name)
-                    .withDescription(location.description)
-                    .withLocationType(location.locationType)
-                    .withNodeId(location.getNodeId())
-                    .withLatLon(location.latLon)
-                    .withPuzzleBuilders(location.puzzleBuilders)
-                    .withFeaturedImage(location.featuredImage)
-                    .withImageUrls(location.imageUrls)
-                    .withEstablishmentId(location.establishmentId)
-                    .withTagScores(location.tagScores)
-                    ;
-        }
-
-        public Location build() {
-            if (locationType == null) {
-                throw new IllegalStateException("Location Type cannot be null");
-            }
-            return new Location(this);
-        }
-
-        public Builder withId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        /**
-         * If the value has been set (by reading from the LocationStore), use that
-         * value, otherwise, we're creating a new instance the and idProvider should
-         * give us the next available value.
-         * @return Unique ID for this instance of Location.
-         */
-        public Integer getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public Builder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public LocationType getLocationType() {
-            return locationType;
-        }
-
-        public Builder withLocationTypeId(Integer locationTypeId) {
-            this.locationTypeId = locationTypeId;
-            return this;
-        }
-
-        public Integer getLocationTypeId() {
-            return locationTypeId;
-        }
-
-        public Builder withLocationTypeName(String locationTypeName) {
-            this.locationTypeName = locationTypeName;
-            return this;
-        }
-
-        public String getLocationTypeName() {
-            return this.locationTypeName;
-        }
-
-        public void setLocationType(LocationType locationType) {
-            this.withLocationType(locationType);
-        }
-
-        public Builder withLocationType(LocationType locationType) {
-            this.locationType = locationType;
-            this.locationTypeId = locationType.getId();
-            return this;
-        }
-
-        public Builder withReadinessLevel(ReadinessLevel readinessLevel) {
-            this.readinessLevel = readinessLevel;
-            return this;
-        }
-
-        public Integer getNodeId() {
-            return nodeId;
-        }
-
-        public Builder withNodeId(Integer nodeId) {
-            this.nodeId = nodeId;
-            return this;
-        }
-
-        public List<Puzzle.Builder> getPuzzleBuilders() {
-            return puzzleBuilders;
-        }
-
-        public Builder withPuzzleBuilders(List<Puzzle.Builder> puzzleBuilders) {
-            this.puzzleBuilders = puzzleBuilders;
-            return this;
-        }
-
-        public Builder addPuzzleBuilder(Puzzle.Builder puzzleBuilder) {
-            this.puzzleBuilders.add(puzzleBuilder);
-            return this;
-        }
-
-        public Map<String, Optional<Double>> getTagScores() {
-            return tagScores;
-        }
-
-        public Builder withTagScores(Map<String, Optional<Double>> tagScores) {
-            this.tagScores = tagScores;
-            return this;
-        }
-
-        public Integer getLocationGroupId() {
-            return locationGroupId;
-        }
-
-        public Builder withLocationGroupId(Integer locationGroupId) {
-            this.locationGroupId = locationGroupId;
-            return this;
-        }
-
-        public Integer getEstablishmentId() {
-            return establishmentId;
-        }
-
-        public Builder withEstablishmentId(Integer establishmentId) {
-            this.establishmentId = establishmentId;
-            return this;
-        }
-
-        public String getEstablishment() {
-            return establishment;
-        }
-
-        public Builder withEstablishment(String establishment) {
-            this.establishment = establishment;
-            return this;
-        }
-
-        public List<URL> getImageUrls() {
-            if (imageUrls != null) {
-                return imageUrls;
-            } else {
-                return Collections.emptyList();
-            }
-        }
-
-        public Builder withImageUrls(List<URL> imageUrls) {
-            this.imageUrls = imageUrls;
-            return this;
-        }
-
-        public LatLon getLatLon() {
-            return latLon;
-        }
-
-        public Builder withLatLon(LatLon latLon) {
-            this.latLon = latLon;
-            if (latLon != null) {
-                this.nodeId = latLon.getId();
-            }
-            return this;
-        }
-
-        public URL getFeaturedImage() {
-            return featuredImage;
-        }
-
-        public Builder withFeaturedImage(URL featuredImage) {
-            this.featuredImage = featuredImage;
-            return this;
-        }
-
-        public Builder clearFeaturedImage() {
-            this.featuredImageId = null;
-            this.featuredImage = null;
-            return this;
-        }
-
-        public boolean hasNoFeaturedImage() {
-            return featuredImageId == null;
-        }
-
-        public Integer getFeaturedImageId() {
-            return featuredImageId;
-        }
-
-        public Builder withFeaturedImageId(int imageId) {
-            this.featuredImageId = imageId;
-            return this;
-        }
-
-        public Integer getGooglePlaceId() {
-            return googlePlaceId;
-        }
-
-        public Builder withGooglePlaceId(Integer googlePlaceId) {
-            this.googlePlaceId = googlePlaceId;
-            return this;
-        }
-
-        public ReadinessLevel getReadinessLevel() {
-            return readinessLevel;
-        }
-
-        /**
-         * Accepts a partial set of information -- generally posted from REST API -- and updates this copy with the
-         * new fields.
-         * @param locationBuilder instance with the new info.
-         */
-        public void updateFrom(Builder locationBuilder) {
-            this
-                    .withName(locationBuilder.name)
-                    .withId(locationBuilder.id)
-                    .withDescription(locationBuilder.description)
-                    .withNodeId(locationBuilder.nodeId)
-                    .withLocationTypeId(locationBuilder.locationTypeId)
-                    .withLocationGroupId(locationBuilder.locationGroupId)
-                    .withImageUrls(locationBuilder.imageUrls);
-        }
-
-        /* TODO: CA-325 Only useful for moving from JSON to JPA; remove after JSON is abandoned for Clues. */
-        public List<Integer> getClueIds() {
-            return clueIds;
-        }
-
-        public Builder withClueIds(List<Integer> clueIds) {
-            this.clueIds = clueIds;
-            return this;
-        }
     }
 
 }

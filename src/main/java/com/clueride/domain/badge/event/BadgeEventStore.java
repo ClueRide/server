@@ -26,13 +26,13 @@ public interface BadgeEventStore {
      * @param badgeEventBuilder instance of Builder for the BadgeEvent.
      * @return Unique ID of the newly created record.
      */
-    Integer add(BadgeEvent.Builder badgeEventBuilder);
+    Integer add(BadgeEventBuilder badgeEventBuilder);
 
     /**
      * Return the matching BadgeEvent (as a Builder) given the ID.
      * @param badgeEventId unique identifier for the Badge Event.
      * @return partially populated BadgeEvent; needs other services to fill remaining fields.
      */
-    BadgeEvent.Builder getById(Integer badgeEventId);
+    BadgeEventBuilder getById(Integer badgeEventId);
 
 }

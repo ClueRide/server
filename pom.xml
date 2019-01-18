@@ -287,6 +287,60 @@
             <artifactId>jta</artifactId>
             <version>1.1</version>
         </dependency>
+        <!-- Hibernate Spatial - matches the version added to WildFly modules. -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+            <version>5.3.6.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.geolatte</groupId>
+            <artifactId>geolatte-geom</artifactId>
+            <version>1.3.0</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.geolatte</groupId>
+            <artifactId>geolatte-geojson</artifactId>
+            <version>1.3.0</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.14.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- This needs to be installed in IntelliJ and WildFly rather than the .war -->
+        <dependency>
+            <groupId>net.postgis</groupId>
+            <artifactId>postgis-jdbc</artifactId>
+            <version>2.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-opengis</artifactId>
+            <version>13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-geojson</artifactId>
+            <version>13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-main</artifactId>
+            <version>13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-referencing</artifactId>
+            <version>13.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -316,7 +370,7 @@
     <profiles>
         <profile>
             <!-- The default profile skips all tests, though you can tune it to run just unit tests based on a custom pattern -->
-            <!-- Seperate profiles are provided for running all tests, including Arquillian tests that execute in the specified container -->
+            <!-- Separate profiles are provided for running all tests, including Arquillian tests that execute in the specified container -->
             <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>

@@ -31,35 +31,35 @@ public interface InviteStore {
      * @return Integer DB-generated ID.
      * @throws IOException if unable to access underlying backing store.
      */
-    Integer addNew(Invite.Builder builder) throws IOException;
+    Integer addNew(InviteBuilder builder) throws IOException;
 
     /**
      * Returns a list of fully-populated Invitations for the given Outing.
      * @param outingId - Unique ID of the Outing which may or may not have Invitations yet.
      * @return List of Invitations or empty list if none created yet.
      */
-    List<Invite.Builder> getInvitationsByOuting(Integer outingId);
+    List<InviteBuilder> getInvitationsByOuting(Integer outingId);
 
     /**
      * Given a memberId, retrieve the list of Active Invitations in order of soonest to latest.
      * @param memberId - Unique identifier for the Member who is being invited.
      * @return List of Invitations for the Member, in order of sooner rather than later.
      */
-    List<Invite.Builder> getUpcomingInvitationsByMemberId(Integer memberId);
+    List<InviteBuilder> getUpcomingInvitationsByMemberId(Integer memberId);
 
     /**
      * Given an invitation ID, retrieve the matching instance.
      * @param inviteId Unique identifier for the Invite.
      * @return Matching Invite Builder.
      */
-    Invite.Builder getInvitationById(Integer inviteId);
+    InviteBuilder getInvitationById(Integer inviteId);
 
     /**
      * Given an instance of Invite.Builder, persist (or create a new record).
      * @param builder instance with new information to replace existing or create new.
      * @return The same builder with populated ID if this is a new record.
      */
-    Invite.Builder save(Invite.Builder builder);
+    InviteBuilder save(InviteBuilder builder);
 
     /**
      * Accept the invitation identified by the given inviteId.
@@ -67,7 +67,7 @@ public interface InviteStore {
      *                 the invite will have much in common with other invites).
      * @return The updated instance of the Invite.
      */
-    Invite.Builder accept(Integer inviteId);
+    InviteBuilder accept(Integer inviteId);
 
     /**
      * Decline the invitation identified by the given inviteId.
@@ -75,6 +75,6 @@ public interface InviteStore {
      *                 the invite will have much in common with other invites).
      * @return The updated instance of the Invite.
      */
-    Invite.Builder decline(Integer inviteId);
+    InviteBuilder decline(Integer inviteId);
 
 }

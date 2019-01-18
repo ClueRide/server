@@ -18,11 +18,6 @@
 package com.clueride.domain.location.loctype;
 
 import javax.annotation.concurrent.Immutable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -41,7 +36,7 @@ public class LocationType {
     // TODO: Temporary constructor in service of JSON
     public LocationType() {}
 
-    private LocationType(Builder builder) {
+    LocationType(LocationTypeBuilder builder) {
         this.id = builder.getId();
         this.name = builder.getName();
         this.description = builder.getDescription();
@@ -79,78 +74,4 @@ public class LocationType {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Entity(name="location_type")
-    public static final class Builder {
-        @Id
-        @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="location_type_pk_sequence")
-        @SequenceGenerator(name="location_type_pk_sequence", sequenceName="location_type_id_seq", allocationSize=1)
-        private Integer id;
-
-        private String name;
-        private String icon;
-        private String description;
-
-        /**
-         * Generate instance from Builder's values.
-         * @return instance of LocationType based on Builder's values.
-         */
-        public LocationType build() {
-            return new LocationType(this);
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        /**
-         * Creates Builder from a given instance of LocationType.
-         * @param locationType the instance whose data to use.
-         * @return Mutable instance of the Builder for the Location Type.
-         */
-        public static Builder from(LocationType locationType) {
-            return builder()
-                    .withId(locationType.getId())
-                    .withName(locationType.getName())
-                    .withDescription(locationType.getDescription())
-                    .withIcon(locationType.getIcon())
-                    ;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public Builder withId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public Builder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public Builder withIcon(String icon) {
-            this.icon = icon;
-            return this;
-        }
-
-    }
 }

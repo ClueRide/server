@@ -27,6 +27,6 @@ public interface BadgeTypeService {
      * @param builder instance of Builder populated from source that doesn't know about ClueRide's Badge Types.
      * @return Enumeration of the BadgeType which provides authorization for certain activities.
      */
-    BadgeType getTypeOfBadge(Badge.Builder builder);
+    BadgeType getTypeOfBadge(BadgeBuilder builder);
 
 }

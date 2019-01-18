@@ -19,7 +19,7 @@ package com.clueride.domain.puzzle;
 
 import java.util.List;
 
-import com.clueride.domain.location.Location;
+import com.clueride.domain.location.LocationBuilder;
 
 /**
  * Definition of operations on Puzzle records.
@@ -32,15 +32,15 @@ public interface PuzzleStore {
      * @param puzzleBuilder fully-populated instance of Puzzle as a Builder.
      * @return unique ID for this new Puzzle instance.
      */
-    Integer addNew(Puzzle.Builder puzzleBuilder);
+    Integer addNew(PuzzleBuilder puzzleBuilder);
 
-    Puzzle.Builder getPuzzleById(Integer id);
+    PuzzleBuilder getPuzzleById(Integer id);
 
     /**
      * Given a Location ID, retrieve all Puzzles for that location.
      *
      * @param locationBuilder@return (possibly empty) list of Puzzles for the Location.
      */
-    List<Puzzle.Builder> getPuzzlesForLocation(Location.Builder locationBuilder);
+    List<PuzzleBuilder> getPuzzlesForLocation(LocationBuilder locationBuilder);
 
 }

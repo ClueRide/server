@@ -40,7 +40,7 @@ public class BadgeTypeServiceMappedImpl implements BadgeTypeService {
      * @return Type of Badge for authorization.
      */
     @Override
-    public BadgeType getTypeOfBadge(Badge.Builder badge) {
+    public BadgeType getTypeOfBadge(BadgeBuilder badge) {
         Integer badgeId = badge.getId();
         if (badgeTypeMap.containsKey(badgeId)) {
             return badgeTypeMap.get(badgeId);

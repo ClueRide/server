@@ -25,6 +25,7 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.NgCdiRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -47,6 +48,10 @@ public class MemberServiceImplTest extends NgCdiRunner {
     @Mock
     private MemberStore memberStore;
 
+    @Produces
+    @Mock
+    Logger LOGGER;
+
     @Inject
     @TestOnly
     private Member member;
@@ -57,25 +62,28 @@ public class MemberServiceImplTest extends NgCdiRunner {
     @BeforeMethod
     public void setUp() throws Exception {
         initMocks(this);
-        toTest = new MemberServiceImpl(memberStore);
+//        toTest = new MemberServiceImpl(memberStore);
         assertNotNull(member);
         goodAddress = new InternetAddress(member.getEmailAddress());
         assertNotNull(toTest);
+        LOGGER.debug("This Logger is able to be injected");
     }
 
     @Test
     public void testGetMember() throws Exception {
+        LOGGER.debug("This Logger is able to be injected");
     }
 
     @Test
     public void testGetMemberByDisplayName() throws Exception {
+        LOGGER.debug("This Logger is able to be injected");
     }
 
     @Test
     public void testGetMemberByEmail() throws Exception {
         Member expected = member;
         assertNotNull(memberStore);
-        when(memberStore.getMemberByEmail(any(InternetAddress.class))).thenReturn(Member.Builder.from(expected));
+        when(memberStore.getMemberByEmail(any(InternetAddress.class))).thenReturn(MemberBuilder.from(expected));
 
         Member actual = toTest.getMemberByEmail(goodAddress.getAddress());
         assertEquals(actual, expected);
@@ -88,10 +96,12 @@ public class MemberServiceImplTest extends NgCdiRunner {
 
     @Test
     public void testCreateNewMemberWithEmail() throws Exception {
+        LOGGER.debug("This Logger is able to be injected");
     }
 
     @Test
     public void testGetAllMembers() throws Exception {
+        LOGGER.debug("This Logger is able to be injected");
     }
 
 }
