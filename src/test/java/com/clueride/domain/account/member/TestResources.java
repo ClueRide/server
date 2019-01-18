@@ -18,6 +18,10 @@
 package com.clueride.domain.account.member;
 
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.clueride.util.TestOnly;
 
@@ -30,7 +34,13 @@ public class TestResources {
     @TestOnly
     Member produceMember() {
         return MemberBuilder.builder()
-                .withEmailAddress("test.email@clueride.com")
+                .withEmailAddress("invitedUser@clueride.com")
                 .build();
     }
+
+    @Produces
+    public Logger produceLog(InjectionPoint injectionPoint) {
+        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+    }
+
 }
