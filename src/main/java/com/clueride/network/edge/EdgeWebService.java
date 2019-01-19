@@ -42,4 +42,12 @@ public class EdgeWebService {
         return edgeService.getEdgeById(edgeId);
     }
 
+    @GET
+    @Secured
+    @Path("geojson/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getEdgeGeoJsonById(@PathParam("id") Integer edgeId) {
+        return edgeService.getEdgeGeoJsonById(edgeId);
+    }
+
 }
