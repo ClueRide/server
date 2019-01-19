@@ -22,4 +22,13 @@ package com.clueride.network.edge;
  */
 public interface EdgeStore {
     EdgeBuilder getEdgeById(Integer id);
+
+    /**
+     * Since the database has the functionality to assemble the GeoJson String, let's try it out.
+     *
+     * @param edgeId unique Identifier for the Edge.
+     * @return String representation of GeoJson, a Feature with LineString Geometry and Properties.
+     */
+    String getEdgeGeoJson(Integer edgeId);
+
 }

@@ -35,4 +35,11 @@ public interface EdgeService {
 
     Edge getEdgeById(Integer edgeId);
 
+    /**
+     * Retrieves the GeoJSON representation of the Edge identified by the given ID.
+     * @param edgeId unique identifier for the Edge.
+     * @return String formatted as a GeoJSON feature collection containing the Geometry for a LineString.
+     */
+    String getEdgeGeoJsonById(Integer edgeId);
+
 }

@@ -47,4 +47,10 @@ public class EdgeServiceImpl implements EdgeService {
         LOGGER.debug(edgeBuilder.toString());
         return edgeBuilder.build();
     }
+
+    @Override
+    public String getEdgeGeoJsonById(Integer edgeId) {
+        requireNonNull(edgeId, "Edge ID must be provided");
+        return edgeStore.getEdgeGeoJson(edgeId);
+    }
 }

@@ -33,4 +33,27 @@ public class EdgeStoreJpa implements EdgeStore {
         return entityManager.find(EdgeBuilder.class, id);
     }
 
+    @Override
+    public String getEdgeGeoJson(Integer edgeId) {
+        return (String) entityManager.createNativeQuery("select cast(row_to_json(feature) as text) " +
+                "from (" +
+                "      select" +
+                "        'Feature' as type," +
+                "        cast(ST_AsGeoJSON(points, 4326) as text) as geometry," +
+                "        (" +
+                "          select json_strip_nulls(row_to_json(p))" +
+                "          from (" +
+                "                 select" +
+                "                   id," +
+                "                   name," +
+                "                   track_reference" +
+                "               ) p" +
+                "        ) as properties" +
+                "      from edge" +
+                "         where id = ?" +
+                ") as feature")
+                    .setParameter(1, edgeId)
+                .getSingleResult();
+    }
+
 }
