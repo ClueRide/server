@@ -39,7 +39,7 @@ public class EdgeStoreJpa implements EdgeStore {
                 "from (" +
                 "      select" +
                 "        'Feature' as type," +
-                "        cast(ST_AsGeoJSON(points, 4326) as text) as geometry," +
+                "        cast(ST_AsGeoJSON(points, 4326) as json) as geometry," +
                 "        (" +
                 "          select json_strip_nulls(row_to_json(p))" +
                 "          from (" +
