@@ -38,24 +38,21 @@ public interface GameStateService {
     /**
      * Indicates that an initial game has all players assembled and we're
      * ready to reveal a puzzle at the starting location.
-     * @param outingId - Unique identifier for the Outing, generally from the session.
      * @return updated Game State instance.
      */
-    GameState updateWithTeamAssembled(Integer outingId);
+    GameState updateWithTeamAssembled();
 
     /**
      * Updates the indicated Outing with an Arrival Event (including the broadcast of the SSE.
      * This is only valid after the first departure from the starting location;
      * it cannot be used to trigger arrival at the start, that's the job for
-     * {@link GameStateService#updateWithTeamAssembled(Integer)}
-     * @param outingId Identifies the Outing (usually taken from the session).
+     * {@link GameStateService#updateWithTeamAssembled()}
      */
-    GameState updateOutingStateWithArrival(Integer outingId);
+    GameState updateOutingStateWithArrival();
 
     /**
-     * Updates the indicated Outing with a Departure Event (including the broadcast of the SSE.
-     * @param outingId Identifies the Outing (usually taken from the session).
+     * Updates the indicated Outing with a Departure Event (including the broadcast of the SSE).
      */
-    GameState updateOutingStateWithDeparture(Integer outingId);
+    GameState updateOutingStateWithDeparture();
 
 }

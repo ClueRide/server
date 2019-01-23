@@ -20,10 +20,13 @@ package com.clueride.domain.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.domain.game.ssevent.SSEventService;
 
 /**
@@ -32,6 +35,11 @@ import com.clueride.domain.game.ssevent.SSEventService;
 public class GameStateServiceImpl implements GameStateService {
     @Inject
     private Logger LOGGER;
+
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
 
     private final SSEventService ssEventService;
 
@@ -52,18 +60,25 @@ public class GameStateServiceImpl implements GameStateService {
     }
 
     @Override
-    public GameState updateWithTeamAssembled(Integer outingId) {
+    public GameState updateWithTeamAssembled() {
+        int outingId = clueRideSessionDto.getOutingView().getId();
         LOGGER.info("Opening Game State for outing " + outingId);
         GameState gameState = GameState.Builder.builder()
                 .withTeamAssembled(true)
                 .build();
+
         gameStateMap.put(outingId, gameState);
+        clueRideSessionDto.setGameState(gameState);
         ssEventService.sendTeamReadyEvent(outingId);
         return gameState;
     }
 
     @Override
-    public GameState updateOutingStateWithArrival(Integer outingId) {
+    public GameState updateOutingStateWithArrival() {
+        int outingId = clueRideSessionDto.getOutingView().getId();
+        if (!gameStateMap.containsKey(outingId)) {
+            throw new IllegalStateException("Team hasn't been assembled yet for this Outing.");
+        }
         LOGGER.info("Changing Game State for outing " + outingId + " to Arrival");
         GameState gameState = gameStateMap.get(outingId);
         if (!gameState.getRolling()) {
@@ -74,13 +89,16 @@ public class GameStateServiceImpl implements GameStateService {
                 .withTeamAssembled(true)
                 .withRolling(false)
                 .build();
+
         gameStateMap.put(outingId, gameState);
+        clueRideSessionDto.setGameState(gameState);
         ssEventService.sendArrivalEvent(outingId);
         return gameState;
     }
 
     @Override
-    public GameState updateOutingStateWithDeparture(Integer outingId) {
+    public GameState updateOutingStateWithDeparture() {
+        int outingId = clueRideSessionDto.getOutingView().getId();
         LOGGER.info("Changing Game State for outing " + outingId + " to Departure");
         GameState gameState = gameStateMap.get(outingId);
         if (gameState.getRolling()) {
@@ -93,6 +111,7 @@ public class GameStateServiceImpl implements GameStateService {
         gameState = gameStateBuilder.build();
 
         gameStateMap.put(outingId, gameState);
+        clueRideSessionDto.setGameState(gameState);
         ssEventService.sendDepartureEvent(outingId);
         return gameState;
     }
