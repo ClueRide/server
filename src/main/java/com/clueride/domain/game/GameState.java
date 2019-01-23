@@ -76,7 +76,7 @@ public class GameState {
         private Boolean teamAssembled = false;
         private Boolean rolling = false;
         private String nextLocation = "Meeting Location";
-        private Integer pathIndex = 0;
+        private Integer pathIndex = -1;
 
         public GameState build() {
             return new GameState(this);

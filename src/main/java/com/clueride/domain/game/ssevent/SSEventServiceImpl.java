@@ -22,11 +22,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
+
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.config.ConfigService;
+import com.clueride.domain.game.GameState;
 
 
 /**
@@ -35,48 +44,79 @@ import org.slf4j.Logger;
  * Picks up the SSE Host information from System Property.
  */
 public class SSEventServiceImpl implements SSEventService {
-    @Inject
-    private Logger LOGGER;
-
+    private final Logger LOGGER;
+    private final ConfigService configService;
     private final String sseHost;
 
-    public SSEventServiceImpl() {
-        this.sseHost = System.getProperty("sse-host");
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
+
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    /**
+     * Injectable constructor; allows logging the configuration upon construction.
+     * @param configService - Service providing which host is used for SSE.
+     * @param logger - How we log.
+     */
+    @Inject
+    public SSEventServiceImpl(
+            ConfigService configService,
+            Logger logger
+    ) {
+        this.configService = configService;
+        this.sseHost = this.configService.get("sse.host");
+        this.LOGGER = logger;
         LOGGER.debug("Communicating with SSE server at " + sseHost);
     }
 
     @Override
     public Integer sendTeamReadyEvent(Integer outingId) {
-        return sendEvent(outingId, eventMessageFromString("Team Assembled", outingId));
+        return sendEvent(eventMessageFromString("Team Assembled"));
     }
 
     @Override
     public Integer sendArrivalEvent(Integer outingId) {
-        return sendEvent(outingId, eventMessageFromString("Arrival", outingId));
+        return sendEvent(eventMessageFromString("Arrival"));
     }
 
     @Override
     public Integer sendDepartureEvent(Integer outingId) {
-        return sendEvent(outingId, eventMessageFromString("Departure", outingId));
+        return sendEvent(eventMessageFromString("Departure"));
     }
 
-    private String eventMessageFromString(String event, Integer outingId) {
-        return String.format("{\"event\":\"%s\",\"outingId\":%d}", event, outingId);
+    /** Builds the Event from Session information including the Game State. */
+    private String eventMessageFromString(String event) {
+        SSEventMessage ssEventMessage =
+                new SSEventMessage(
+                        event,
+                        clueRideSessionDto.getOutingView().getId(),
+                        clueRideSessionDto.getGameState()
+                );
+        try {
+            return objectMapper.writeValueAsString(
+                    ssEventMessage
+            );
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
+
+//        return String.format("{\"event\":\"%s\",\"outingId\":%d}", event, outingId);
     }
 
     /**
      * Bundles up the formatted message for sending as a post to the game state broadcast URL.
-     * @param outingId Identifier for the Outing which tells which channel to broadcast.
      * @param message JSON-formatted plain text to be sent as the message.
      * @return the HTTP Response code (exception thrown if it's not 200).
      */
     private Integer sendEvent(
-            Integer outingId,
             String message
     ) {
         Integer responseCode = 500;
         try {
-            URL url = new URL("http://" + sseHost + "/rest/game-state-broadcast/" + outingId);
+            URL url = urlForSession();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
@@ -111,6 +151,40 @@ public class SSEventServiceImpl implements SSEventService {
         }
 
         return responseCode;
+    }
+
+    /** Builds appropriate URL based on the Session's Outing ID. */
+    private URL urlForSession() throws MalformedURLException {
+        return new URL(
+                "http://" + sseHost
+                        + "/rest/game-state-broadcast/"
+                        + clueRideSessionDto.getOutingView().getId()
+        );
+    }
+
+    class SSEventMessage {
+        String event;
+        Integer outingId;
+        GameState gameState;
+
+        public SSEventMessage(String event, Integer id, GameState gameState) {
+            this.event = event;
+            this.outingId = id;
+            this.gameState = gameState;
+        }
+
+        public String getEvent() {
+            return event;
+        }
+
+        public Integer getOutingId() {
+            return outingId;
+        }
+
+        public GameState getGameState() {
+            return gameState;
+        }
+
     }
 
 }

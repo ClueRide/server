@@ -38,6 +38,7 @@ import com.clueride.domain.invite.Invite;
 import com.clueride.domain.invite.InviteService;
 import com.clueride.domain.outing.OutingService;
 import com.clueride.domain.outing.OutingView;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Responds to the Event that requests placing Principal instances into user's session.
@@ -76,6 +77,7 @@ public class ClueRideSessionProducer implements Serializable {
     @ClueRideSession
     /* Invoked once per session. */
     private ClueRideSessionDto produceClueRideSessionDto() {
+        requireNonNull(accessToken, "Empty Token. Is this endpoint behind the @Secured annotation?");
         LOGGER.debug("Instantiating a Session DTO for auth token {}", accessToken);
 
         ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
