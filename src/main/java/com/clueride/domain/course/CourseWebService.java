@@ -13,24 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 1/1/19.
+ * Created by jett on 1/26/19.
  */
 package com.clueride.domain.course;
 
-/**
- * Defines operations on a Course.
- */
-public interface CourseService {
-    /**
-     * Interim retrieval of a Course instance matching the given ID.
-     * @param courseId unique identifier for the course.
-     * @return matching Course.
-     */
-    Course getById(Integer courseId);
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-    /**
-     * For an established session, return the Course associated with the Session.
-     * @return Session's instance of {@link Course}.
-     */
-    Course getSessionCourse();
+import com.clueride.auth.Secured;
+
+/**
+ * REST API for {@link Course} operations.
+ */
+@Path("/course")
+public class CourseWebService {
+    @Inject
+    private CourseService courseService;
+
+    @GET
+    @Secured
+    @Path("active")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Course getSessionCourse() {
+        return courseService.getSessionCourse();
+    }
+
 }
