@@ -19,6 +19,7 @@ package com.clueride.domain.course;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +29,11 @@ import com.clueride.domain.location.Location;
  * Interim implementation.
  */
 public class CourseServiceImpl implements CourseService {
+    @Override
+    public Course getSessionCourse() {
+        return getById(1);
+    }
+
     @Override
     public Course getById(final Integer courseId) {
         /* Interim implementation. */
@@ -60,7 +66,15 @@ public class CourseServiceImpl implements CourseService {
 
             @Override
             public List<Integer> getPathIds() {
-                return Collections.EMPTY_LIST;
+                return Arrays.asList(
+                        6,
+                        4,
+                        3,
+                        13,
+                        9,
+                        10,
+                        2
+                );
             }
 
             @Override
