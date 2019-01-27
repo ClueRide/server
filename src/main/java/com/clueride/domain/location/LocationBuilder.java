@@ -25,9 +25,12 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
@@ -36,6 +39,7 @@ import com.google.common.base.Optional;
 
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
+import com.clueride.domain.location.loctype.LocationTypeBuilder;
 import com.clueride.domain.puzzle.PuzzleBuilder;
 
 /**
@@ -51,8 +55,6 @@ public class LocationBuilder {
     private String name;
     private String description;
 
-    @Column(name= "location_type_id") private Integer locationTypeId;
-
     @Column(name="node_id") private Integer nodeId;
     @Column(name="featured_image_id") private Integer featuredImageId;
 
@@ -62,6 +64,10 @@ public class LocationBuilder {
     // TODO: CA-325 - Coming out after we abandon the Json Clues
     @Transient
     private List<Integer> clueIds;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_type_id")
+    private LocationTypeBuilder locationTypeBuilder;
 
     @Transient
     private LocationType locationType;
@@ -112,8 +118,10 @@ public class LocationBuilder {
     }
 
     public Location build() {
-        if (locationType == null) {
+        if (locationTypeBuilder == null) {
             throw new IllegalStateException("Location Type cannot be null");
+        } else {
+            locationType = locationTypeBuilder.build();
         }
         return new Location(this);
     }
@@ -155,14 +163,15 @@ public class LocationBuilder {
         return locationType;
     }
 
-    public LocationBuilder withLocationTypeId(Integer locationTypeId) {
-        this.locationTypeId = locationTypeId;
-        return this;
-    }
-
-    public Integer getLocationTypeId() {
-        return locationTypeId;
-    }
+    // TODO: Undecided if we want this flattened representation or not.
+//    public LocationBuilder withLocationTypeId(Integer locationTypeId) {
+//        this.locationTypeId = locationTypeId;
+//        return this;
+//    }
+//
+//    public Integer getLocationTypeId() {
+//        return locationTypeId;
+//    }
 
     public LocationBuilder withLocationTypeName(String locationTypeName) {
         this.locationTypeName = locationTypeName;
@@ -179,8 +188,17 @@ public class LocationBuilder {
 
     public LocationBuilder withLocationType(LocationType locationType) {
         this.locationType = locationType;
-        this.locationTypeId = locationType.getId();
+//        this.locationTypeId = locationType.getId();
         return this;
+    }
+
+    public LocationTypeBuilder getLocationTypeBuilder() {
+        return locationTypeBuilder;
+    }
+
+    public void setLocationTypeBuilder(LocationTypeBuilder locationTypeBuilder) {
+        this.locationTypeBuilder = locationTypeBuilder;
+        this.locationType = locationTypeBuilder.build();
     }
 
     public LocationBuilder withReadinessLevel(ReadinessLevel readinessLevel) {
@@ -324,7 +342,7 @@ public class LocationBuilder {
                 .withId(locationBuilder.id)
                 .withDescription(locationBuilder.description)
                 .withNodeId(locationBuilder.nodeId)
-                .withLocationTypeId(locationBuilder.locationTypeId)
+//                .withLocationTypeId(locationBuilder.locationTypeId)
                 .withLocationGroupId(locationBuilder.locationGroupId)
                 .withImageUrls(locationBuilder.imageUrls);
     }
@@ -338,4 +356,5 @@ public class LocationBuilder {
         this.clueIds = clueIds;
         return this;
     }
+
 }

@@ -50,11 +50,13 @@ public class OutingView {
     private final String guideName;
     private final Integer guideMemberId;
     private final String teamName;
+    private final Integer courseId;
 
     public OutingView(OutingViewBuilder builder) {
         this.id = builder.getId();
         this.scheduledTime = builder.getScheduledTime();
         this.startPin = builder.getStartPin();
+        this.courseId = builder.getCourseId();
         this.courseName = builder.getCourseName();
         this.courseDescription = builder.getCourseDescription();
         this.courseUrl = builder.getCourseUrl();
@@ -73,6 +75,10 @@ public class OutingView {
 
     public LatLon getStartPin() {
         return startPin;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
     }
 
     public String getCourseName() {

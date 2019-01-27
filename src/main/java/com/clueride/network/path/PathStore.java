@@ -17,6 +17,8 @@
  */
 package com.clueride.network.path;
 
+import com.clueride.domain.path.Path;
+
 /**
  * Defines persistence operations on a {@link Path} instance.
  */

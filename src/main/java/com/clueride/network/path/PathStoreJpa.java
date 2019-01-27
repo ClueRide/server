@@ -21,9 +21,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * TODO: Description.
+ * JPA implementation of {@link PathStore} that supports GeoJSON query.
  */
-public class PathStoreImpl implements PathStore {
+public class PathStoreJpa implements PathStore {
 
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
@@ -46,4 +46,5 @@ public class PathStoreImpl implements PathStore {
                 .setParameter(1, pathId)
                 .getSingleResult();
     }
+
 }
