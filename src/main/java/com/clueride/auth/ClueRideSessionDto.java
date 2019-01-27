@@ -22,6 +22,7 @@ import java.io.Serializable;
 import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
+import com.clueride.domain.course.Course;
 import com.clueride.domain.game.GameState;
 import com.clueride.domain.invite.Invite;
 import com.clueride.domain.outing.OutingView;
@@ -35,6 +36,7 @@ public class ClueRideSessionDto implements Serializable {
     private Member member = null;
     private Invite invite = null;
     private OutingView outingView = null;
+    private Course course = null;
     private GameState gameState = null;
 
     public void setClueRideIdentity(ClueRideIdentity clueRideIdentity) {
@@ -75,6 +77,14 @@ public class ClueRideSessionDto implements Serializable {
 
     public void setOutingView(OutingView outingView) {
         this.outingView = outingView;
+    }
+
+    public Course getCourse() {
+        return this.course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public GameState getGameState() {

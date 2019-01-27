@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.course;
 
+import java.util.List;
+
 /**
  * Defines operations on a Course.
  */
@@ -33,4 +35,12 @@ public interface CourseService {
      * @return Session's instance of {@link Course}.
      */
     Course getSessionCourse();
+
+    /**
+     * Given the Course ID, retrieve the ordered list of Location IDs for that Course.
+     * @param courseId unique identifier for the Course.
+     * @return Ordered list of Location IDs.
+     */
+    List<Integer> getLocationIdsForCourse(Integer courseId);
+
 }

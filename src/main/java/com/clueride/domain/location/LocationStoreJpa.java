@@ -59,9 +59,7 @@ public class LocationStoreJpa implements LocationStore {
 
     @Override
     public LocationBuilder getLocationBuilderById(Integer id) {
-        entityManager.getTransaction().begin();
         LocationBuilder locationBuilder = entityManager.find(LocationBuilder.class, id);
-        entityManager.getTransaction().commit();
         return locationBuilder;
     }
 

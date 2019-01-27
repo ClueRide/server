@@ -19,6 +19,7 @@ package com.clueride.domain.path;
 
 import java.util.List;
 
+import com.clueride.domain.course.Course;
 import com.clueride.domain.course.Step;
 import com.clueride.domain.location.Location;
 
@@ -45,6 +46,14 @@ public interface Path extends Step {
      * @return Integer representing this Path.
      */
     Integer getId();
+
+    /**
+     * Since a given Path can be part of multiple courses, this may
+     * not always be defined. As part of a given Course however, this
+     * field will reference that {@link Course}.
+     * @return associated Course, if any and null otherwise.
+     */
+    Integer getCourseId();
 
     /**
      * ID of the Node at the start of this Path; the Departure.

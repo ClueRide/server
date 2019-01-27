@@ -23,15 +23,32 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.clueride.domain.location.Location;
+import com.clueride.network.path.PathService;
 
 /**
  * Interim implementation.
  */
 public class CourseServiceImpl implements CourseService {
+    private final PathService pathService;
+
+    @Inject
+    public CourseServiceImpl(
+            PathService pathService
+    ) {
+        this.pathService = pathService;
+    }
+
     @Override
     public Course getSessionCourse() {
         return getById(1);
+    }
+
+    @Override
+    public List<Integer> getLocationIdsForCourse(Integer courseId) {
+        return pathService.getLocationIds(courseId);
     }
 
     @Override

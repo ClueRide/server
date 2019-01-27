@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Jett Marks
+ * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 9/10/17.
+ * Created by jett on 1/27/19.
  */
-package com.clueride.domain.location.latlon;
+package com.clueride.domain.path;
 
-import java.io.IOException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * JPA implementation of the Loc LatLon Store.
+ * JPA-implementation of {@link PathForCourseStore}.
  */
-public class LatLonStoreJpa implements LatLonStore {
+public class PathForCourseStoreJpa implements PathForCourseStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
     @Override
-    public Integer addNew(LatLon latLon) throws IOException {
-        entityManager.persist(latLon);
-        return latLon.getId();
-    }
+    public List<PathForCourseBuilder> getPathsForCourse(Integer courseId) {
+        List<PathForCourseBuilder> builders;
+        builders = entityManager.createQuery(
+               "SELECT p FROM PathForCourse p " +
+                       " WHERE p.courseId = :courseId" +
+                       " ORDER BY p.pathOrder"
+        ).setParameter(
+                "courseId", courseId
+        ).getResultList();
 
-    @Override
-    public LatLon getLatLonById(Integer id) {
-        LatLon latLon = entityManager.find(LatLon.class, id);
-        return latLon;
+        return builders;
     }
-
 }
