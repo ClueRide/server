@@ -30,17 +30,19 @@ import com.clueride.domain.puzzle.answer.AnswerKey;
 
 @Immutable
 public class Puzzle {
-    private Integer id;
-    private String name;
-    private String locationName;
-    private String question;
+    private final Integer id;
+    private final String name;
+    private final Integer locationId;
+    private final String locationName;
+    private final String question;
     private List<Answer> answers = new ArrayList<>();
-    private AnswerKey correctAnswer;
-    private Integer points;
+    private final AnswerKey correctAnswer;
+    private final Integer points;
 
     Puzzle(PuzzleBuilder builder) {
         this.id = builder.getId();
         this.name = builder.getName();
+        this.locationId = builder.getLocationBuilder().getId();
         this.locationName = builder.getLocationBuilder().getName();
         this.question = builder.getQuestion();
         this.answers = builder.getAnswers();
@@ -54,6 +56,10 @@ public class Puzzle {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getLocationId() {
+        return locationId;
     }
 
     public String getLocationName() {

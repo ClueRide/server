@@ -42,7 +42,7 @@ import com.clueride.domain.puzzle.answer.Answer;
 import com.clueride.domain.puzzle.answer.AnswerKey;
 
 /**
- * TODO: Description.
+ * Persistable Builder for {@link Puzzle} instances.
  */
 @Entity(name = "PuzzleBuilder")
 @Table(name = "puzzle")
@@ -56,7 +56,7 @@ public final class PuzzleBuilder {
     private String question;
 
     @OneToMany(
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             mappedBy = "puzzleBuilder"
     )
@@ -66,7 +66,7 @@ public final class PuzzleBuilder {
     private AnswerKey correctAnswer;
     private Integer points;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
     private LocationBuilder locationBuilder;
 

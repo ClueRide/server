@@ -52,12 +52,10 @@ public class PuzzleStoreJpa implements PuzzleStore {
     @Override
     public List<PuzzleBuilder> getPuzzlesForLocation(LocationBuilder locationBuilder) {
         List<PuzzleBuilder> puzzleBuilders;
-        entityManager.getTransaction().begin();
         puzzleBuilders = entityManager.createQuery(
                         "SELECT p FROM PuzzleBuilder p where p.locationBuilder = :locationBuilder"
                 ).setParameter("locationBuilder", locationBuilder)
                 .getResultList();
-        entityManager.getTransaction().commit();
         return puzzleBuilders;
     }
 
