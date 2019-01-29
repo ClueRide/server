@@ -43,17 +43,20 @@ import com.clueride.domain.location.latlon.LatLon;
 public class OutingView {
     private final Integer id;
     private final Date scheduledTime;
+    private final Integer startingLocationId;
     private final LatLon startPin;
     private final String courseName;
     private final String courseDescription;
     private final URL courseUrl;
     private final String guideName;
     private final Integer guideMemberId;
+    private final Integer teamId;
     private final String teamName;
     private final Integer courseId;
 
     public OutingView(OutingViewBuilder builder) {
         this.id = builder.getId();
+        this.startingLocationId = builder.getStartingLocationId();
         this.scheduledTime = builder.getScheduledTime();
         this.startPin = builder.getStartPin();
         this.courseId = builder.getCourseId();
@@ -62,6 +65,7 @@ public class OutingView {
         this.courseUrl = builder.getCourseUrl();
         this.guideName = builder.getGuideName();
         this.guideMemberId = builder.getGuideMemberId();
+        this.teamId = builder.getTeamId();
         this.teamName = builder.getTeamName();
     }
 
@@ -71,6 +75,10 @@ public class OutingView {
 
     public Date getScheduledTime() {
         return scheduledTime;
+    }
+
+    public Integer getStartingLocationId() {
+        return startingLocationId;
     }
 
     public LatLon getStartPin() {
@@ -99,6 +107,10 @@ public class OutingView {
 
     public Integer getGuideMemberId() {
         return guideMemberId;
+    }
+
+    public Integer getTeamId() {
+        return teamId;
     }
 
     public String getTeamName() {

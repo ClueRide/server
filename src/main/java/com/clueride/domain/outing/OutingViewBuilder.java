@@ -49,6 +49,7 @@ public class OutingViewBuilder {
     @Column(name = "guide_id") private Integer guideMemberId;
     @Column(name = "team_name") private String teamName;
     @Column(name = "team_id") private Integer teamId;
+    @Column(name = "location_id") private Integer startingLocationId;
     @Column(name = "node_id") private Integer nodeId;
     @Column(name = "lat") private Double lat;
     @Column(name = "lon") private Double lon;
@@ -191,6 +192,15 @@ public class OutingViewBuilder {
 
     public Integer getTeamId() {
         return teamId;
+    }
+
+    public Integer getStartingLocationId() {
+        return startingLocationId;
+    }
+
+    public OutingViewBuilder withStartingLocationId(Integer startingLocationId) {
+        this.startingLocationId = startingLocationId;
+        return this;
     }
 
     public Integer getNodeId() {
