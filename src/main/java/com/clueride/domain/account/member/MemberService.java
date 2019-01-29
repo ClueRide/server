@@ -30,6 +30,12 @@ import com.clueride.auth.identity.ClueRideIdentity;
 public interface MemberService {
 
     /**
+     * From the session, returns the Active {@link Member} instance.
+     * @return Member instance from the Session.
+     */
+    Member getActiveMember();
+
+    /**
      * Returns the entire list of members contained within the store.
      * TODO: This won't be sustainable once we have a significant number of members, but it's sufficient for testing.
      * @return List of the Members currently defined.
@@ -63,5 +69,4 @@ public interface MemberService {
      * @return Member instance built from ClueRideIdentity.
      */
     Member createNewMember(ClueRideIdentity clueRideIdentity);
-
 }

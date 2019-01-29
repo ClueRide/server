@@ -43,4 +43,13 @@ public class MemberWebService {
     public List<Member> getAllMembers() {
         return memberService.getAllMembers();
     }
+
+    @GET
+    @Secured
+    @Path("active")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Member getActiveMembers() {
+        return memberService.getActiveMember();
+    }
+
 }

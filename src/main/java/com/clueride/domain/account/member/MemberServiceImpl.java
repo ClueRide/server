@@ -20,6 +20,7 @@ package com.clueride.domain.account.member;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -29,6 +30,8 @@ import org.slf4j.Logger;
 
 import com.clueride.RecordNotFoundException;
 import com.clueride.aop.badge.BadgeCapture;
+import com.clueride.auth.ClueRideSession;
+import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.auth.identity.ClueRideIdentity;
 
 /**
@@ -38,11 +41,21 @@ public class MemberServiceImpl implements MemberService {
     @Inject
     private Logger LOGGER;
 
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
+
     private final MemberStore memberStore;
 
     @Inject
     public MemberServiceImpl(MemberStore memberStore) {
         this.memberStore = memberStore;
+    }
+
+    @Override
+    public Member getActiveMember() {
+        return clueRideSessionDto.getMember();
     }
 
     @Override
