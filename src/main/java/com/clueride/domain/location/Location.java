@@ -78,10 +78,6 @@ public class Location implements Step {
         // If we have multiple images, the ranking goes up
         imageUrls = builder.getImageUrls();
 
-        // TODO: we may want a Location that holds these, but it's not terrible to retrieve puzzles separately. */
-        // If this is missing, we're at the Place level; present, we're at the Attraction level
-//        puzzleBuilders = builder.getPuzzleBuilders();
-
         // Featured Level requires the following
         googlePlaceId = builder.getGooglePlaceId();
 
