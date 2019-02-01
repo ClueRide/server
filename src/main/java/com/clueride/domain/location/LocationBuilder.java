@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.location;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,19 +32,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.google.common.base.Optional;
 
+import com.clueride.domain.image.ImageEntity;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeBuilder;
-import com.clueride.domain.puzzle.PuzzleBuilder;
 
 /**
  * Knows how to assemble the parts of a Location.
+ *
+ * In this incarnation, the target client is the Player application.
+ * We may get mileage out of this for the Location Editor, but that's
+ * not the focus at this date (Jan 2019).
  */
 @Entity(name="location")
 public class LocationBuilder {
@@ -56,14 +61,10 @@ public class LocationBuilder {
     private String description;
 
     @Column(name="node_id") private Integer nodeId;
-    @Column(name="featured_image_id") private Integer featuredImageId;
 
-    @OneToMany(mappedBy = "locationBuilder")
-    private List<PuzzleBuilder> puzzleBuilders;
-
-    // TODO: CA-325 - Coming out after we abandon the Json Clues
-    @Transient
-    private List<Integer> clueIds;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="featured_image_id")
+    private ImageEntity featuredImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_type_id")
@@ -78,7 +79,8 @@ public class LocationBuilder {
     @Transient
     private List<URL> imageUrls;
     @Transient
-    private URL featuredImage;
+    private URL featuredImageUrl;
+    @Transient private Integer featuredImageId;
     @Transient
     private Integer googlePlaceId;
 
@@ -109,7 +111,6 @@ public class LocationBuilder {
                 .withLocationType(location.getLocationType())
                 .withNodeId(location.getNodeId())
                 .withLatLon(location.getLatLon())
-                .withPuzzleBuilders(location.getPuzzleBuilders())
                 .withFeaturedImage(location.getFeaturedImage())
                 .withImageUrls(location.getImageUrls())
                 .withEstablishmentId(location.getEstablishment())
@@ -118,6 +119,19 @@ public class LocationBuilder {
     }
 
     public Location build() {
+        /* Convert String to URL */
+        if (featuredImage != null) {
+            try {
+                featuredImageId = featuredImage.getId();
+                featuredImageUrl = new URL(featuredImage.getUrl());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(
+                        "Got a bad URL in the Image table: "
+                                + featuredImage.getUrl()
+                );
+            }
+        }
+
         if (locationTypeBuilder == null) {
             throw new IllegalStateException("Location Type cannot be null");
         } else {
@@ -215,20 +229,6 @@ public class LocationBuilder {
         return this;
     }
 
-    public List<PuzzleBuilder> getPuzzleBuilders() {
-        return puzzleBuilders;
-    }
-
-    public LocationBuilder withPuzzleBuilders(List<PuzzleBuilder> puzzleBuilders) {
-        this.puzzleBuilders = puzzleBuilders;
-        return this;
-    }
-
-    public LocationBuilder addPuzzleBuilder(PuzzleBuilder puzzleBuilder) {
-        this.puzzleBuilders.add(puzzleBuilder);
-        return this;
-    }
-
     public Map<String, Optional<Double>> getTagScores() {
         return tagScores;
     }
@@ -290,12 +290,13 @@ public class LocationBuilder {
         return this;
     }
 
+    /* Image Methods */
     public URL getFeaturedImage() {
-        return featuredImage;
+        return featuredImageUrl;
     }
 
-    public LocationBuilder withFeaturedImage(URL featuredImage) {
-        this.featuredImage = featuredImage;
+    public LocationBuilder withFeaturedImage(URL featuredImageUrl) {
+        this.featuredImageUrl = featuredImageUrl;
         return this;
     }
 
@@ -317,6 +318,7 @@ public class LocationBuilder {
         this.featuredImageId = imageId;
         return this;
     }
+    /* End of Image Methods */
 
     public Integer getGooglePlaceId() {
         return googlePlaceId;
@@ -345,16 +347,6 @@ public class LocationBuilder {
 //                .withLocationTypeId(locationBuilder.locationTypeId)
                 .withLocationGroupId(locationBuilder.locationGroupId)
                 .withImageUrls(locationBuilder.imageUrls);
-    }
-
-    /* TODO: CA-325 Only useful for moving from JSON to JPA; remove after JSON is abandoned for Clues. */
-    public List<Integer> getClueIds() {
-        return clueIds;
-    }
-
-    public LocationBuilder withClueIds(List<Integer> clueIds) {
-        this.clueIds = clueIds;
-        return this;
     }
 
 }
