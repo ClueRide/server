@@ -44,13 +44,36 @@ public class GameStateServiceImpl implements GameStateService {
     private final SSEventService ssEventService;
 
     /** Cached copy of GameState TODO: Persist this via a service. */
-    private static Map<Integer, GameState> gameStateMap = new HashMap<>();
+    private final static Map<Integer, GameState> gameStateMap = new HashMap<>();
 
     @Inject
     public GameStateServiceImpl(
             SSEventService ssEventService
     ) {
         this.ssEventService = ssEventService;
+    }
+
+    /**
+     * Retrieves the GameState by Outing ID.
+     * If other sessions have advanced the GameState, it will be available in our map.
+     * If not, we want to set it to an appropriate state.
+     * @return the GameState instance for the Outing.
+     */
+    @Override
+    public GameState getActiveSessionGameState() {
+        Integer outingId = clueRideSessionDto.getOutingView().getId();
+        /* TODO: What to do if outingId is empty? */
+        if (outingId == null) {
+            LOGGER.error("Unable to retrieve GameState when there is no Outing");
+            return new GameState.Builder().build();
+        }
+
+        GameState gameState = gameStateMap.get(outingId);
+        if (gameState == null) {
+            gameState = new GameState.Builder().build();
+            gameStateMap.put(outingId, gameState);
+        }
+        return gameState;
     }
 
     @Override
@@ -67,9 +90,10 @@ public class GameStateServiceImpl implements GameStateService {
                 .withTeamAssembled(true)
                 .build();
 
-        gameStateMap.put(outingId, gameState);
-        clueRideSessionDto.setGameState(gameState);
-        ssEventService.sendTeamReadyEvent(outingId);
+        synchronized (gameStateMap) {
+            gameStateMap.put(outingId, gameState);
+            ssEventService.sendTeamReadyEvent(outingId, gameState);
+        }
         return gameState;
     }
 
@@ -90,9 +114,12 @@ public class GameStateServiceImpl implements GameStateService {
                 .withRolling(false)
                 .build();
 
-        gameStateMap.put(outingId, gameState);
-        clueRideSessionDto.setGameState(gameState);
-        ssEventService.sendArrivalEvent(outingId);
+        /* TODO: SVR-9 - Set Completed flag if this was the last location. */
+
+        synchronized (gameStateMap) {
+            gameStateMap.put(outingId, gameState);
+            ssEventService.sendArrivalEvent(outingId, gameState);
+        }
         return gameState;
     }
 
@@ -110,9 +137,10 @@ public class GameStateServiceImpl implements GameStateService {
 
         gameState = gameStateBuilder.build();
 
-        gameStateMap.put(outingId, gameState);
-        clueRideSessionDto.setGameState(gameState);
-        ssEventService.sendDepartureEvent(outingId);
+        synchronized (gameStateMap) {
+            gameStateMap.put(outingId, gameState);
+            ssEventService.sendDepartureEvent(outingId, gameState);
+        }
         return gameState;
     }
 

@@ -22,17 +22,25 @@ package com.clueride.domain.game;
  */
 public interface GameStateService {
     /**
+     * Retrieves the current game state for the session from the session.
+     * If this session is empty, ask the GameState Service to provide the instance for the outing
+     * and cache this in the session before returning to client.
+     * @return Active Session's Game State -- either cached, or now placed in cache.
+     */
+    GameState getActiveSessionGameState();
+
+    /**
      * Given a Team's ID, return the most recently stored State for that Team.
      * @param teamId - Unique Integer identifying the Team whose State to be retrieved.
      * @return - JSON String representing the entire state object.
      */
     String getGameStateByTeam(Integer teamId);
-
     /**
      * Update the stored Game State for a team using the given instance.
      * @param clueRideState - State values to be used for the update.
      * @return - JSON object indicating success of update.
      */
+
 //    String updateGameStateByTeam(ClueRideState clueRideState);
 
     /**
