@@ -87,12 +87,4 @@ public class ClueRideSessionDto implements Serializable {
         this.course = course;
     }
 
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
 }

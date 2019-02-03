@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.game.ssevent;
 
+import com.clueride.domain.game.GameState;
+
 /**
  * Handles the generation and propagation of Events from the Game's point of view.
  *
@@ -29,12 +31,13 @@ public interface SSEventService {
      * we're beginning the game.
      *
      * @param outingId Unique identifier for the Outing that is beginning play; indicates which channel is updated.
+     * @param gameState Updated GameState for sharing with clients.
      * @return ID of the message.
      */
-    Integer sendTeamReadyEvent(Integer outingId);
+    Integer sendTeamReadyEvent(Integer outingId, GameState gameState);
 
-    Integer sendArrivalEvent(Integer outingId);
+    Integer sendArrivalEvent(Integer outingId, GameState gameState);
 
-    Integer sendDepartureEvent(Integer outingId);
+    Integer sendDepartureEvent(Integer outingId, GameState gameState);
 
 }

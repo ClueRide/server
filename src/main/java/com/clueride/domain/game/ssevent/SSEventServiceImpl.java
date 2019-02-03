@@ -45,7 +45,6 @@ import com.clueride.domain.game.GameState;
  */
 public class SSEventServiceImpl implements SSEventService {
     private final Logger LOGGER;
-    private final ConfigService configService;
     private final String sseHost;
 
     @Inject
@@ -65,34 +64,33 @@ public class SSEventServiceImpl implements SSEventService {
             ConfigService configService,
             Logger logger
     ) {
-        this.configService = configService;
-        this.sseHost = this.configService.get("sse.host");
+        this.sseHost = configService.get("sse.host");
         this.LOGGER = logger;
         LOGGER.debug("Communicating with SSE server at " + sseHost);
     }
 
     @Override
-    public Integer sendTeamReadyEvent(Integer outingId) {
-        return sendEvent(eventMessageFromString("Team Assembled"));
+    public Integer sendTeamReadyEvent(Integer outingId, GameState gameState) {
+        return sendEvent(eventMessageFromString("Team Assembled", gameState));
     }
 
     @Override
-    public Integer sendArrivalEvent(Integer outingId) {
-        return sendEvent(eventMessageFromString("Arrival"));
+    public Integer sendArrivalEvent(Integer outingId, GameState gameState) {
+        return sendEvent(eventMessageFromString("Arrival", gameState));
     }
 
     @Override
-    public Integer sendDepartureEvent(Integer outingId) {
-        return sendEvent(eventMessageFromString("Departure"));
+    public Integer sendDepartureEvent(Integer outingId, GameState gameState) {
+        return sendEvent(eventMessageFromString("Departure", gameState));
     }
 
     /** Builds the Event from Session information including the Game State. */
-    private String eventMessageFromString(String event) {
+    private String eventMessageFromString(String event, GameState gameState) {
         SSEventMessage ssEventMessage =
                 new SSEventMessage(
                         event,
                         clueRideSessionDto.getOutingView().getId(),
-                        clueRideSessionDto.getGameState()
+                        gameState
                 );
         try {
             return objectMapper.writeValueAsString(
@@ -114,7 +112,7 @@ public class SSEventServiceImpl implements SSEventService {
     private Integer sendEvent(
             String message
     ) {
-        Integer responseCode = 500;
+        int responseCode = 500;
         try {
             URL url = urlForSession();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -167,7 +165,7 @@ public class SSEventServiceImpl implements SSEventService {
         Integer outingId;
         GameState gameState;
 
-        public SSEventMessage(String event, Integer id, GameState gameState) {
+        SSEventMessage(String event, Integer id, GameState gameState) {
             this.event = event;
             this.outingId = id;
             this.gameState = gameState;
