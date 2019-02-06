@@ -26,6 +26,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.location.loctype.LocationType;
+import com.clueride.domain.location.loctype.LocationTypeService;
 
 /**
  * REST API for {@link Location} instances.
@@ -35,6 +37,8 @@ public class LocationWebService {
 
     @Inject
     private LocationService locationService;
+    @Inject
+    private LocationTypeService locationTypeService;
 
     @GET
     @Secured
@@ -42,6 +46,14 @@ public class LocationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Location> getActiveSessionLocations() {
         return locationService.getSessionLocationsWithGeoJson();
+    }
+
+    @GET
+    @Secured
+    @Path("types")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<LocationType> getLocationTypes() {
+        return locationTypeService.getLocationTypes();
     }
 
 }
