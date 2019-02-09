@@ -23,17 +23,22 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+
 import com.clueride.auth.ClueRideSession;
 import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.domain.course.CourseService;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.outing.OutingView;
+import com.clueride.domain.place.ScoredLocationService;
 
 /**
  * Implementation of {@link LocationService}.
  */
 public class LocationServiceImpl implements LocationService {
+    @Inject
+    private Logger LOGGER;
 
     @Inject
     @SessionScoped
@@ -43,16 +48,25 @@ public class LocationServiceImpl implements LocationService {
     private final CourseService courseService;
     private final LocationStore locationStore;
     private final LatLonService latLonService;
+    private final ScoredLocationService scoredLocationService;
 
     @Inject
     public LocationServiceImpl(
             CourseService courseService,
             LocationStore locationStore,
-            LatLonService latLonService
+            LatLonService latLonService,
+            ScoredLocationService scoredLocationService
     ) {
         this.courseService = courseService;
         this.locationStore = locationStore;
         this.latLonService = latLonService;
+        this.scoredLocationService = scoredLocationService;
+    }
+
+    @Override
+    public Location getById(Integer locationId) {
+        LocationBuilder builder = locationStore.getLocationBuilderById(locationId);
+        return builder.build();
     }
 
     @Override
@@ -71,4 +85,25 @@ public class LocationServiceImpl implements LocationService {
 
         return locations;
     }
+
+    @Override
+    public List<Location> getNearestMarkerLocations(Double lat, Double lon) {
+        LOGGER.info("Retrieving Nearest Marker Locations for (" + lat + ", " + lon + ")");
+        List<Location> locations = new ArrayList<>();
+
+        for (LocationBuilder builder : locationStore.getLocationBuilders()) {
+            fillAndGradeLocation(builder);
+            locations.add(builder.build());
+        }
+        return locations;
+    }
+
+    private void fillAndGradeLocation(LocationBuilder builder) {
+        /* Assemble the derived transient fields. */
+        builder.withLatLon(latLonService.getLatLonById(builder.getNodeId()));
+
+        /* Last thing to assemble; after other pieces have been put into place. */
+        builder.withReadinessLevel(scoredLocationService.calculateReadinessLevel(builder));
+    }
+
 }

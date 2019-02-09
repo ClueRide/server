@@ -49,6 +49,11 @@ import com.clueride.domain.location.loctype.LocationTypeBuilder;
  * In this incarnation, the target client is the Player application.
  * We may get mileage out of this for the Location Editor, but that's
  * not the focus at this date (Jan 2019).
+ *
+ * OK, on Feb 5 2019, we're looking at whether this will serve the
+ * Location Editor ;-). Looks like the Puzzle Builders are considered to
+ * determine the ReadinessLevel of the Location. I think we can consult
+ * the Puzzle Service to find what we need.
  */
 @Entity(name="location")
 public class LocationBuilder {

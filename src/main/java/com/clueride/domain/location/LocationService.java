@@ -26,6 +26,8 @@ import com.clueride.domain.course.Course;
  */
 public interface LocationService {
 
+    Location getById(Integer locationId);
+
     /**
      * For an open session (which will have an Outing & Course),
      * return the list of ordered Locations that support the {@link Course}.
@@ -34,4 +36,11 @@ public interface LocationService {
      */
     List<Location> getSessionLocationsWithGeoJson();
 
+    /**
+     * For editors, we return all nearby locations.
+     * @param lat Latitude to match.
+     * @param lon Longitude to match.
+     * @return List of locations closest to the given location.
+     */
+    List<Location> getNearestMarkerLocations(Double lat, Double lon);
 }
