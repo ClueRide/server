@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
@@ -42,6 +43,13 @@ public class LocationWebService {
 
     @GET
     @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location getById(@QueryParam("id") Integer locationId) {
+        return locationService.getById(locationId);
+    }
+
+    @GET
+    @Secured
     @Path("active")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Location> getActiveSessionLocations() {
@@ -54,6 +62,17 @@ public class LocationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<LocationType> getLocationTypes() {
         return locationTypeService.getLocationTypes();
+    }
+
+    @GET
+    @Secured
+    @Path("nearest-marker")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Location> getNearestMarkerLocations(
+            @QueryParam("lat") Double lat,
+            @QueryParam("lon") Double lon
+    ) {
+        return locationService.getNearestMarkerLocations(lat, lon);
     }
 
 }

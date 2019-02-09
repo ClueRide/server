@@ -46,9 +46,7 @@ public class LocationStoreJpa implements LocationStore {
 
     @Override
     public Integer addNew(LocationBuilder locationBuilder) throws IOException {
-        entityManager.getTransaction().begin();
         entityManager.persist(locationBuilder);
-        entityManager.getTransaction().commit();
         return locationBuilder.getId();
     }
 
@@ -80,11 +78,9 @@ public class LocationStoreJpa implements LocationStore {
     @Override
     public Collection<LocationBuilder> getLocationBuilders() {
         Collection<LocationBuilder> builderCollection = new ArrayList<>();
-        entityManager.getTransaction().begin();
         List<LocationBuilder> locationList = entityManager.createQuery(
                 "SELECT l FROM location l"
         ).getResultList();
-        entityManager.getTransaction().commit();
         builderCollection.addAll(locationList);
         return builderCollection;
     }
@@ -100,8 +96,6 @@ public class LocationStoreJpa implements LocationStore {
 
     @Override
     public void update(LocationBuilder locationBuilder) {
-        entityManager.getTransaction().begin();
         entityManager.persist(locationBuilder);
-        entityManager.getTransaction().commit();
     }
 }
