@@ -20,6 +20,7 @@ package com.clueride.domain.location;
 import java.util.List;
 
 import com.clueride.domain.course.Course;
+import com.clueride.domain.location.latlon.LatLon;
 
 /**
  * Defines operations on {@link Location} instances.
@@ -27,6 +28,27 @@ import com.clueride.domain.course.Course;
 public interface LocationService {
 
     Location getById(Integer locationId);
+
+    /**
+     * Given an existing Location, update properties as
+     * provided in the passed Builder instance. This expects
+     * the Location ID to have been populated; otherwise, the
+     * instance doesn't represent an existing location.
+     * @param locationBuilder instance with updated properties.
+     * @return the updated and built Location.
+     */
+    Location updateLocation(LocationBuilder locationBuilder);
+
+    /**
+     * Given coordinates for a new location, create an instance with
+     * default properties and persist this for showing on the map
+     * as a Location needing attention. Generally, the client will
+     * be opening a dialog to capture the properties that would be
+     * passed to the {@link #updateLocation(LocationBuilder)} endpoint.
+     * @param latLon representing the coordinates of the new Location.
+     * @return Location instance with an assigned ID.
+     */
+    Location proposeLocation(LatLon latLon);
 
     /**
      * For an open session (which will have an Outing & Course),
@@ -43,4 +65,5 @@ public interface LocationService {
      * @return List of locations closest to the given location.
      */
     List<Location> getNearestMarkerLocations(Double lat, Double lon);
+
 }

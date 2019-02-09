@@ -20,18 +20,7 @@ package com.clueride.domain.location;
 import java.io.IOException;
 import java.util.Collection;
 
-// TODO: CA-309: Location Store API is straddling two implementations; clean these up.
 public interface LocationStore {
-
-    /**
-     * Accepts a fully constructed Location to the store and returns the ID.
-     * Implementations are expected to write to permanent storage.
-     * @param location newly and fully constructed Location, ready to persist.
-     * @return ID of the new Location.
-     * @deprecated prefer Builder.
-     */
-    @Deprecated
-    Integer addNew(Location location) throws IOException;
 
     /**
      * Accepts a partially constructed Location to the store and returns the ID.
@@ -42,16 +31,6 @@ public interface LocationStore {
     Integer addNew(LocationBuilder locationBuilder) throws IOException;
 
     /**
-     * Returns the Location matching the ID from the store.
-     *
-     * @param id of the Location we expect to retrieve from the store.
-     * @return Location with the given ID or null if no location is found.
-     * @deprecated prefer the Builder.
-     */
-    @Deprecated
-    Location getLocationById(Integer id);
-
-    /**
      * Returns the Location Builder matching the unique ID.
      * @param id unique identifier for the Location Builder.
      * @return fully-populated Location Builder.
@@ -59,29 +38,10 @@ public interface LocationStore {
     LocationBuilder getLocationBuilderById(Integer id);
 
     /**
-     * Returns the list of Locations maintained by this store.
-     *
-     * The Store is populated from persisted store upon instantiation, so
-     * the initial contents will come from some permanent storage.
-     * @return Collection of all Locations in the store.
-     * @deprecated - Prefer returning Builders so the Service can handle build() problems.
-     */
-    @Deprecated
-    Collection<Location> getLocations();
-
-    /**
      * Returns the list of Location Builders maintained by this store.
      * @return Collection of all Locations in the store.
      */
     Collection<LocationBuilder> getLocationBuilders();
-
-    /**
-     * Accepts an existing Location and updates the persistent record with new information.
-     * @param location to be updated.
-     * @deprecated prefer Builder.
-     */
-    @Deprecated
-    void update(Location location);
 
     /**
      * Accepts an existing Location and updates the persistent record with new information.

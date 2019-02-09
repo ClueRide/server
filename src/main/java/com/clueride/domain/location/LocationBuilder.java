@@ -42,6 +42,7 @@ import com.clueride.domain.image.ImageEntity;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeBuilder;
+import com.clueride.domain.puzzle.PuzzleBuilder;
 
 /**
  * Knows how to assemble the parts of a Location.
@@ -87,6 +88,8 @@ public class LocationBuilder {
     private URL featuredImageUrl;
     @Transient private Integer featuredImageId;
     @Transient
+    private List<PuzzleBuilder> puzzleBuilders;
+    @Transient
     private Integer googlePlaceId;
 
     @Transient
@@ -101,6 +104,8 @@ public class LocationBuilder {
 
     @Transient
     private ReadinessLevel readinessLevel;
+    @Transient
+    private Integer locationTypeId;
 
     public LocationBuilder() {}
 
@@ -182,15 +187,22 @@ public class LocationBuilder {
         return locationType;
     }
 
-    // TODO: Undecided if we want this flattened representation or not.
-//    public LocationBuilder withLocationTypeId(Integer locationTypeId) {
-//        this.locationTypeId = locationTypeId;
-//        return this;
-//    }
-//
-//    public Integer getLocationTypeId() {
-//        return locationTypeId;
-//    }
+    /**
+     * This is generally inbound from clients. Service is responsible for
+     * taking this value, looking up the LocationType via its service, and
+     * then populating this LocationBuilder instance with that LocationType
+     * instance.
+     * @param locationTypeId chosen from a list of possible Location Types.
+     * @return this.
+     */
+    public LocationBuilder withLocationTypeId(Integer locationTypeId) {
+        this.locationTypeId = locationTypeId;
+        return this;
+    }
+
+    public Integer getLocationTypeId() {
+        return locationTypeId;
+    }
 
     public LocationBuilder withLocationTypeName(String locationTypeName) {
         this.locationTypeName = locationTypeName;
@@ -207,7 +219,7 @@ public class LocationBuilder {
 
     public LocationBuilder withLocationType(LocationType locationType) {
         this.locationType = locationType;
-//        this.locationTypeId = locationType.getId();
+        this.locationTypeBuilder = LocationTypeBuilder.from(locationType);
         return this;
     }
 
@@ -324,6 +336,15 @@ public class LocationBuilder {
         return this;
     }
     /* End of Image Methods */
+
+    public List<PuzzleBuilder> getPuzzleBuilders() {
+        return puzzleBuilders;
+    }
+
+    public LocationBuilder withPuzzleBuilders(List<PuzzleBuilder> puzzleBuilders) {
+        this.puzzleBuilders = puzzleBuilders;
+        return this;
+    }
 
     public Integer getGooglePlaceId() {
         return googlePlaceId;
