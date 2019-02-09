@@ -58,12 +58,24 @@ public class LocationWebService {
         return locationService.getSessionLocationsWithGeoJson();
     }
 
-    @GET
+    @POST
     @Secured
-    @Path("types")
+    @Path("update")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<LocationType> getLocationTypes() {
-        return locationTypeService.getLocationTypes();
+    public Location updateLocation(LocationBuilder locationBuilder) {
+        return locationService.updateLocation(locationBuilder);
+    }
+
+    @POST
+    @Secured
+    @Path("propose")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location proposeLocation(
+            @QueryParam("lat") Double lat,
+            @QueryParam("lon") Double lon
+    ) {
+        LatLon latLon = new LatLon(lat, lon);
+        return locationService.proposeLocation(latLon);
     }
 
     @POST
@@ -87,6 +99,14 @@ public class LocationWebService {
             @QueryParam("lon") Double lon
     ) {
         return locationService.getNearestMarkerLocations(lat, lon);
+    }
+
+    @GET
+    @Secured
+    @Path("types")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<LocationType> getLocationTypes() {
+        return locationTypeService.getLocationTypes();
     }
 
 }
