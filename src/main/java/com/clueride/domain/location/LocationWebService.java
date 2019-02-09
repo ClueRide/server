@@ -21,12 +21,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
 
@@ -62,6 +64,18 @@ public class LocationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<LocationType> getLocationTypes() {
         return locationTypeService.getLocationTypes();
+    }
+
+    @POST
+    @Secured
+    @Path("propose")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location proposeLocation(
+            @QueryParam("lat") Double lat,
+            @QueryParam("lon") Double lon
+    ) {
+        LatLon latLon = new LatLon(lat, lon);
+        return locationService.proposeLocation(latLon);
     }
 
     @GET

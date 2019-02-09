@@ -22,8 +22,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  * JPA Implementation of the LocationStore (DAO) interface.
@@ -33,46 +40,24 @@ public class LocationStoreJpa implements LocationStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
-    /**
-     * Likely to be removed.
-     * @param location newly and fully constructed Location, ready to persist.
-     * @return
-     * @throws IOException
-     */
-    @Override
-    public Integer addNew(Location location) throws IOException {
-        return null;
-    }
+    @Resource
+    private UserTransaction userTransaction;
 
     @Override
     public Integer addNew(LocationBuilder locationBuilder) throws IOException {
-        entityManager.persist(locationBuilder);
+        try {
+            userTransaction.begin();
+            entityManager.persist(locationBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
         return locationBuilder.getId();
     }
 
     @Override
-    public Location getLocationById(Integer id) {
-        return null;
-    }
-
-    @Override
     public LocationBuilder getLocationBuilderById(Integer id) {
-        LocationBuilder locationBuilder = entityManager.find(LocationBuilder.class, id);
-        return locationBuilder;
-    }
-
-    @Override
-    public Collection<Location> getLocations() {
-        Collection<Location> locations = new ArrayList<>();
-        Collection<LocationBuilder> builderCollection = getLocationBuilders();
-        for (LocationBuilder builder : builderCollection) {
-            try {
-                locations.add(builder.build());
-            } catch (IllegalStateException ise) {
-                /* Defer to returning Builders; deprecated for now. */
-            }
-        }
-        return locations;
+        return entityManager.find(LocationBuilder.class, id);
     }
 
     @Override
@@ -85,17 +70,14 @@ public class LocationStoreJpa implements LocationStore {
         return builderCollection;
     }
 
-    /**
-     * @deprecated - use method accepting Location.Builder.
-     * @param location to be updated.
-     */
-    @Override
-    public void update(Location location) {
-
-    }
-
     @Override
     public void update(LocationBuilder locationBuilder) {
-        entityManager.persist(locationBuilder);
+        try {
+            userTransaction.begin();
+            entityManager.merge(locationBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
     }
 }

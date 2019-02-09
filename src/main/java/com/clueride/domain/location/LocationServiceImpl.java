@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.location;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,11 @@ import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.domain.course.CourseService;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.latlon.LatLonService;
+import com.clueride.domain.location.loctype.LocationType;
+import com.clueride.domain.location.loctype.LocationTypeService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.place.ScoredLocationService;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of {@link LocationService}.
@@ -49,24 +53,51 @@ public class LocationServiceImpl implements LocationService {
     private final LocationStore locationStore;
     private final LatLonService latLonService;
     private final ScoredLocationService scoredLocationService;
+    private final LocationTypeService locationTypeService;
 
     @Inject
     public LocationServiceImpl(
             CourseService courseService,
             LocationStore locationStore,
             LatLonService latLonService,
-            ScoredLocationService scoredLocationService
+            ScoredLocationService scoredLocationService,
+            LocationTypeService locationTypeService
     ) {
         this.courseService = courseService;
         this.locationStore = locationStore;
         this.latLonService = latLonService;
         this.scoredLocationService = scoredLocationService;
+        this.locationTypeService = locationTypeService;
     }
 
     @Override
     public Location getById(Integer locationId) {
         LocationBuilder builder = locationStore.getLocationBuilderById(locationId);
         return builder.build();
+    }
+
+    @Override
+    public Location proposeLocation(LatLon latLon) {
+        latLonService.addNew(latLon);
+        LocationType locationType = locationTypeService.getById(0);
+        LocationBuilder locationBuilder = LocationBuilder.builder()
+                .withLatLon(latLon)
+                .withLocationType(locationType);
+        try {
+            locationStore.addNew(locationBuilder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return locationBuilder.build();
+    }
+
+    @Override
+    public Location updateLocation(LocationBuilder locationBuilder) {
+        requireNonNull(locationBuilder.getId(), "Location ID not found; cannot update non-existent record");
+        requireNonNull(locationBuilder.getLocationTypeId(), "Location Type not specified; cannot update");
+        locationBuilder.withLocationType(locationTypeService.getById(locationBuilder.getLocationTypeId()));
+        locationStore.update(locationBuilder);
+        return locationBuilder.build();
     }
 
     @Override
