@@ -19,8 +19,15 @@ package com.clueride.domain.location.latlon;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  * JPA implementation of the Loc LatLon Store.
@@ -29,9 +36,18 @@ public class LatLonStoreJpa implements LatLonStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @Override
     public Integer addNew(LatLon latLon) throws IOException {
-        entityManager.persist(latLon);
+        try {
+            userTransaction.begin();
+            entityManager.persist(latLon);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
         return latLon.getId();
     }
 
