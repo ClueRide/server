@@ -78,18 +78,6 @@ public class LocationWebService {
         return locationService.proposeLocation(latLon);
     }
 
-    @POST
-    @Secured
-    @Path("propose")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Location proposeLocation(
-            @QueryParam("lat") Double lat,
-            @QueryParam("lon") Double lon
-    ) {
-        LatLon latLon = new LatLon(lat, lon);
-        return locationService.proposeLocation(latLon);
-    }
-
     @GET
     @Secured
     @Path("nearest-marker")

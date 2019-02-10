@@ -123,8 +123,10 @@ public class LocationServiceImpl implements LocationService {
         List<Location> locations = new ArrayList<>();
 
         for (LocationBuilder builder : locationStore.getLocationBuilders()) {
-            fillAndGradeLocation(builder);
-            locations.add(builder.build());
+            if (!builder.getLocationTypeBuilder().getId().equals(15)) {
+                fillAndGradeLocation(builder);
+                locations.add(builder.build());
+            }
         }
         return locations;
     }
