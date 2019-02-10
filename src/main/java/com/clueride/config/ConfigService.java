@@ -52,4 +52,10 @@ public interface ConfigService {
     /** Provides a Map between tokens and the matching email address which resides in Member table. */
     Map<String, String> getTestAccountMap();
 
+    /** Base URL of the Image server. */
+    String getBaseImageUrl();
+
+    /** Base Directory for images on the Image Server. */
+    String getImageBaseDirectory();
+
 }

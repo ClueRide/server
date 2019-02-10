@@ -19,6 +19,7 @@ package com.clueride.domain.badge.event;
 
 import java.security.Principal;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -160,7 +161,7 @@ public class BadgeEventBuilder {
 
     public BadgeEventBuilder withReturnValue(Object returnValue) {
         this.returnValue = returnValue;
-        this.returnValueAsString = returnValue.toString();
+        this.returnValueAsString = Objects.toString(returnValue);
         return this;
     }
 
