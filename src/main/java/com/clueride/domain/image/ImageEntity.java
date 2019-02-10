@@ -19,7 +19,12 @@ package com.clueride.domain.image;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * JPA Entity for Images that are referred to by ID.
@@ -29,6 +34,8 @@ import javax.persistence.Id;
 @Entity(name = "Image")
 public class ImageEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_pk_sequence")
+    @SequenceGenerator(name = "image_pk_sequence", sequenceName = "image_id_seq", allocationSize = 1)
     private Integer id;
 
     @Column
@@ -40,5 +47,14 @@ public class ImageEntity {
 
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

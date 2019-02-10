@@ -121,7 +121,7 @@ public class LocationBuilder {
                 .withLocationType(location.getLocationType())
                 .withNodeId(location.getNodeId())
                 .withLatLon(location.getLatLon())
-                .withFeaturedImage(location.getFeaturedImage())
+                .withFeaturedImageUrl(location.getFeaturedImage())
                 .withImageUrls(location.getImageUrls())
                 .withEstablishmentId(location.getEstablishment())
                 .withTagScores(location.getTagScores())
@@ -312,8 +312,14 @@ public class LocationBuilder {
         return featuredImageUrl;
     }
 
-    public LocationBuilder withFeaturedImage(URL featuredImageUrl) {
-        this.featuredImageUrl = featuredImageUrl;
+    public LocationBuilder withFeaturedImage(ImageEntity featuredImage) {
+        this.featuredImage = featuredImage;
+        this.featuredImageId = featuredImage.getId();
+        try {
+            this.featuredImageUrl = new URL(featuredImage.getUrl());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Bad URL: " + featuredImage.getUrl(), e);
+        }
         return this;
     }
 
@@ -333,6 +339,11 @@ public class LocationBuilder {
 
     public LocationBuilder withFeaturedImageId(int imageId) {
         this.featuredImageId = imageId;
+        return this;
+    }
+
+    public LocationBuilder withFeaturedImageUrl(URL featuredImageUrl) {
+        this.featuredImageUrl = featuredImageUrl;
         return this;
     }
     /* End of Image Methods */

@@ -82,4 +82,14 @@ public class ConfigServiceImpl implements ConfigService {
         return testAccountMap;
     }
 
+    @Override
+    public String getBaseImageUrl() {
+        return get("clueride.image.baseUrl");
+    }
+
+    @Override
+    public String getImageBaseDirectory() {
+        return get("clueride.image.baseDirectory");
+    }
+
 }
