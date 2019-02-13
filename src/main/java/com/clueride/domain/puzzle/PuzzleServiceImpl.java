@@ -25,6 +25,9 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationStore;
+import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.puzzle.answer.AnswerKey;
 
 /**
  * Implementation of the PuzzleService interface.
@@ -34,10 +37,15 @@ public class PuzzleServiceImpl implements PuzzleService {
     private Logger LOGGER;
 
     private final PuzzleStore puzzleStore;
+    private final LocationStore locationStore;
 
     @Inject
-    public PuzzleServiceImpl(PuzzleStore puzzleStore) {
+    public PuzzleServiceImpl(
+            PuzzleStore puzzleStore,
+            LocationStore locationStore
+    ) {
         this.puzzleStore = puzzleStore;
+        this.locationStore = locationStore;
     }
 
     @Override
@@ -61,7 +69,31 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle addNew(PuzzleBuilder puzzleBuilder, LocationBuilder locationBuilder) {
-        return null;
+    public Puzzle addNew(PuzzleBuilder puzzleBuilder) {
+        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(puzzleBuilder.getLocationId());
+        puzzleBuilder.withLocationBuilder(locationBuilder);
+        linkPuzzleToAnswers(puzzleBuilder);
+        puzzleStore.addNew(puzzleBuilder);
+        return puzzleBuilder.build();
     }
+
+    private void linkPuzzleToAnswers(PuzzleBuilder puzzleBuilder) {
+        for (Answer answer : puzzleBuilder.getAnswers()) {
+            answer.withPuzzleBuilder(puzzleBuilder);
+        }
+    }
+
+    @Override
+    public Puzzle getBlankPuzzleForLocation(LocationBuilder locationBuilder) {
+        List<Answer> answers = new ArrayList<>();
+        answers.add(new Answer( AnswerKey.A, "" ));
+        answers.add(new Answer( AnswerKey.B, "" ));
+        answers.add(new Answer( AnswerKey.C, "" ));
+        answers.add(new Answer( AnswerKey.D, "" ));
+        PuzzleBuilder puzzleBuilder = PuzzleBuilder.builder()
+                .withLocationBuilder(locationBuilder)
+                .withAnswers(answers);
+        return puzzleBuilder.build();
+    }
+
 }

@@ -20,13 +20,16 @@ package com.clueride.domain.puzzle;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.location.LocationBuilder;
 import com.clueride.domain.puzzle.answer.Answer;
 
 /**
@@ -46,4 +49,20 @@ public class PuzzleWebService {
         return puzzleService.getByLocation(locationId);
     }
 
+    @POST
+    @Secured
+    @Path("blank")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Puzzle getBlankPuzzle(LocationBuilder locationBuilder) {
+        return puzzleService.getBlankPuzzleForLocation(locationBuilder);
+    }
+
+    @POST
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Puzzle savePuzzle(PuzzleBuilder puzzleBuilder) {
+        return puzzleService.addNew(puzzleBuilder);
+    }
 }

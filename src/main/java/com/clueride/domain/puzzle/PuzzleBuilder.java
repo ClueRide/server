@@ -32,6 +32,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -70,6 +71,12 @@ public final class PuzzleBuilder {
     @JoinColumn(name = "location_id")
     private LocationBuilder locationBuilder;
 
+    /* Supports REST API. */
+    @Transient
+    private Integer locationId;
+    @Transient
+    private String locationName;
+
     public static PuzzleBuilder builder() {
         return new PuzzleBuilder();
     }
@@ -83,6 +90,20 @@ public final class PuzzleBuilder {
                 .withAnswers(instance.getAnswers())
                 .withPoints(instance.getPoints())
                 ;
+    }
+
+    public Integer getLocationId() {
+        return locationId;
+    }
+
+    /* Supports REST API. */
+    public void setLocationId(Integer locationId) {
+        this.locationId = locationId;
+    }
+
+    /* Supports REST API. */
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public String getQuestion() {

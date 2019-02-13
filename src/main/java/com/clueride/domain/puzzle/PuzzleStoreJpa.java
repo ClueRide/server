@@ -19,8 +19,15 @@ package com.clueride.domain.puzzle;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import com.clueride.domain.location.LocationBuilder;
 
@@ -32,20 +39,25 @@ public class PuzzleStoreJpa implements PuzzleStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @Override
     public Integer addNew(PuzzleBuilder puzzleBuilder) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(puzzleBuilder);
-        entityManager.getTransaction().commit();
+        try {
+            userTransaction.begin();
+            entityManager.persist(puzzleBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
+            e.printStackTrace();
+        }
         return puzzleBuilder.getId();
     }
 
     @Override
     public PuzzleBuilder getPuzzleById(Integer id) {
         PuzzleBuilder puzzleBuilder;
-        entityManager.getTransaction().begin();
         puzzleBuilder = entityManager.find(PuzzleBuilder.class, id);
-        entityManager.getTransaction().commit();
         return puzzleBuilder;
     }
 
