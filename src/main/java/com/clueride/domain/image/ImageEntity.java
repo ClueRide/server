@@ -41,6 +41,14 @@ public class ImageEntity {
     @Column
     private String url;
 
+    /** Empty constructor for JPA. */
+    public ImageEntity() {}
+
+    /** String constructor for REST API. */
+    public ImageEntity(String featuredImage) {
+        this.url = featuredImage;
+    }
+
     public Integer getId() {
         return id;
     }

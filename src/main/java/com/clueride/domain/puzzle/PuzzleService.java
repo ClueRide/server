@@ -42,9 +42,14 @@ public interface PuzzleService {
     /**
      * Create a New puzzle instance for the given Location.
      * @param puzzleBuilder data for the new Puzzle.
-     * @param locationBuilder data for the Location to accept the new Puzzle.
      * @return fully-populated instance of the new Puzzle.
      */
-    Puzzle addNew(PuzzleBuilder puzzleBuilder, LocationBuilder locationBuilder);
+    Puzzle addNew(PuzzleBuilder puzzleBuilder);
+
+    /**
+     * Creates a New puzzle instance for the front-end to populate.
+     * @return Empty Puzzle ready to be filled by the client.
+     */
+    Puzzle getBlankPuzzleForLocation(LocationBuilder locationBuilder);
 
 }

@@ -82,11 +82,12 @@ public class ImageServiceImpl implements ImageService {
 
     private ImageEntity persistImageMetadata(Integer locationId, Integer imageOnFileSystemId) {
         /* Build and assign URL. */
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setUrl(buildImageUrlString(
-                locationId,
-                imageOnFileSystemId
-        ));
+        ImageEntity imageEntity = new ImageEntity(
+                buildImageUrlString(
+                        locationId,
+                        imageOnFileSystemId
+                )
+        );
 
         imageStore.addNewToLocation(imageEntity, locationId);
         return imageEntity;
