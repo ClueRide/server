@@ -31,6 +31,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.clueride.domain.course.Step;
+import com.clueride.domain.image.ImageEntity;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.puzzle.PuzzleBuilder;
@@ -47,7 +48,7 @@ public class Location implements Step {
     private final String description;
     private final LocationType locationType;
     private final Integer nodeId;
-    private final URL featuredImage;
+    private final ImageEntity featuredImage;
     private final Integer googlePlaceId;
     private final LatLon latLon;
     private final ReadinessLevel readinessLevel;
@@ -163,7 +164,7 @@ public class Location implements Step {
         return establishmentId;
     }
 
-    public URL getFeaturedImage() {
+    public ImageEntity getFeaturedImage() {
         return featuredImage;
     }
 

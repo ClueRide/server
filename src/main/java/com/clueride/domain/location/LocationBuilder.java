@@ -121,7 +121,7 @@ public class LocationBuilder {
                 .withLocationType(location.getLocationType())
                 .withNodeId(location.getNodeId())
                 .withLatLon(location.getLatLon())
-                .withFeaturedImageUrl(location.getFeaturedImage())
+                .withFeaturedImage(location.getFeaturedImage())
                 .withImageUrls(location.getImageUrls())
                 .withEstablishmentId(location.getEstablishment())
                 .withTagScores(location.getTagScores())
@@ -308,8 +308,8 @@ public class LocationBuilder {
     }
 
     /* Image Methods */
-    public URL getFeaturedImage() {
-        return featuredImageUrl;
+    public ImageEntity getFeaturedImage() {
+        return featuredImage;
     }
 
     public LocationBuilder withFeaturedImage(ImageEntity featuredImage) {
@@ -346,6 +346,16 @@ public class LocationBuilder {
         this.featuredImageUrl = featuredImageUrl;
         return this;
     }
+
+    /** Adds to the list of existing images, but not the Featured Image. */
+    public void withImage(ImageEntity image) {
+        try {
+            this.imageUrls.add(new URL(image.getUrl()));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /* End of Image Methods */
 
     public List<PuzzleBuilder> getPuzzleBuilders() {
@@ -385,5 +395,4 @@ public class LocationBuilder {
                 .withLocationGroupId(locationBuilder.locationGroupId)
                 .withImageUrls(locationBuilder.imageUrls);
     }
-
 }
