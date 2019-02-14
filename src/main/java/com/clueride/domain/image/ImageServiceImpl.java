@@ -57,6 +57,8 @@ public class ImageServiceImpl implements ImageService {
         if (locationBuilder.hasNoFeaturedImage()) {
             locationBuilder.withFeaturedImage(image);
             locationStore.update(locationBuilder);
+        } else {
+            locationBuilder.withImage(image);
         }
         return image;
     }

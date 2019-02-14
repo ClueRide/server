@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
@@ -32,10 +33,14 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import org.slf4j.Logger;
+
 /**
  * JPA Implementation of the LocationStore (DAO) interface.
  */
 public class LocationStoreJpa implements LocationStore {
+    @Inject
+    private Logger LOGGER;
 
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
@@ -77,6 +82,7 @@ public class LocationStoreJpa implements LocationStore {
             entityManager.merge(locationBuilder);
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            LOGGER.error(String.valueOf(e));
             e.printStackTrace();
         }
     }
