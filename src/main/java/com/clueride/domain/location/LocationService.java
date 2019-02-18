@@ -66,4 +66,12 @@ public interface LocationService {
      */
     List<Location> getNearestMarkerLocations(Double lat, Double lon);
 
+    /**
+     * Deletes the Location record -- along with any links to Image records
+     * (but not the images themselves).
+     * @param locationId unique identifier for the Location.
+     * @return The instance deleted.
+     */
+    Location deleteById(Integer locationId);
+
 }

@@ -49,4 +49,10 @@ public interface LocationStore {
      */
     void update(LocationBuilder locationBuilder);
 
+    /**
+     * Given the Location record, remove it from storage.
+     * @param location Instance to be deleted.
+     */
+    void delete(LocationBuilder location);
+
 }
