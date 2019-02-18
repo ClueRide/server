@@ -131,6 +131,15 @@ public class LocationServiceImpl implements LocationService {
         return locations;
     }
 
+    @Override
+    public Location deleteById(Integer locationId) {
+        LOGGER.info("Deleting Location with ID {}", locationId);
+
+        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
+        locationStore.delete(locationBuilder);
+        return locationBuilder.build();
+    }
+
     private void fillAndGradeLocation(LocationBuilder builder) {
         /* Assemble the derived transient fields. */
         builder.withLatLon(latLonService.getLatLonById(builder.getNodeId()));

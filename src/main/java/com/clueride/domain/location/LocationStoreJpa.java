@@ -86,4 +86,21 @@ public class LocationStoreJpa implements LocationStore {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void delete(LocationBuilder locationBuilder) {
+        try {
+            userTransaction.begin();
+            entityManager.remove(
+                    entityManager.contains(locationBuilder)
+                            ? locationBuilder
+                            : entityManager.merge(locationBuilder)
+            );
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            LOGGER.error(String.valueOf(e));
+            e.printStackTrace();
+        }
+    }
+
 }

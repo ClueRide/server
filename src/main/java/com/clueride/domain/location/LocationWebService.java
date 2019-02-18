@@ -20,6 +20,7 @@ package com.clueride.domain.location;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -95,6 +96,13 @@ public class LocationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<LocationType> getLocationTypes() {
         return locationTypeService.getLocationTypes();
+    }
+
+    @DELETE
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location deleteById(@QueryParam("id") Integer locationId) {
+        return locationService.deleteById(locationId);
     }
 
 }
