@@ -36,6 +36,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Optional;
 
 import com.clueride.domain.image.ImageEntity;
@@ -57,6 +58,7 @@ import com.clueride.domain.puzzle.PuzzleBuilder;
  * the Puzzle Service to find what we need.
  */
 @Entity(name="location")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocationBuilder {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="location_pk_sequence")
