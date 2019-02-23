@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.ClueRideSession;
 import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.domain.course.CourseService;
@@ -92,10 +93,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @BadgeCapture
     public Location updateLocation(LocationBuilder locationBuilder) {
         requireNonNull(locationBuilder.getId(), "Location ID not found; cannot update non-existent record");
         requireNonNull(locationBuilder.getLocationTypeId(), "Location Type not specified; cannot update");
         locationBuilder.withLocationType(locationTypeService.getById(locationBuilder.getLocationTypeId()));
+        locationBuilder.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationBuilder));
         locationStore.update(locationBuilder);
         return locationBuilder.build();
     }
@@ -138,6 +141,19 @@ public class LocationServiceImpl implements LocationService {
         LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
         locationStore.delete(locationBuilder);
         return locationBuilder.build();
+    }
+
+    @Override
+    public Location unlinkFeaturedImage(Integer locationId) {
+        requireNonNull(locationId, "Location ID required");
+        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
+        locationBuilder.withLocationType(locationTypeService.getById(
+                locationBuilder.getLocationTypeBuilder().getId()
+        ));
+        locationBuilder.withLocationTypeId(locationBuilder.getLocationTypeBuilder().getId());
+        locationBuilder.clearFeaturedImage();
+        /* Update Location will set new readiness level and persist the updated Location. */
+        return updateLocation(locationBuilder);
     }
 
     private void fillAndGradeLocation(LocationBuilder builder) {
