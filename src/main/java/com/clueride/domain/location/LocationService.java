@@ -74,4 +74,11 @@ public interface LocationService {
      */
     Location deleteById(Integer locationId);
 
+    /**
+     * Drops the link between this Location and the Featured Image.
+     * @param locationId unique Identifier for the Location whose featured image we want to unlink.
+     * @return The updated and re-evaluated Location.
+     */
+    Location unlinkFeaturedImage(Integer locationId);
+
 }

@@ -105,4 +105,12 @@ public class LocationWebService {
         return locationService.deleteById(locationId);
     }
 
+    @DELETE
+    @Secured
+    @Path("featured/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location unlinkFeaturedImage(@QueryParam("id") Integer locationId) {
+        return locationService.unlinkFeaturedImage(locationId);
+    }
+
 }
