@@ -71,4 +71,15 @@ public class PuzzleStoreJpa implements PuzzleStore {
         return puzzleBuilders;
     }
 
+    @Override
+    public void update(PuzzleBuilder puzzleBuilder) {
+        try {
+            userTransaction.begin();
+            entityManager.merge(puzzleBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
