@@ -43,4 +43,10 @@ public interface PuzzleStore {
      */
     List<PuzzleBuilder> getPuzzlesForLocation(LocationBuilder locationBuilder);
 
+    /**
+     * Update existing puzzle with new properties.
+     * @param puzzleBuilder instance containing new information to be persisted.
+     */
+    void update(PuzzleBuilder puzzleBuilder);
+
 }

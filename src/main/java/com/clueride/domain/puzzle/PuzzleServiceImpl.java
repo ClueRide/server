@@ -73,7 +73,11 @@ public class PuzzleServiceImpl implements PuzzleService {
         LocationBuilder locationBuilder = locationStore.getLocationBuilderById(puzzleBuilder.getLocationId());
         puzzleBuilder.withLocationBuilder(locationBuilder);
         linkPuzzleToAnswers(puzzleBuilder);
-        puzzleStore.addNew(puzzleBuilder);
+        if (puzzleBuilder.getId() == null) {
+            puzzleStore.addNew(puzzleBuilder);
+        } else {
+            puzzleStore.update(puzzleBuilder);
+        }
         return puzzleBuilder.build();
     }
 

@@ -65,4 +65,5 @@ public class PuzzleWebService {
     public Puzzle savePuzzle(PuzzleBuilder puzzleBuilder) {
         return puzzleService.addNew(puzzleBuilder);
     }
+
 }
