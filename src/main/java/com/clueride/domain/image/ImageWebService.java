@@ -50,7 +50,7 @@ public class ImageWebService {
     @Secured
     @BadgeCapture
     @Path("upload")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ImageEntity uploadImage(@MultipartForm ImageUploadRequest imageUploadRequest) {
         return imageService.saveLocationImage(imageUploadRequest);
