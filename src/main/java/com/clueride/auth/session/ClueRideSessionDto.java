@@ -15,7 +15,7 @@
  *
  * Created by jett on 12/2/18.
  */
-package com.clueride.auth;
+package com.clueride.auth.session;
 
 import java.io.Serializable;
 
@@ -23,9 +23,9 @@ import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.course.Course;
-import com.clueride.domain.game.GameState;
 import com.clueride.domain.invite.Invite;
 import com.clueride.domain.outing.OutingView;
+import com.clueride.domain.puzzle.state.PuzzleState;
 
 /**
  * "Holder" for session-related class instances.
@@ -37,7 +37,7 @@ public class ClueRideSessionDto implements Serializable {
     private Invite invite = null;
     private OutingView outingView = null;
     private Course course = null;
-    private GameState gameState = null;
+    private PuzzleState puzzleState = null;
 
     public void setClueRideIdentity(ClueRideIdentity clueRideIdentity) {
         this.clueRideIdentity = clueRideIdentity;
@@ -85,6 +85,14 @@ public class ClueRideSessionDto implements Serializable {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public void setPuzzleState(PuzzleState puzzleState) {
+        this.puzzleState = puzzleState;
+    }
+
+    public PuzzleState getPuzzleState() {
+        return puzzleState;
     }
 
 }

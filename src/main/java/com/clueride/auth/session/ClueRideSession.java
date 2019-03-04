@@ -15,7 +15,7 @@
  *
  * Created by jett on 12/1/18.
  */
-package com.clueride.auth;
+package com.clueride.auth.session;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

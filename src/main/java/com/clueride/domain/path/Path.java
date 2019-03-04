@@ -20,7 +20,6 @@ package com.clueride.domain.path;
 import java.util.List;
 
 import com.clueride.domain.course.Course;
-import com.clueride.domain.course.Step;
 import com.clueride.domain.location.Location;
 
 /**
@@ -36,9 +35,7 @@ import com.clueride.domain.location.Location;
  *
  * @author jett
  */
-public interface Path extends Step {
-    // TODO: Unsure who is using this, but commented out to avoid bringing this code in right now.
-//    SortedSet<Segment> getSegments();
+public interface Path {
 
     /**
      * Uniquely identifies this particular sequence of segments/edges between
