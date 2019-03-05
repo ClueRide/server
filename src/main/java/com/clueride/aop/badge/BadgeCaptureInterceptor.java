@@ -27,8 +27,8 @@ import javax.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 
-import com.clueride.auth.ClueRideSession;
-import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.badge.event.BadgeEventBuilder;
 import com.clueride.domain.badge.event.BadgeEventService;
 

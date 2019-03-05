@@ -18,6 +18,7 @@
 package com.clueride.domain.game.ssevent;
 
 import com.clueride.domain.game.GameState;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
 
 /**
  * Handles the generation and propagation of Events from the Game's point of view.
@@ -39,5 +40,7 @@ public interface SSEventService {
     Integer sendArrivalEvent(Integer outingId, GameState gameState);
 
     Integer sendDepartureEvent(Integer outingId, GameState gameState);
+
+    Integer sendAnswerSummaryEvent(Integer outingId, AnswerSummary answerSummary);
 
 }

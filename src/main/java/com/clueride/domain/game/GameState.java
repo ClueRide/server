@@ -23,6 +23,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.clueride.domain.course.Course;
+
 /**
  * Defines what we need to track the state of the Game for the clients.
  */
@@ -30,14 +32,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class GameState {
     private final Boolean teamAssembled;
     private final Boolean rolling;
-    private final String nextLocation;
+    private final String nextLocationName;
     private final Integer pathIndex;
+    private final Integer locationId;
+    private final Integer puzzleId;
 
     private GameState(Builder builder) {
         this.teamAssembled = builder.getTeamAssembled();
         this.rolling = builder.getRolling();
-        this.nextLocation = builder.getNextLocation();
+        this.nextLocationName = builder.getNextLocation();
         this.pathIndex = builder.getPathIndex();
+        this.locationId = builder.getLocationId();
+        this.puzzleId = builder.getPuzzleId();
     }
 
     public Boolean getTeamAssembled() {
@@ -48,12 +54,20 @@ public class GameState {
         return rolling;
     }
 
-    public String getNextLocation() {
-        return nextLocation;
+    public String getNextLocationName() {
+        return nextLocationName;
     }
 
     public Integer getPathIndex() {
         return pathIndex;
+    }
+
+    public Integer getLocationId() {
+        return locationId;
+    }
+
+    public Integer getPuzzleId() {
+        return puzzleId;
     }
 
     @Override
@@ -72,11 +86,13 @@ public class GameState {
     }
 
     public static class Builder {
-        /* Initial Game State */
+        /* Initial Game State -- without knowing the Course. */
         private Boolean teamAssembled = false;
         private Boolean rolling = false;
-        private String nextLocation = "Meeting Location";
+        private String nextLocationName = "Meeting Location";
         private Integer pathIndex = -1;
+        private Integer locationId = null;
+        private Integer puzzleId = null;
 
         public GameState build() {
             return new GameState(this);
@@ -90,8 +106,10 @@ public class GameState {
             return builder()
                     .withTeamAssembled(gameState.getTeamAssembled())
                     .withRolling(gameState.getRolling())
-                    .withNextLocation(gameState.getNextLocation())
-                    .withPathIndex(gameState.getPathIndex());
+                    .withNextLocationName(gameState.getNextLocationName())
+                    .withPathIndex(gameState.getPathIndex())
+                    .withLocationId(gameState.getLocationId())
+                    .withPuzzleId(gameState.getPuzzleId());
         }
 
         public Boolean getTeamAssembled() {
@@ -113,11 +131,11 @@ public class GameState {
         }
 
         public String getNextLocation() {
-            return nextLocation;
+            return nextLocationName;
         }
 
-        public Builder withNextLocation(String nextLocation) {
-            this.nextLocation = nextLocation;
+        public Builder withNextLocationName(String nextLocationName) {
+            this.nextLocationName = nextLocationName;
             return this;
         }
 
@@ -129,6 +147,36 @@ public class GameState {
             this.pathIndex = pathIndex;
             return this;
         }
+
+        public Builder incrementPathIndex(int moduloValue) {
+            /* TODO: this is an interim definition for ease of testing; we'll want to avoid going past the end. */
+            /* TODO: SVR-9 - Set Completed flag if this was the last location. */
+            return withPathIndex((pathIndex + 1) % moduloValue);
+        }
+
+        public Integer getLocationId() {
+            return locationId;
+        }
+
+        public Builder withLocationId(Integer locationId) {
+            this.locationId = locationId;
+            return this;
+        }
+
+        public Integer getPuzzleId() {
+            return puzzleId;
+        }
+
+        public Builder withPuzzleId(Integer puzzleId) {
+            this.puzzleId = puzzleId;
+            return this;
+        }
+
+        public Builder bumpLocation(Course course) {
+            this.locationId = course.getPathIds().get(pathIndex + 1);
+            return this;
+        }
+
     }
 
 }

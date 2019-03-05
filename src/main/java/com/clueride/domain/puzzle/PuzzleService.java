@@ -20,6 +20,8 @@ package com.clueride.domain.puzzle;
 import java.util.List;
 
 import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.puzzle.answer.AnswerPost;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
 
 /**
  * Defines the operations on a Puzzle.
@@ -51,5 +53,13 @@ public interface PuzzleService {
      * @return Empty Puzzle ready to be filled by the client.
      */
     Puzzle getBlankPuzzleForLocation(LocationBuilder locationBuilder);
+
+    /**
+     * Posts the given answer against the current session, updates the
+     * overall Outing's summary for this puzzle, and returns that summary.
+     * @param answerPost Puzzle ID and Answer choice for that puzzle.
+     * @return Summary of responses for the puzzle references in the Answer Post.
+     */
+    AnswerSummary postAnswer(AnswerPost answerPost);
 
 }

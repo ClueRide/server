@@ -27,8 +27,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.clueride.aop.badge.BadgeCapture;
-import com.clueride.auth.ClueRideSession;
-import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.course.CourseService;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.latlon.LatLonService;

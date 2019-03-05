@@ -26,11 +26,10 @@ import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-
 import org.slf4j.Logger;
 
-import com.clueride.auth.ClueRideSession;
-import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
 import static java.util.Objects.requireNonNull;
 
 /**

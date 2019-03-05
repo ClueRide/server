@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 
 import com.clueride.RecordNotFoundException;
 import com.clueride.aop.badge.BadgeCapture;
-import com.clueride.auth.ClueRideSession;
-import com.clueride.auth.ClueRideSessionDto;
 import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
 
 /**
  * Implementation of {@link MemberService}.

@@ -20,7 +20,6 @@ package com.clueride.domain.course;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -54,6 +53,19 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course getById(final Integer courseId) {
         /* Interim implementation. */
+        // TODO: sort out whether the Path Service should be providing this.
+        final List<Integer> interimPathIds = Arrays.asList(
+                6,
+                4,
+                3,
+                13,
+                9,
+                10,
+                2
+        );
+
+        final List<Integer> interimLocations = pathService.getLocationIds(courseId);
+
         return new Course(){
 
             @Override
@@ -77,21 +89,13 @@ public class CourseServiceImpl implements CourseService {
             }
 
             @Override
-            public List<Step> getSteps() {
-                return Collections.EMPTY_LIST;
+            public List<Integer> getLocationIdList() {
+                return interimLocations;
             }
 
             @Override
             public List<Integer> getPathIds() {
-                return Arrays.asList(
-                        6,
-                        4,
-                        3,
-                        13,
-                        9,
-                        10,
-                        2
-                );
+                return interimPathIds;
             }
 
             @Override

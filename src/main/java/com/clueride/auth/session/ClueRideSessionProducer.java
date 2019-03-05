@@ -15,7 +15,7 @@
  *
  * Created by jett on 12/1/18.
  */
-package com.clueride.auth;
+package com.clueride.auth.session;
 
 import java.io.Serializable;
 import java.util.List;
@@ -57,6 +57,9 @@ public class ClueRideSessionProducer implements Serializable {
     private BadgeOsPrincipalService badgeOsPrincipalService;
 
     @Inject
+    private ClueRideSessionService clueRideSessionService;
+
+    @Inject
     private InviteService inviteService;
 
     @Inject
@@ -64,6 +67,7 @@ public class ClueRideSessionProducer implements Serializable {
 
     @Inject
     private OutingService outingService;
+
 
     private String accessToken;
 
@@ -75,12 +79,20 @@ public class ClueRideSessionProducer implements Serializable {
     @Produces
     @SessionScoped
     @ClueRideSession
-    /* Invoked once per session. */
+    /* Invoked once per session, but maintaining session is tricky across platforms. */
     private ClueRideSessionDto produceClueRideSessionDto() {
         requireNonNull(accessToken, "Empty Token. Is this endpoint behind the @Secured annotation?");
+        ClueRideSessionDto clueRideSessionDto = clueRideSessionService.getSessionFromToken(accessToken);
+
+        /* Check if we already have a session object for this token. */
+        if (clueRideSessionDto != null) {
+            return clueRideSessionDto;
+        }
+
+        /* If not, create a new one. */
         LOGGER.debug("Instantiating a Session DTO for auth token {}", accessToken);
 
-        ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
+        clueRideSessionDto = new ClueRideSessionDto();
 
         ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(accessToken);
         clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
@@ -93,6 +105,7 @@ public class ClueRideSessionProducer implements Serializable {
             addInviteAndOuting(clueRideSessionDto, memberId);
         }
 
+        clueRideSessionService.setSessionForToken(accessToken, clueRideSessionDto);
         return clueRideSessionDto;
     }
 

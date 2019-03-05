@@ -41,7 +41,6 @@ public class GameCourse implements Course {
     private final String name;
     private final String description;
     private final Integer courseTypeId;
-    private final List<Step> steps;
     private final List<Integer> pathIds;
     private final Location departure;
     private final Location destination;
@@ -51,7 +50,6 @@ public class GameCourse implements Course {
         this.name = builder.getName();
         this.description = builder.getDescription();
         this.courseTypeId = builder.getCourseTypeId();
-        this.steps = builder.getSteps();
         this.pathIds = builder.getPathIds();
         this.departure = builder.getDeparture();
         this.destination = builder.getDestination();
@@ -83,7 +81,7 @@ public class GameCourse implements Course {
     }
 
     @Override
-    public List<Step> getSteps() {
+    public List<Integer> getLocationIdList() {
         return null;
     }
 
@@ -117,7 +115,7 @@ public class GameCourse implements Course {
         private String name;
         private String description;
         private Integer courseTypeId;
-        private List<Step> steps;
+        private List<Integer> locationIds;
         private List<Integer> pathIds;
         private Location departure;
         private Location destination;
@@ -132,7 +130,7 @@ public class GameCourse implements Course {
                     .withName(course.getName())
                     .withDescription(course.getDescription())
                     .withCourseTypeId(course.getCourseTypeId())
-                    .withSteps(course.getSteps())
+                    .withLocationIdList(course.getLocationIdList())
                     ;
         }
 
@@ -176,12 +174,12 @@ public class GameCourse implements Course {
             return this;
         }
 
-        public List<Step> getSteps() {
-            return steps;
+        public List<Integer> getSteps() {
+            return locationIds;
         }
 
-        public Builder withSteps(List<Step> steps) {
-            this.steps = steps;
+        public Builder withLocationIdList(List<Integer> locationIdList) {
+            this.locationIds = locationIdList;
             return this;
         }
 

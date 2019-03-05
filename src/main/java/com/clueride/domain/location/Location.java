@@ -30,7 +30,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.course.Step;
 import com.clueride.domain.image.ImageEntity;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
@@ -42,7 +41,7 @@ import com.clueride.domain.puzzle.PuzzleBuilder;
  * @author jett
  */
 @Immutable
-public class Location implements Step {
+public class Location {
     private final Integer id;
     private final String name;
     private final String description;

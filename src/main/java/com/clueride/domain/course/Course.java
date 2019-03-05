@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.List;
 
 import com.clueride.domain.location.Location;
-import com.clueride.domain.path.Path;
 
 /**
  * Representation of a Course, including an ordered list of Locations and the Paths
@@ -33,7 +32,7 @@ public interface Course {
     String getDescription();
     URL getUrl();
     Integer getCourseTypeId();
-    List<Step> getSteps();
+    List<Integer> getLocationIdList();
     List<Integer> getPathIds();
     Location getDeparture();
     Location getDestination();
@@ -42,12 +41,4 @@ public interface Course {
 //    Step nextStep();
 //    Step currentStep();
 
-    /**
-     * As progress is made along the course, each step is completed by calling
-     * this method.
-     * For example, upon departure from the first {@link Location}, that step is completed
-     * and the state changes to the first {@link Path}.
-     * @return The last current step which we've marked as completed (giving us a new current Step).
-     */
-//    Step completeCurrentStep();
 }

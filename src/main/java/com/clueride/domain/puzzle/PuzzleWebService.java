@@ -28,9 +28,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.Secured;
 import com.clueride.domain.location.LocationBuilder;
 import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.puzzle.answer.AnswerPost;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
 
 /**
  * REST API for {@link Puzzle} instances and their {@link Answer} instances.
@@ -64,6 +67,16 @@ public class PuzzleWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Puzzle savePuzzle(PuzzleBuilder puzzleBuilder) {
         return puzzleService.addNew(puzzleBuilder);
+    }
+
+    @POST
+    @Secured
+    @BadgeCapture
+    @Path("answer")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AnswerSummary postAnswerForSession(AnswerPost answerPost) {
+        return puzzleService.postAnswer(answerPost);
     }
 
 }

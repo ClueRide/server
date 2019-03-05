@@ -32,10 +32,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 
-import com.clueride.auth.ClueRideSession;
-import com.clueride.auth.ClueRideSessionDto;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.config.ConfigService;
 import com.clueride.domain.game.GameState;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
 
 
 /**
@@ -82,6 +83,12 @@ public class SSEventServiceImpl implements SSEventService {
     @Override
     public Integer sendDepartureEvent(Integer outingId, GameState gameState) {
         return sendEvent(eventMessageFromString("Departure", gameState));
+    }
+
+    @Override
+    public Integer sendAnswerSummaryEvent(Integer outingId, AnswerSummary answerSummary) {
+        // TODO: Implement this
+        return null;
     }
 
     /** Builds the Event from Session information including the Game State. */

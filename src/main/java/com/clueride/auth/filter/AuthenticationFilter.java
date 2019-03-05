@@ -35,10 +35,10 @@ import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 
 import com.clueride.RecordNotFoundException;
-import com.clueride.auth.ClueRideSession;
 import com.clueride.auth.Secured;
 import com.clueride.auth.access.AccessTokenService;
 import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.session.ClueRideSession;
 import com.clueride.config.ConfigService;
 import com.clueride.domain.account.principal.PrincipalService;
 
