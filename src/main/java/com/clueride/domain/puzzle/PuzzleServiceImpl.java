@@ -71,7 +71,7 @@ public class PuzzleServiceImpl implements PuzzleService {
     @Override
     public List<Puzzle> getByLocation(Integer locationId) {
         List<Puzzle> puzzles = new ArrayList<>();
-        LocationBuilder locationBuilder = LocationBuilder.builder().withId(locationId);
+        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
         for (PuzzleBuilder puzzleBuilder : puzzleStore.getPuzzlesForLocation(locationBuilder)) {
             try {
                 puzzles.add(puzzleBuilder.build());
@@ -119,7 +119,7 @@ public class PuzzleServiceImpl implements PuzzleService {
     public AnswerSummary postAnswer(AnswerPost answerPost) {
         AnswerKey postedAnswerKey = AnswerKey.valueOf(answerPost.getAnswer());
         AnswerSummary answerSummary = new AnswerSummary();
-        answerSummary.setPuzzleId(answerPost.getId());
+        answerSummary.setPuzzleId(answerPost.getPuzzleId());
         answerSummary.setMyAnswer(postedAnswerKey);
 
         PuzzleState puzzleState = clueRideSessionDto.getPuzzleState();
