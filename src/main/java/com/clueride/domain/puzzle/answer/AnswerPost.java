@@ -21,15 +21,15 @@ package com.clueride.domain.puzzle.answer;
  * Represents a player's choice of answer for a given puzzle.
  */
 public class AnswerPost {
-    private Integer id;
+    private Integer puzzleId;
     private String answer;
 
-    public Integer getId() {
-        return id;
+    public Integer getPuzzleId() {
+        return puzzleId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPuzzleId(Integer puzzleId) {
+        this.puzzleId = puzzleId;
     }
 
     public String getAnswer() {
