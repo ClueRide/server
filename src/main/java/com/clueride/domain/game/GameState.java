@@ -173,7 +173,7 @@ public class GameState {
         }
 
         public Builder bumpLocation(Course course) {
-            this.locationId = course.getPathIds().get(pathIndex + 1);
+            this.locationId = course.getLocationIdList().get(pathIndex + 1);
             return this;
         }
 
