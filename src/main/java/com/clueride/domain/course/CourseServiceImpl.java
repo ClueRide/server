@@ -17,32 +17,41 @@
  */
 package com.clueride.domain.course;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
-import com.clueride.domain.location.Location;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.network.path.PathService;
 
 /**
- * Interim implementation.
+ * Implementation of CourseService.
  */
 public class CourseServiceImpl implements CourseService {
     private final PathService pathService;
+    private final CourseStore courseStore;
+
+    @Inject
+    @SessionScoped
+    @ClueRideSession
+    private ClueRideSessionDto clueRideSessionDto;
 
     @Inject
     public CourseServiceImpl(
-            PathService pathService
+            PathService pathService,
+            CourseStore courseStore
     ) {
         this.pathService = pathService;
+        this.courseStore = courseStore;
     }
 
     @Override
     public Course getSessionCourse() {
-        return getById(1);
+        return getById(
+                clueRideSessionDto.getOutingView().getCourseId()
+        );
     }
 
     @Override
@@ -52,75 +61,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getById(final Integer courseId) {
-        /* Interim implementation. */
-        // TODO: sort out whether the Path Service should be providing this.
-        final List<Integer> interimPathIds = Arrays.asList(
-                6,
-                4,
-                3,
-                13,
-                9,
-                10,
-                2
-        );
+        CourseBuilder courseBuilder = courseStore.getCourseById(courseId)
+                .withLocationIds(pathService.getLocationIds(courseId));
 
-        final List<Integer> interimLocations = pathService.getLocationIds(courseId);
-
-        return new Course(){
-
-            @Override
-            public Integer getId() {
-                return courseId;
-            }
-
-            @Override
-            public String getName() {
-                return "Five Free Things";
-            }
-
-            @Override
-            public String getDescription() {
-                return "From an article that I can no longer find";
-            }
-
-            @Override
-            public Integer getCourseTypeId() {
-                return null;
-            }
-
-            @Override
-            public List<Integer> getLocationIdList() {
-                return interimLocations;
-            }
-
-            @Override
-            public List<Integer> getPathIds() {
-                return interimPathIds;
-            }
-
-            @Override
-            public Location getDeparture() {
-                return null;
-            }
-
-            @Override
-            public Location getDestination() {
-                return null;
-            }
-
-            @Override
-            public URL getUrl() {
-                URL url = null;
-                try {
-                    url = new URL("https://clueride.com/five-free-things/");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                return url;
-            }
-
-        };
-
+        return courseBuilder.build();
     }
 
 }
