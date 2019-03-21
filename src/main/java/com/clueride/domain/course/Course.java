@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Jett Marks
+ * Copyright 2018 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,86 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 1/15/16.
+ * Created by jett on 9/15/18.
  */
 package com.clueride.domain.course;
 
-import java.net.URL;
 import java.util.List;
 
-import com.clueride.domain.location.Location;
+import javax.annotation.concurrent.Immutable;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.clueride.domain.game.GameState;
 
 /**
- * Representation of a Course, including an ordered list of Locations and the Paths
- * which move from one Location to the next.
+ * Contains static information about a Course; persistable to DB and unchanging
+ * over the time frame of an Outing.
+ *
+ * This serves as a reference to obtain information about the structure of the
+ * course. The dynamic state information is held in the {@link GameState} instance.
  */
-public interface Course {
-    Integer getId();
-    String getName();
-    String getDescription();
-    URL getUrl();
-    Integer getCourseTypeId();
-    List<Integer> getLocationIdList();
-    List<Integer> getPathIds();
-    Location getDeparture();
-    Location getDestination();
+@Immutable
+public class Course {
+    private final Integer id;
+    private final String name;
+    private final String description;
+    private final String url;
+    private final Integer courseTypeId;
+    private final List<Integer> pathIds;
+    private final List<Integer> locationIds;
+//    private final Location departure;
+//    private final Location destination;
 
-    // TODO: CA-374
-//    Step nextStep();
-//    Step currentStep();
+    public Course(CourseBuilder builder) {
+        this.id = builder.getId();
+        this.name = builder.getName();
+        this.description = builder.getDescription();
+        this.url = builder.getUrl();
+        this.courseTypeId = builder.getCourseTypeId();
+        this.pathIds = builder.getPathIds();
+        this.locationIds = builder.getLocationIds();
+//        this.departure = builder.getDeparture();
+//        this.destination = builder.getDestination();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Integer getCourseTypeId() {
+        return courseTypeId;
+    }
+
+    public List<Integer> getPathIds() {
+        return pathIds;
+    }
+
+    public List<Integer> getLocationIds() {
+        return locationIds;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 
 }

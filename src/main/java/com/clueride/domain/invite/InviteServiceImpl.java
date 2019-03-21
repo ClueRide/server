@@ -18,6 +18,8 @@
 package com.clueride.domain.invite;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +101,11 @@ public class InviteServiceImpl implements InviteService {
 
             Course course = courseService.getById(outing.getCourseId());
             builder.withCourseName(course.getName());
-            builder.withCourseUrl(course.getUrl());
+            try {
+                builder.withCourseUrl(new URL(course.getUrl()));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
 
             invites.add(builder.build());
         }
