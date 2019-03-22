@@ -34,7 +34,12 @@ import com.clueride.domain.game.ssevent.SSEventService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.puzzle.Puzzle;
 import com.clueride.domain.puzzle.PuzzleService;
+import com.clueride.domain.puzzle.answer.AnswerKey;
+import com.clueride.domain.puzzle.answer.AnswerPost;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
 import com.clueride.domain.puzzle.state.PuzzleState;
+import com.clueride.domain.puzzle.state.PuzzleStateService;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of service handling Game State.
@@ -51,6 +56,7 @@ public class GameStateServiceImpl implements GameStateService {
     private final SSEventService ssEventService;
     private final PuzzleService puzzleService;
     private final CourseService courseService;
+    private final PuzzleStateService puzzleStateService;
 
     /** Cached copy of GameState TODO: Persist this via a service. */
     private final static Map<Integer, GameState> gameStateMap = new HashMap<>();
@@ -59,11 +65,13 @@ public class GameStateServiceImpl implements GameStateService {
     public GameStateServiceImpl(
             SSEventService ssEventService,
             PuzzleService puzzleService,
-            CourseService courseService
+            CourseService courseService,
+            PuzzleStateService puzzleStateService
     ) {
         this.ssEventService = ssEventService;
         this.puzzleService = puzzleService;
         this.courseService = courseService;
+        this.puzzleStateService = puzzleStateService;
     }
 
     /**
@@ -96,17 +104,37 @@ public class GameStateServiceImpl implements GameStateService {
     }
 
     @Override
+    public PuzzleState getPuzzleStateForSession() {
+        OutingView outingView = clueRideSessionDto.getOutingView();
+        int outingId = outingView.getId();
+
+        GameState gameState = gameStateMap.get(outingId);
+        return puzzleStateService.getPuzzleStateByLocationAndOuting(
+                outingId,
+                gameState.getLocationId()
+        );
+    }
+
+    @Override
     public GameState updateWithTeamAssembled() {
         OutingView outingView = clueRideSessionDto.getOutingView();
         int outingId = outingView.getId();
         LOGGER.info("Opening Game State for outing " + outingId);
         Course course = courseService.getById(outingView.getCourseId());
+        setupPuzzles(outingId, course);
         clueRideSessionDto.setCourse(course);
         GameState.Builder gameStateBuilder = GameState.Builder.builder()
                 .withTeamAssembled(true)
                 .bumpLocation(course);
 
-        setPuzzle(gameStateBuilder);
+        gameStateBuilder
+                .withPuzzleId(
+                        puzzleStateService.getPuzzleStateByLocationAndOuting(
+                                outingId,
+                                gameStateBuilder.getLocationId()
+                        ).getPuzzleId()
+                );
+
         GameState gameState = gameStateBuilder.build();
 
         synchronized (gameStateMap) {
@@ -116,6 +144,11 @@ public class GameStateServiceImpl implements GameStateService {
         return gameState;
     }
 
+    /**
+     * This happens at the conclusion of a travel step.
+     *
+     * @return updated GameState.
+     */
     @Override
     public GameState updateOutingStateWithArrival() {
         int outingId = clueRideSessionDto.getOutingView().getId();
@@ -141,6 +174,13 @@ public class GameStateServiceImpl implements GameStateService {
         return gameState;
     }
 
+    /**
+     * This happens as we're about to embark on a new step with a new location and
+     * its new puzzle (although the puzzle won't be revealed until we arrive at the
+     * new location).
+     *
+     * @return updated GameState.
+     */
     @Override
     public GameState updateOutingStateWithDeparture() {
         int outingId = clueRideSessionDto.getOutingView().getId();
@@ -154,7 +194,12 @@ public class GameStateServiceImpl implements GameStateService {
         gameStateBuilder.withRolling(true)
                 .incrementPathIndex(course.getPathIds().size())
                 .bumpLocation(course);
-        setPuzzle(gameStateBuilder);
+        gameStateBuilder.withPuzzleId(
+                puzzleStateService.getPuzzleStateByLocationAndOuting(
+                        outingId,
+                        gameStateBuilder.getLocationId()
+                ).getPuzzleId()
+        );
         gameState = gameStateBuilder.build();
 
         synchronized (gameStateMap) {
@@ -164,19 +209,58 @@ public class GameStateServiceImpl implements GameStateService {
         return gameState;
     }
 
-    private void setPuzzle(GameState.Builder gameStateBuilder) {
-        List<Puzzle> puzzles = puzzleService.getByLocation(gameStateBuilder.getLocationId());
+    @Override
+    public AnswerSummary postAnswer(AnswerPost answerPost) {
+        AnswerKey postedAnswerKey = AnswerKey.valueOf(answerPost.getAnswer());
+        AnswerSummary answerSummary = new AnswerSummary();
+        answerSummary.setPuzzleId(answerPost.getPuzzleId());
+        answerSummary.setMyAnswer(postedAnswerKey);
+
+        PuzzleState puzzleState = getPuzzleStateForSession();
+        requireNonNull(puzzleState, "Attempting to post answer against no puzzle state");
+        answerSummary.setCorrectAnswer(puzzleState.getCorrectAnswer());
+        answerSummary.setAnswerMap(puzzleState.postAnswer(postedAnswerKey));
+
+        synchronized (ssEventService) {
+            ssEventService.sendAnswerSummaryEvent(
+                    clueRideSessionDto.getOutingView().getId(),
+                    answerSummary
+            );
+        }
+        return answerSummary;
+    }
+
+    /**
+     * Initializes the Puzzle State for all puzzles in the given outing by
+     * iterating over each location in the course and choosing a puzzle
+     * for that location.
+     *
+     * @param outingId unique Identifier for the outing we're setting up.
+     * @param course contains the list of Locations and their puzzle IDs.
+     */
+    private void setupPuzzles(Integer outingId, Course course) {
+        puzzleStateService.openOuting(outingId);
+        for (Integer locationId : course.getLocationIds()) {
+            puzzleStateService.addPuzzleState(
+                    outingId,
+                    locationId,
+                    new PuzzleState(
+                            getPuzzleForLocation(locationId)
+                    )
+            );
+        }
+    }
+
+    private Puzzle getPuzzleForLocation(Integer locationId) {
+        List<Puzzle> puzzles = puzzleService.getByLocation(locationId);
         Puzzle chosenPuzzle = null;
         if (puzzles.size() == 0) {
             LOGGER.error("No puzzles for this location");
         } else {
             /* Simply picking the first at this time. */
             chosenPuzzle = puzzles.get(0);
-            gameStateBuilder.withPuzzleId(chosenPuzzle.getId());
         }
-
-        PuzzleState puzzleState = new PuzzleState(chosenPuzzle);
-        clueRideSessionDto.setPuzzleState(puzzleState);
+        return chosenPuzzle;
     }
 
 }

@@ -27,14 +27,10 @@ import org.slf4j.Logger;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.domain.game.ssevent.SSEventService;
 import com.clueride.domain.location.LocationBuilder;
 import com.clueride.domain.location.LocationStore;
 import com.clueride.domain.puzzle.answer.Answer;
 import com.clueride.domain.puzzle.answer.AnswerKey;
-import com.clueride.domain.puzzle.answer.AnswerPost;
-import com.clueride.domain.puzzle.answer.AnswerSummary;
-import com.clueride.domain.puzzle.state.PuzzleState;
 
 /**
  * Implementation of the PuzzleService interface.
@@ -50,17 +46,14 @@ public class PuzzleServiceImpl implements PuzzleService {
 
     private final LocationStore locationStore;
     private final PuzzleStore puzzleStore;
-    private final SSEventService ssEventService;
 
     @Inject
     public PuzzleServiceImpl(
             PuzzleStore puzzleStore,
-            LocationStore locationStore,
-            SSEventService ssEventService
+            LocationStore locationStore
     ) {
         this.puzzleStore = puzzleStore;
         this.locationStore = locationStore;
-        this.ssEventService = ssEventService;
     }
 
     @Override
@@ -113,26 +106,6 @@ public class PuzzleServiceImpl implements PuzzleService {
                 .withLocationBuilder(locationBuilder)
                 .withAnswers(answers);
         return puzzleBuilder.build();
-    }
-
-    @Override
-    public AnswerSummary postAnswer(AnswerPost answerPost) {
-        AnswerKey postedAnswerKey = AnswerKey.valueOf(answerPost.getAnswer());
-        AnswerSummary answerSummary = new AnswerSummary();
-        answerSummary.setPuzzleId(answerPost.getPuzzleId());
-        answerSummary.setMyAnswer(postedAnswerKey);
-
-        PuzzleState puzzleState = clueRideSessionDto.getPuzzleState();
-        answerSummary.setCorrectAnswer(puzzleState.getCorrectAnswer());
-        answerSummary.setAnswerMap(puzzleState.postAnswer(postedAnswerKey));
-
-        synchronized (ssEventService) {
-            ssEventService.sendAnswerSummaryEvent(
-                    clueRideSessionDto.getOutingView().getId(),
-                    answerSummary
-            );
-        }
-        return answerSummary;
     }
 
 }

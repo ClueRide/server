@@ -23,6 +23,7 @@ import java.util.Map;
 import com.clueride.domain.puzzle.Puzzle;
 import com.clueride.domain.puzzle.answer.Answer;
 import com.clueride.domain.puzzle.answer.AnswerKey;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tracks the progress on the team's answers for a given Puzzle.
@@ -32,10 +33,17 @@ public class PuzzleState {
     private Map<AnswerKey, Integer> answerMap = new HashMap<>();
 
     public PuzzleState (Puzzle puzzle) {
+        requireNonNull(puzzle, "Can't create Puzzle State for null puzzle");
+        requireNonNull(puzzle.getAnswers(), "Can't create Puzzle State for puzzle without answers");
+
         this.puzzle = puzzle;
         for (Answer answer : puzzle.getAnswers()) {
             answerMap.put(answer.getKey(), 0);
         }
+    }
+
+    public Integer getPuzzleId() {
+        return this.puzzle.getId();
     }
 
     public Map<AnswerKey, Integer> postAnswer(AnswerKey answerKey) {
