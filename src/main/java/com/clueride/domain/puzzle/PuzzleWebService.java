@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.Secured;
+import com.clueride.domain.game.GameStateService;
 import com.clueride.domain.location.LocationBuilder;
 import com.clueride.domain.puzzle.answer.Answer;
 import com.clueride.domain.puzzle.answer.AnswerPost;
@@ -43,6 +44,9 @@ public class PuzzleWebService {
 
     @Inject
     private PuzzleService puzzleService;
+
+    @Inject
+    private GameStateService gameStateService;
 
     @GET
     @Secured
@@ -76,7 +80,7 @@ public class PuzzleWebService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public AnswerSummary postAnswerForSession(AnswerPost answerPost) {
-        return puzzleService.postAnswer(answerPost);
+        return gameStateService.postAnswer(answerPost);
     }
 
 }

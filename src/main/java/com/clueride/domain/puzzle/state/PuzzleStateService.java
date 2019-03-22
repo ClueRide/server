@@ -22,6 +22,42 @@ package com.clueride.domain.puzzle.state;
  */
 public interface PuzzleStateService {
 
+    /**
+     * Given the outing and the location, retrieve the corresponding puzzleState.
+     *
+     * @param outingId unique identifier for an outing.
+     * @param locationId unique identifier for the Location.
+     * @return matching instance of mutable PuzzleState.
+     */
+    PuzzleState getPuzzleStateByLocationAndOuting(
+            Integer outingId,
+            Integer locationId
+    );
 
+    /**
+     * Places an instance of Puzzle State in the map under the given outing and location.
+     *
+     * @param outingId unique identifier for an outing.
+     * @param locationId unique identifier for the Location.
+     * @param puzzleState instance of Puzzle State corresponding to the outing and location.
+     */
+    void addPuzzleState(
+            Integer outingId,
+            Integer locationId,
+            PuzzleState puzzleState
+    );
 
+    /**
+     * Prepare the map for tracking the puzzles for the given outing ID.
+     *
+     * @param outingId unique identifier for an outing.
+     */
+    void openOuting(Integer outingId);
+
+    /**
+     * Releases the puzzle states for the given Outing.
+     *
+     * @param outingId unique identifier for an outing.
+     */
+    void closeOuting(Integer outingId);
 }

@@ -26,6 +26,8 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.account.member.Member;
@@ -42,6 +44,9 @@ import static java.util.Objects.requireNonNull;
  * Implementation of the {@link InviteService}.
  */
 public class InviteServiceImpl implements InviteService {
+    @Inject
+    private Logger LOGGER;
+
     @Inject
     @SessionScoped
     @ClueRideSession
@@ -85,6 +90,8 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public List<Invite> getMemberInvites(Integer memberId) {
+        LOGGER.debug("Retrieving Invite List for member ID {}", memberId);
+
         List<Invite> invites = new ArrayList<>();
 
         List<InviteBuilder> inviteBuilders = inviteStore.getUpcomingInvitationsByMemberId(memberId);
@@ -139,6 +146,8 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public SessionInviteState getInviteState(Integer memberId) {
+        LOGGER.debug("Retrieving Invite State for member ID {}", memberId);
+
         List<InviteBuilder> sessionInvites = inviteStore.getUpcomingInvitationsByMemberId(memberId);
         if (sessionInvites.size() == 0) {
             return SessionInviteState.NO_INVITES;

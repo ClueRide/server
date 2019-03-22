@@ -17,6 +17,10 @@
  */
 package com.clueride.domain.game;
 
+import com.clueride.domain.puzzle.answer.AnswerPost;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
+import com.clueride.domain.puzzle.state.PuzzleState;
+
 /**
  * Manages an in-memory copy of the State per Team and per User Session.
  */
@@ -36,14 +40,6 @@ public interface GameStateService {
      */
     String getGameStateByTeam(Integer teamId);
     /**
-     * Update the stored Game State for a team using the given instance.
-     * @param clueRideState - State values to be used for the update.
-     * @return - JSON object indicating success of update.
-     */
-
-//    String updateGameStateByTeam(ClueRideState clueRideState);
-
-    /**
      * Indicates that an initial game has all players assembled and we're
      * ready to reveal a puzzle at the starting location.
      * @return updated Game State instance.
@@ -62,5 +58,28 @@ public interface GameStateService {
      * Updates the indicated Outing with a Departure Event (including the broadcast of the SSE).
      */
     GameState updateOutingStateWithDeparture();
+
+    /**
+     * Update the stored Game State for a team using the given instance.
+     * @param clueRideState - State values to be used for the update.
+     * @return - JSON object indicating success of update.
+     */
+
+//    String updateGameStateByTeam(ClueRideState clueRideState);
+
+    /**
+     * For the session's Game, retrieve the current Puzzle State.
+     *
+     * @return Session's PuzzleState.
+     */
+    PuzzleState getPuzzleStateForSession();
+
+    /**
+     * Posts the given answer against the current session, updates the
+     * overall Outing's summary for this puzzle, and returns that summary.
+     * @param answerPost Puzzle ID and Answer choice for that puzzle.
+     * @return Summary of responses for the puzzle references in the Answer Post.
+     */
+    AnswerSummary postAnswer(AnswerPost answerPost);
 
 }
