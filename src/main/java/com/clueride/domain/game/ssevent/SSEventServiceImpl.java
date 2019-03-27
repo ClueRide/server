@@ -47,6 +47,7 @@ import com.clueride.domain.puzzle.answer.AnswerSummary;
 public class SSEventServiceImpl implements SSEventService {
     private final Logger LOGGER;
     private final String sseHost;
+    private final ConfigService configService;
 
     @Inject
     @SessionScoped
@@ -65,6 +66,7 @@ public class SSEventServiceImpl implements SSEventService {
             ConfigService configService,
             Logger logger
     ) {
+        this.configService = configService;
         this.sseHost = configService.get("sse.host");
         this.LOGGER = logger;
         LOGGER.debug("Communicating with SSE server at " + sseHost);
@@ -72,23 +74,39 @@ public class SSEventServiceImpl implements SSEventService {
 
     @Override
     public Integer sendTeamReadyEvent(Integer outingId, GameState gameState) {
-        return sendEvent(eventMessageFromString("Team Assembled", gameState));
+        return sendGameStateEvent(eventMessageFromString("Team Assembled", gameState));
     }
 
     @Override
     public Integer sendArrivalEvent(Integer outingId, GameState gameState) {
-        return sendEvent(eventMessageFromString("Arrival", gameState));
+        return sendGameStateEvent(eventMessageFromString("Arrival", gameState));
     }
 
     @Override
     public Integer sendDepartureEvent(Integer outingId, GameState gameState) {
-        return sendEvent(eventMessageFromString("Departure", gameState));
+        return sendGameStateEvent(eventMessageFromString("Departure", gameState));
     }
 
     @Override
     public Integer sendAnswerSummaryEvent(Integer outingId, AnswerSummary answerSummary) {
-        // TODO: Implement this
-        return null;
+        return sendEvent(
+                answerSummaryEventMessage(answerSummary),
+                SSEventType.ANSWER_SUMMARY
+        );
+    }
+
+    private String answerSummaryEventMessage(AnswerSummary answerSummary) {
+        AnswerSummaryEvent answerSummaryEvent = new AnswerSummaryEvent(
+                SSEventType.ANSWER_SUMMARY.toString(),
+                clueRideSessionDto.getOutingView().getId(),
+                answerSummary
+        );
+        try {
+            return objectMapper.writeValueAsString(answerSummaryEvent);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /** Builds the Event from Session information including the Game State. */
@@ -100,15 +118,15 @@ public class SSEventServiceImpl implements SSEventService {
                         gameState
                 );
         try {
-            return objectMapper.writeValueAsString(
-                    ssEventMessage
-            );
+            return objectMapper.writeValueAsString(ssEventMessage);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return "";
+    }
 
-//        return String.format("{\"event\":\"%s\",\"outingId\":%d}", event, outingId);
+    private Integer sendGameStateEvent(String message) {
+        return sendEvent(message, SSEventType.GAME_STATE);
     }
 
     /**
@@ -117,11 +135,12 @@ public class SSEventServiceImpl implements SSEventService {
      * @return the HTTP Response code (exception thrown if it's not 200).
      */
     private Integer sendEvent(
-            String message
+            String message,
+            SSEventType ssEventType
     ) {
         int responseCode = 500;
         try {
-            URL url = urlForSession();
+            URL url = urlForSession(ssEventType);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
@@ -159,10 +178,12 @@ public class SSEventServiceImpl implements SSEventService {
     }
 
     /** Builds appropriate URL based on the Session's Outing ID. */
-    private URL urlForSession() throws MalformedURLException {
+    private URL urlForSession(SSEventType ssEventType) throws MalformedURLException {
+        String endpoint = this.configService.get("sse.endpoint." + ssEventType.toString());
         return new URL(
                 "http://" + sseHost
-                        + "/rest/game-state-broadcast/"
+                        + "/rest/"
+                        + endpoint + "/"
                         + clueRideSessionDto.getOutingView().getId()
         );
     }
