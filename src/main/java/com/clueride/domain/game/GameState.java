@@ -23,8 +23,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.course.Course;
-
 /**
  * Defines what we need to track the state of the Game for the clients.
  */
@@ -171,12 +169,6 @@ public class GameState {
             this.puzzleId = puzzleId;
             return this;
         }
-
-        public Builder bumpLocation(Course course) {
-            this.locationId = course.getLocationIds().get(pathIndex + 1);
-            return this;
-        }
-
     }
 
 }
