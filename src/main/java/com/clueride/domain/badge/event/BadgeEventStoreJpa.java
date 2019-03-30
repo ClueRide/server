@@ -17,8 +17,15 @@
  */
 package com.clueride.domain.badge.event;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  * Implementation of Badge Event Store for JPA.
@@ -27,20 +34,26 @@ public class BadgeEventStoreJpa implements BadgeEventStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @Override
     public Integer add(BadgeEventBuilder badgeEventBuilder) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(badgeEventBuilder);
-        entityManager.getTransaction().commit();
+        //noinspection Duplicates
+        try {
+            userTransaction.begin();
+            entityManager.persist(badgeEventBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
         return badgeEventBuilder.getId();
     }
 
     @Override
     public BadgeEventBuilder getById(Integer badgeEventId) {
         BadgeEventBuilder badgeEventBuilder;
-        entityManager.getTransaction().begin();
         badgeEventBuilder = entityManager.find(BadgeEventBuilder.class, badgeEventId);
-        entityManager.getTransaction().commit();
         return badgeEventBuilder;
     }
 

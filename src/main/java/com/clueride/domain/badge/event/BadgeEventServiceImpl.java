@@ -28,11 +28,10 @@ import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 
+import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.PrincipalService;
-
-//import com.clueride.domain.account.member.Member;
 
 /**
  * Implementation of Badge Event service which dispatches events from a queue that is populated by clients.
@@ -79,19 +78,18 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     @Override
     public BadgeEvent getBadgeEventById(Integer badgeEventId) {
         BadgeEventBuilder badgeEventBuilder = badgeEventStore.getById(badgeEventId);
-//        fillDbBuilder(badgeEventBuilder);
+        fillDbBuilder(badgeEventBuilder);
         return badgeEventBuilder.build();
     }
 
-    // TODO: Tie this into the database to create the event records
-//    private void fillDbBuilder(BadgeEvent.Builder badgeEventBuilder) {
-//        Member member = memberService.getMember(badgeEventBuilder.getMemberId());
-//        badgeEventBuilder.withPrincipal(
-//                principalService.getPrincipalForEmailAddress(
-//                        member.getEmailAddress()
-//                )
-//        );
-//    }
+    private void fillDbBuilder(BadgeEventBuilder badgeEventBuilder) {
+        Member member = memberService.getMember(badgeEventBuilder.getMemberId());
+        badgeEventBuilder.withPrincipal(
+                principalService.getPrincipalForEmailAddress(
+                        member.getEmailAddress()
+                )
+        );
+    }
 
     private void fillClientBuilder(BadgeEventBuilder badgeEventBuilder) throws AddressException {
         BadgeOsPrincipal principal = (BadgeOsPrincipal) badgeEventBuilder.getPrincipal();
@@ -112,7 +110,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
                     badgeEventBuilder = eventQueue.take();
                     fillClientBuilder(badgeEventBuilder);
                     LOGGER.info("Captured Event: " + badgeEventBuilder.toString());
-//                    badgeEventStore.add(badgeEventBuilder);
+                    badgeEventStore.add(badgeEventBuilder);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     runnable = false;
@@ -133,6 +131,5 @@ public class BadgeEventServiceImpl implements BadgeEventService {
         }
 
     }
-
 
 }
