@@ -113,12 +113,6 @@ public class GameStateServiceImpl implements GameStateService {
     }
 
     @Override
-    public String getGameStateByTeam(Integer teamId) {
-        LOGGER.info("Requesting Game State for Team ID " + teamId);
-        return "";
-    }
-
-    @Override
     public PuzzleState getPuzzleStateForSession() {
         GameState.Builder gameStateBuilder = getBuilderForSession();
         return puzzleStateService.getPuzzleStateByLocationAndOuting(
@@ -158,6 +152,9 @@ public class GameStateServiceImpl implements GameStateService {
     /**
      * This happens at the conclusion of a travel step.
      *
+     * A special case is when we arrive at the end of the Course. In this case,
+     * we change the GameState to indicate the Outing is complete.
+     *
      * @return updated GameState.
      */
     @Override
@@ -175,12 +172,33 @@ public class GameStateServiceImpl implements GameStateService {
         LOGGER.info("Changing Game State for outing " + outingId + " to Arrival");
 
         gameStateBuilder.withRolling(false);
+        if (endOfCourse(gameStateBuilder)) {
+            gameStateBuilder.withOutingComplete(true);
+        }
 
         synchronized (gameStateMap) {
             gameStateMap.put(outingId, gameStateBuilder);
             ssEventService.sendArrivalEvent(outingId, gameStateBuilder.build());
         }
         return gameStateBuilder.build();
+    }
+
+    /**
+     * This happens when we've received an arrival event and we're on the last path
+     * of the course.
+     *
+     * @param gameStateBuilder the current state which we're evaluating.
+     * @return true if we're at the last location in the Course.
+     */
+    private boolean endOfCourse(GameState.Builder gameStateBuilder) {
+        Course course = clueRideSessionDto.getCourse();
+        /* Last Location ID is the size of the Location IDs - 1. */
+        int lastLocationId = course.getLocationIds().size() - 1;
+        return (
+                gameStateBuilder.getLocationId().equals(
+                         course.getLocationIds().get(lastLocationId)
+                )
+        );
     }
 
     /**
