@@ -25,11 +25,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Defines what we need to track the state of the Game for the clients.
+ *
+ * Immutable instance is used for broadcasting.
  */
 @Immutable
 public class GameState {
-    private final Boolean teamAssembled;
-    private final Boolean rolling;
+    private final boolean teamAssembled;
+    private final boolean rolling;
+    private final boolean outingComplete;
     private final String nextLocationName;
     private final Integer pathIndex;
     private final Integer locationId;
@@ -38,18 +41,23 @@ public class GameState {
     private GameState(Builder builder) {
         this.teamAssembled = builder.getTeamAssembled();
         this.rolling = builder.getRolling();
+        this.outingComplete = builder.isOutingComplete();
         this.nextLocationName = builder.getNextLocation();
         this.pathIndex = builder.getPathIndex();
         this.locationId = builder.getLocationId();
         this.puzzleId = builder.getPuzzleId();
     }
 
-    public Boolean getTeamAssembled() {
+    public boolean getTeamAssembled() {
         return teamAssembled;
     }
 
-    public Boolean getRolling() {
+    public boolean getRolling() {
         return rolling;
+    }
+
+    public boolean isOutingComplete() {
+        return outingComplete;
     }
 
     public String getNextLocationName() {
@@ -85,10 +93,11 @@ public class GameState {
 
     public static class Builder {
         /* Initial Game State -- without knowing the Course. */
-        private Boolean teamAssembled = false;
-        private Boolean rolling = false;
+        private boolean teamAssembled = false;
+        private boolean rolling = false;
+        private boolean outingComplete = false;
         private String nextLocationName = "Meeting Location";
-        private Integer pathIndex = -1;
+        private int pathIndex = -1;
         private Integer locationId = null;
         private Integer puzzleId = null;
 
@@ -128,6 +137,15 @@ public class GameState {
             return this;
         }
 
+        public boolean isOutingComplete() {
+            return outingComplete;
+        }
+
+        public Builder withOutingComplete(boolean outingComplete) {
+            this.outingComplete = outingComplete;
+            return this;
+        }
+
         public String getNextLocation() {
             return nextLocationName;
         }
@@ -147,8 +165,7 @@ public class GameState {
         }
 
         public Builder incrementPathIndex(int moduloValue) {
-            /* TODO: this is an interim definition for ease of testing; we'll want to avoid going past the end. */
-            /* TODO: SVR-9 - Set Completed flag if this was the last location. */
+            /* Game State is set to "Outing Complete" when this wraps; for testing, it's convenient to wrap. */
             return withPathIndex((pathIndex + 1) % moduloValue);
         }
 

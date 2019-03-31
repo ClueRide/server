@@ -34,12 +34,6 @@ public interface GameStateService {
     GameState getActiveSessionGameState();
 
     /**
-     * Given a Team's ID, return the most recently stored State for that Team.
-     * @param teamId - Unique Integer identifying the Team whose State to be retrieved.
-     * @return - JSON String representing the entire state object.
-     */
-    String getGameStateByTeam(Integer teamId);
-    /**
      * Indicates that an initial game has all players assembled and we're
      * ready to reveal a puzzle at the starting location.
      * @return updated Game State instance.
@@ -51,6 +45,10 @@ public interface GameStateService {
      * This is only valid after the first departure from the starting location;
      * it cannot be used to trigger arrival at the start, that's the job for
      * {@link GameStateService#updateWithTeamAssembled()}
+     *
+     * Once we know the course, we're able to tell if a given Arrival event is the last Arrival and
+     * thus the completion of the Course and Outing. Course Completion triggers the broadcast of
+     * a Game State with completion status.
      */
     GameState updateOutingStateWithArrival();
 
@@ -58,14 +56,6 @@ public interface GameStateService {
      * Updates the indicated Outing with a Departure Event (including the broadcast of the SSE).
      */
     GameState updateOutingStateWithDeparture();
-
-    /**
-     * Update the stored Game State for a team using the given instance.
-     * @param clueRideState - State values to be used for the update.
-     * @return - JSON object indicating success of update.
-     */
-
-//    String updateGameStateByTeam(ClueRideState clueRideState);
 
     /**
      * For the session's Game, retrieve the current Puzzle State.
