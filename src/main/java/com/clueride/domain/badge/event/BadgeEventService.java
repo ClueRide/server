@@ -23,9 +23,9 @@ package com.clueride.domain.badge.event;
 public interface BadgeEventService {
     /**
      * Passes captured Badge Event to the service thread that persists the event.
-     * @param badgeEvent instance of captured Badge Event.
+     * @param badgeEventBuilder instance of captured Badge Event.
      */
-    void send(BadgeEventBuilder badgeEvent);
+    void send(BadgeEventBuilder badgeEventBuilder);
 
     /**
      * Given the unique identifier for a Badge Event, retrieve that badge event.
@@ -33,5 +33,13 @@ public interface BadgeEventService {
      * @return fully-populated Badge Event.
      */
     BadgeEvent getBadgeEventById(Integer badgeEventId);
+
+    /**
+     * Accepts an assembled BadgeEvent to be sent to each member of the given
+     * team.
+     * @param badgeEventBuilder meat of the Event.
+     * @param teamId Identifier for the members who have earned the achievement.
+     */
+    void sendToTeam(BadgeEventBuilder badgeEventBuilder, int teamId);
 
 }

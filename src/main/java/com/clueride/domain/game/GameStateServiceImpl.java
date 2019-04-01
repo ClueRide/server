@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.game;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ import org.slf4j.Logger;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.domain.badge.event.BadgeEventBuilder;
+import com.clueride.domain.badge.event.BadgeEventService;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseService;
 import com.clueride.domain.game.ssevent.SSEventService;
@@ -55,11 +58,12 @@ public class GameStateServiceImpl implements GameStateService {
     @ClueRideSession
     private ClueRideSessionDto clueRideSessionDto;
 
-    private final SSEventService ssEventService;
+    private final BadgeEventService badgeEventService;
+    private final CourseService courseService;
     private final LocationService locationService;
     private final PuzzleService puzzleService;
-    private final CourseService courseService;
     private final PuzzleStateService puzzleStateService;
+    private final SSEventService ssEventService;
 
     private final static Integer NO_OUTING = -1;
 
@@ -69,17 +73,19 @@ public class GameStateServiceImpl implements GameStateService {
 
     @Inject
     public GameStateServiceImpl(
-            SSEventService ssEventService,
+            BadgeEventService badgeEventService,
+            CourseService courseService,
             LocationService locationService,
             PuzzleService puzzleService,
-            CourseService courseService,
-            PuzzleStateService puzzleStateService
+            PuzzleStateService puzzleStateService,
+            SSEventService ssEventService
     ) {
-        this.ssEventService = ssEventService;
+        this.badgeEventService = badgeEventService;
+        this.courseService = courseService;
         this.locationService = locationService;
         this.puzzleService = puzzleService;
-        this.courseService = courseService;
         this.puzzleStateService = puzzleStateService;
+        this.ssEventService = ssEventService;
     }
 
     /**
@@ -146,6 +152,7 @@ public class GameStateServiceImpl implements GameStateService {
             gameStateMap.put(outingId, gameStateBuilder);
             ssEventService.sendTeamReadyEvent(outingId, gameState);
         }
+        recordTeamBadgeEvent("teamAssembled");
         return gameState;
     }
 
@@ -174,13 +181,29 @@ public class GameStateServiceImpl implements GameStateService {
         gameStateBuilder.withRolling(false);
         if (endOfCourse(gameStateBuilder)) {
             gameStateBuilder.withOutingComplete(true);
+            recordTeamBadgeEvent("courseCompleted");
         }
 
         synchronized (gameStateMap) {
             gameStateMap.put(outingId, gameStateBuilder);
             ssEventService.sendArrivalEvent(outingId, gameStateBuilder.build());
         }
+        recordTeamBadgeEvent("arrival");
         return gameStateBuilder.build();
+    }
+
+    /**
+     * Sends out Badge Events with the given type to everyone on the team (who has
+     * checked in).
+     * @param badgeEventName specific Team Event.
+     */
+    private void recordTeamBadgeEvent(String badgeEventName) {
+        BadgeEventBuilder badgeEventBuilder = BadgeEventBuilder.builder()
+                .withTimestamp(new Date())
+                .withMethodName(badgeEventName)
+                .withMethodClass(this.getClass())
+                .withReturnValue(clueRideSessionDto.getOutingView());
+        badgeEventService.sendToTeam(badgeEventBuilder, clueRideSessionDto.getOutingView().getTeamId());
     }
 
     /**
