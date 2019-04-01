@@ -39,6 +39,7 @@ public class BadgeEvent {
     private String methodName;
     private Class methodClass;
     private Object returnValue;
+    private String returnValueAsJson;
 
     BadgeEvent(BadgeEventBuilder builder) {
         this.id = builder.getId();
@@ -48,6 +49,7 @@ public class BadgeEvent {
         this.methodClass = builder.getMethodClass();
         this.methodName = builder.getMethodName();
         this.returnValue = builder.getReturnValue();
+        this.returnValueAsJson = builder.getReturnValueAsJson();
     }
 
     public Integer getId() {
@@ -76,6 +78,10 @@ public class BadgeEvent {
 
     public Object getReturnValue() {
         return returnValue;
+    }
+
+    public String getReturnValueAsJson() {
+        return returnValueAsJson;
     }
 
     @Override
