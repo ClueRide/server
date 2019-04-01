@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.badge.event;
 
+import java.security.Principal;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 
@@ -32,6 +33,8 @@ import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.PrincipalService;
+import com.clueride.domain.team.Team;
+import com.clueride.domain.team.TeamService;
 
 /**
  * Implementation of Badge Event service which dispatches events from a queue that is populated by clients.
@@ -53,6 +56,8 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     private MemberService memberService;
     @Inject
     private PrincipalService principalService;
+    @Inject
+    private TeamService teamService;
 
     @PostConstruct
     public void postConstruction() {
@@ -65,10 +70,10 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     }
 
     @Override
-    public void send(BadgeEventBuilder badgeEvent) {
+    public void send(BadgeEventBuilder badgeEventBuilder) {
         try {
             synchronized(eventQueue) {
-                eventQueue.put(badgeEvent);
+                eventQueue.put(badgeEventBuilder);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -80,6 +85,18 @@ public class BadgeEventServiceImpl implements BadgeEventService {
         BadgeEventBuilder badgeEventBuilder = badgeEventStore.getById(badgeEventId);
         fillDbBuilder(badgeEventBuilder);
         return badgeEventBuilder.build();
+    }
+
+    @Override
+    public void sendToTeam(BadgeEventBuilder badgeEventBuilderCommon, int teamId) {
+        BadgeEvent badgeEventSharedValues = badgeEventBuilderCommon.build();
+        Team team = teamService.getTeam(teamId);
+        for (Member member : team.getMembers()) {
+            BadgeEventBuilder builder = BadgeEventBuilder.from(badgeEventSharedValues);
+            Principal principal = principalService.getPrincipalForEmailAddress(member.getEmailAddress());
+            builder.withPrincipal(principal);
+            send(builder);
+        }
     }
 
     private void fillDbBuilder(BadgeEventBuilder badgeEventBuilder) {
