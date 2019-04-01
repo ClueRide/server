@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,15 +30,22 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
 
 /**
  * Mutable instance of BadgeEvent.
  */
 @Entity(name="badge_event")
 public class BadgeEventBuilder {
+    @Inject
+    @Transient
+    private Logger LOGGER;
+
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "badge_event_pk_sequence")
     @SequenceGenerator(name="badge_event_pk_sequence", sequenceName = "badge_event_id_seq", allocationSize = 1)
@@ -64,8 +72,13 @@ public class BadgeEventBuilder {
     @Column(name="return_value")
     private String returnValueAsString;
 
+    @Column(name="return_value_json")
+    private String returnValueAsJson;
+
     @Transient
     private Object returnValue;
+
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
     public BadgeEventBuilder () {}
 
@@ -162,6 +175,11 @@ public class BadgeEventBuilder {
     public BadgeEventBuilder withReturnValue(Object returnValue) {
         this.returnValue = returnValue;
         this.returnValueAsString = Objects.toString(returnValue);
+        try {
+            this.returnValueAsJson = objectMapper.writeValueAsString(returnValue);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Trouble generating JSON: ", e);
+        }
         return this;
     }
 
@@ -172,6 +190,10 @@ public class BadgeEventBuilder {
 
     public String getReturnValueAsString() {
         return returnValueAsString;
+    }
+
+    public String getReturnValueAsJson() {
+        return returnValueAsJson;
     }
 
     @Override
