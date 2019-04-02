@@ -17,12 +17,21 @@
  */
 package com.clueride.domain.image;
 
+import java.util.List;
+
 import com.clueride.domain.location.Location;
 
 /**
  * Defines operations on {@link ImageEntity} instances.
  */
 public interface ImageService {
+
+    /**
+     * For the given Location ID, return all the associated images.
+     * @param locationId unique identifier for the Location.
+     * @return List of {@link ImageEntity} matching the given location.
+     */
+    List<ImageEntity> getImagesForLocation(Integer locationId);
 
     /**
      * Uploads and persists a new Image.

@@ -20,6 +20,7 @@ package com.clueride.domain.image;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,6 +45,12 @@ public class ImageServiceImpl implements ImageService {
     private ImageStore imageStore;
     @Inject
     private ConfigService config;
+
+    @Override
+    public List<ImageEntity> getImagesForLocation(Integer locationId) {
+        requireNonNull(locationId, "Must specify location");
+        return imageStore.getImagesForLocation(locationId);
+    }
 
     @Override
     public ImageEntity saveLocationImage(ImageUploadRequest imageUploadRequest) {
