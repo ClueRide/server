@@ -18,6 +18,7 @@
 package com.clueride.domain.image;
 
 import java.io.InputStream;
+import java.util.List;
 
 import com.clueride.domain.location.Location;
 
@@ -32,6 +33,13 @@ import com.clueride.domain.location.Location;
  * file system implementations.
  */
 public interface ImageStore {
+    /**
+     * Retrieves the list of {@link ImageEntity} instances for the given location.
+     * @param locationId unique identifier for the location.
+     * @return List of matching {@link ImageEntity}.
+     */
+    List<ImageEntity> getImagesForLocation(Integer locationId);
+
     /**
      * Accepts InputStream of image data to persist along with
      * a Location ID to tie this image to.
@@ -56,5 +64,4 @@ public interface ImageStore {
      * @return unique identifier for the link record.
      */
     Integer addNewToLocation(ImageEntity imageEntity, Integer locationId);
-
 }

@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -55,6 +56,20 @@ public class ImageStoreImpl implements ImageStore {
 
     @Inject
     private ConfigService config;
+
+    @Override
+    public List<ImageEntity> getImagesForLocation(Integer locationId) {
+        List<ImageEntity> images = entityManager
+                .createQuery(
+                        "select i from Image i, image_by_location l" +
+                                " where i.id = l.imageId" +
+                                "   and l.locationId = :locationId",
+                        ImageEntity.class
+                )
+                .setParameter("locationId", locationId)
+                .getResultList();
+        return images;
+    }
 
     @Override
     public Integer addNew(Integer locationId, InputStream imageData) {
