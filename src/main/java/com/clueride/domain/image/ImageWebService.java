@@ -49,7 +49,7 @@ public class ImageWebService {
     @Path("{locationId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<ImageEntity> getImagesForLocation(@PathParam("locationId") Integer locationId) {
+    public List<ImageLinkEntity> getImagesForLocation(@PathParam("locationId") Integer locationId) {
         return imageService.getImagesForLocation(locationId);
     }
 
@@ -65,7 +65,7 @@ public class ImageWebService {
     @Path("upload")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public ImageEntity uploadImage(@MultipartForm ImageUploadRequest imageUploadRequest) {
+    public ImageLinkEntity uploadImage(@MultipartForm ImageUploadRequest imageUploadRequest) {
         return imageService.saveLocationImage(imageUploadRequest);
     }
 

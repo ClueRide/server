@@ -23,7 +23,7 @@ import java.util.List;
 import com.clueride.domain.location.Location;
 
 /**
- * Defines JPA and File System operations on {@link ImageEntity} instances.
+ * Defines JPA and File System operations on {@link ImageLinkEntity} instances.
  *
  * In the case of Image data, we would expect to write the data out to
  * the web server's Document directory where URLs can be used to retrieve
@@ -34,11 +34,11 @@ import com.clueride.domain.location.Location;
  */
 public interface ImageStore {
     /**
-     * Retrieves the list of {@link ImageEntity} instances for the given location.
+     * Retrieves the list of {@link ImageLinkEntity} instances for the given location.
      * @param locationId unique identifier for the location.
-     * @return List of matching {@link ImageEntity}.
+     * @return List of matching {@link ImageLinkEntity}.
      */
-    List<ImageEntity> getImagesForLocation(Integer locationId);
+    List<ImageLinkEntity> getImagesForLocation(Integer locationId);
 
     /**
      * Accepts InputStream of image data to persist along with
@@ -55,13 +55,13 @@ public interface ImageStore {
     Integer addNew(Integer locationId, InputStream convertedFileData);
 
     /**
-     * Accepts the ImageEntity which contains the URL of an image which
+     * Accepts the ImageLinkEntity which contains the URL of an image which
      * has been placed on the Image Web Server's file system along with
      * the Location ID of the Location to association with the image, and
      * persists this link in the JPA-based database.
-     * @param imageEntity Image's URL record.
+     * @param imageLinkEntity Image's URL record.
      * @param locationId Unique identifier for the {@link Location} instance.
      * @return unique identifier for the link record.
      */
-    Integer addNewToLocation(ImageEntity imageEntity, Integer locationId);
+    Integer addNewToLocation(ImageLinkEntity imageLinkEntity, Integer locationId);
 }

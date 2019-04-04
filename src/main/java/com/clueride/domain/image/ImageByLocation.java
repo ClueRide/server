@@ -28,7 +28,7 @@ import com.clueride.domain.location.Location;
 
 /**
  * Entity representing the relationship between a {@link Location} instance and
- * its set of {@link ImageEntity}.
+ * its set of {@link ImageLinkEntity}.
  */
 @Entity(name="image_by_location")
 public class ImageByLocation {

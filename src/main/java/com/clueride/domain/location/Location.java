@@ -17,20 +17,17 @@
  */
 package com.clueride.domain.location;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.concurrent.Immutable;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.image.ImageEntity;
+import com.clueride.domain.image.ImageLink;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.puzzle.PuzzleBuilder;
@@ -47,12 +44,11 @@ public class Location {
     private final String description;
     private final LocationType locationType;
     private final Integer nodeId;
-    private final ImageEntity featuredImage;
+    private final ImageLink featuredImage;
     private final Integer googlePlaceId;
     private final LatLon latLon;
     private final ReadinessLevel readinessLevel;
     private List<PuzzleBuilder> puzzleBuilders;
-    private final List<URL> imageUrls;
     private final Integer locationGroupId;
     private final String establishment;
     private final Integer establishmentId;
@@ -73,10 +69,13 @@ public class Location {
         name = builder.getName();
         description = builder.getDescription();
         locationType = builder.getLocationType();
-        featuredImage = builder.getFeaturedImage();
 
-        // If we have multiple images, the ranking goes up
-        imageUrls = builder.getImageUrls();
+        /* OK for Location to be missing Featured Image. */
+        if (builder.getFeaturedImage() != null) {
+            featuredImage = builder.getFeaturedImage().build();
+        } else {
+            featuredImage = null;
+        }
 
         // Featured Level requires the following
         googlePlaceId = builder.getGooglePlaceId();
@@ -163,12 +162,8 @@ public class Location {
         return establishmentId;
     }
 
-    public ImageEntity getFeaturedImage() {
+    public ImageLink getFeaturedImage() {
         return featuredImage;
-    }
-
-    public List<URL> getImageUrls() {
-        return imageUrls;
     }
 
     /**
@@ -195,23 +190,6 @@ public class Location {
     // TODO: not settled on this API
     public Optional<Double> getScorePerTag(String tag) {
         return tagScores.get(tag);
-    }
-
-    // TODO: CA-324 -- Move this logic into the service
-    public void removePuzzle(Integer puzzleId) {
-        synchronized(SYNCH_LOCK) {
-            List<PuzzleBuilder> remainingPuzzles = new ArrayList<>();
-            for (PuzzleBuilder builder : puzzleBuilders) {
-                if (!puzzleId.equals(builder.getId()) && builder != null) {
-                    remainingPuzzles.add(builder);
-                }
-            }
-            this.puzzleBuilders = ImmutableList.copyOf(remainingPuzzles);
-        }
-    }
-
-    public List<PuzzleBuilder> getPuzzleBuilders() {
-        return puzzleBuilders;
     }
 
     @Override

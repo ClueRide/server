@@ -58,13 +58,13 @@ public class ImageStoreImpl implements ImageStore {
     private ConfigService config;
 
     @Override
-    public List<ImageEntity> getImagesForLocation(Integer locationId) {
-        List<ImageEntity> images = entityManager
+    public List<ImageLinkEntity> getImagesForLocation(Integer locationId) {
+        List<ImageLinkEntity> images = entityManager
                 .createQuery(
                         "select i from Image i, image_by_location l" +
                                 " where i.id = l.imageId" +
                                 "   and l.locationId = :locationId",
-                        ImageEntity.class
+                        ImageLinkEntity.class
                 )
                 .setParameter("locationId", locationId)
                 .getResultList();
@@ -129,19 +129,19 @@ public class ImageStoreImpl implements ImageStore {
     }
 
     @Override
-    public Integer addNewToLocation(ImageEntity imageEntity, Integer locationId) {
+    public Integer addNewToLocation(ImageLinkEntity imageLinkEntity, Integer locationId) {
         try {
             userTransaction.begin();
-            entityManager.persist(imageEntity);
+            entityManager.persist(imageLinkEntity);
             ImageByLocation imageByLocation = new ImageByLocation();
-            imageByLocation.setImageId(imageEntity.getId());
+            imageByLocation.setImageId(imageLinkEntity.getId());
             imageByLocation.setLocationId(locationId);
             entityManager.persist(imageByLocation);
             userTransaction.commit();
         } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
             e.printStackTrace();
         }
-        return imageEntity.getId();
+        return imageLinkEntity.getId();
     }
 
 }

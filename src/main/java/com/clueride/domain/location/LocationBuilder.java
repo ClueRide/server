@@ -19,7 +19,6 @@ package com.clueride.domain.location;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Optional;
 
-import com.clueride.domain.image.ImageEntity;
+import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeBuilder;
@@ -72,11 +71,13 @@ public class LocationBuilder {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="featured_image_id")
-    private ImageEntity featuredImage;
+    private ImageLinkEntity featuredImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_type_id")
     private LocationTypeBuilder locationTypeBuilder;
+
+    @Column(name="location_group_id") private Integer locationGroupId;
 
     @Transient
     private LocationType locationType;
@@ -84,8 +85,6 @@ public class LocationBuilder {
     private String locationTypeName;
     @Transient
     private LatLon latLon;
-    @Transient
-    private List<URL> imageUrls;
     @Transient
     private URL featuredImageUrl;
     @Transient private Integer featuredImageId;
@@ -96,7 +95,6 @@ public class LocationBuilder {
 
     @Transient
     private Integer establishmentId;
-    @Column(name="location_group_id") private Integer locationGroupId;
 
     @Transient
     private Map<String,Optional<Double>> tagScores = new HashMap<>();
@@ -123,8 +121,7 @@ public class LocationBuilder {
                 .withLocationType(location.getLocationType())
                 .withNodeId(location.getNodeId())
                 .withLatLon(location.getLatLon())
-                .withFeaturedImage(location.getFeaturedImage())
-                .withImageUrls(location.getImageUrls())
+                .withFeaturedImage(ImageLinkEntity.from(location.getFeaturedImage()))
                 .withEstablishmentId(location.getEstablishment())
                 .withTagScores(location.getTagScores())
                 ;
@@ -284,19 +281,6 @@ public class LocationBuilder {
         return this;
     }
 
-    public List<URL> getImageUrls() {
-        if (imageUrls != null) {
-            return imageUrls;
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public LocationBuilder withImageUrls(List<URL> imageUrls) {
-        this.imageUrls = imageUrls;
-        return this;
-    }
-
     public LatLon getLatLon() {
         return latLon;
     }
@@ -310,11 +294,11 @@ public class LocationBuilder {
     }
 
     /* Image Methods */
-    public ImageEntity getFeaturedImage() {
+    public ImageLinkEntity getFeaturedImage() {
         return featuredImage;
     }
 
-    public LocationBuilder withFeaturedImage(ImageEntity featuredImage) {
+    public LocationBuilder withFeaturedImage(ImageLinkEntity featuredImage) {
         this.featuredImage = featuredImage;
         this.featuredImageId = featuredImage.getId();
         try {
@@ -347,15 +331,6 @@ public class LocationBuilder {
     public LocationBuilder withFeaturedImageUrl(URL featuredImageUrl) {
         this.featuredImageUrl = featuredImageUrl;
         return this;
-    }
-
-    /** Adds to the list of existing images, but not the Featured Image. */
-    public void withImage(ImageEntity image) {
-        try {
-            this.imageUrls.add(new URL(image.getUrl()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     /* End of Image Methods */
@@ -395,6 +370,7 @@ public class LocationBuilder {
                 .withNodeId(locationBuilder.nodeId)
 //                .withLocationTypeId(locationBuilder.locationTypeId)
                 .withLocationGroupId(locationBuilder.locationGroupId)
-                .withImageUrls(locationBuilder.imageUrls);
+        ;
     }
+
 }

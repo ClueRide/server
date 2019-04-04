@@ -22,16 +22,16 @@ import java.util.List;
 import com.clueride.domain.location.Location;
 
 /**
- * Defines operations on {@link ImageEntity} instances.
+ * Defines operations on {@link ImageLinkEntity} instances.
  */
 public interface ImageService {
 
     /**
      * For the given Location ID, return all the associated images.
      * @param locationId unique identifier for the Location.
-     * @return List of {@link ImageEntity} matching the given location.
+     * @return List of {@link ImageLinkEntity} matching the given location.
      */
-    List<ImageEntity> getImagesForLocation(Integer locationId);
+    List<ImageLinkEntity> getImagesForLocation(Integer locationId);
 
     /**
      * Uploads and persists a new Image.
@@ -41,6 +41,6 @@ public interface ImageService {
      *                           InputStream of the image.
      * @return Identifying record for this image, including its URL on the system.
      */
-    ImageEntity saveLocationImage(ImageUploadRequest imageUploadRequest);
+    ImageLinkEntity saveLocationImage(ImageUploadRequest imageUploadRequest);
 
 }
