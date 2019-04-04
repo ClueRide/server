@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * This maps a file's URL with a unique ID via database table.
  */
 @Entity(name = "Image")
-public class ImageEntity {
+public class ImageLinkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_pk_sequence")
     @SequenceGenerator(name = "image_pk_sequence", sequenceName = "image_id_seq", allocationSize = 1)
@@ -42,10 +42,20 @@ public class ImageEntity {
     private String url;
 
     /** Empty constructor for JPA. */
-    public ImageEntity() {}
+    public ImageLinkEntity() {}
+
+    public ImageLink build() {
+        return new ImageLink(this);
+    }
+
+    public static ImageLinkEntity from(ImageLink imageLink) {
+        return ImageLink.builder()
+                .withId(imageLink.getId())
+                .withUrl(imageLink.getUrl());
+    }
 
     /** String constructor for REST API. */
-    public ImageEntity(String featuredImage) {
+    public ImageLinkEntity(String featuredImage) {
         this.url = featuredImage;
     }
 
@@ -53,8 +63,18 @@ public class ImageEntity {
         return id;
     }
 
+    public ImageLinkEntity withId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
     public String getUrl() {
         return url;
+    }
+
+    public ImageLinkEntity withUrl(String url) {
+        this.url = url;
+        return this;
     }
 
     public void setUrl(String url) {
@@ -65,4 +85,5 @@ public class ImageEntity {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
 }

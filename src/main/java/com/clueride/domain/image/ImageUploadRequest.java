@@ -23,7 +23,7 @@ import javax.ws.rs.FormParam;
 
 /**
  * Captures the Form Data for requesting a new file upload, specifically,
- * an {@link ImageEntity} upload.
+ * an {@link ImageLinkEntity} upload.
  */
 public class ImageUploadRequest {
     @FormParam("lat") private Double lat;

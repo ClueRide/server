@@ -47,25 +47,24 @@ public class ImageServiceImpl implements ImageService {
     private ConfigService config;
 
     @Override
-    public List<ImageEntity> getImagesForLocation(Integer locationId) {
+    public List<ImageLinkEntity> getImagesForLocation(Integer locationId) {
         requireNonNull(locationId, "Must specify location");
         return imageStore.getImagesForLocation(locationId);
     }
 
     @Override
-    public ImageEntity saveLocationImage(ImageUploadRequest imageUploadRequest) {
+    public ImageLinkEntity saveLocationImage(ImageUploadRequest imageUploadRequest) {
         Integer locationId = imageUploadRequest.getLocationId();
         requireNonNull(locationId, "Must specify location to associate with image");
         LOGGER.info("Requesting Save of image for Location ID {}", locationId);
 
         Integer newSeqId = persistImageContent(locationId, imageUploadRequest.getFileData());
-        ImageEntity image = persistImageMetadata(locationId, newSeqId);
+        ImageLinkEntity image = persistImageMetadata(locationId, newSeqId);
         LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
+        /* Save this image as the (default) featured image because there is no other featured image. */
         if (locationBuilder.hasNoFeaturedImage()) {
             locationBuilder.withFeaturedImage(image);
             locationStore.update(locationBuilder);
-        } else {
-            locationBuilder.withImage(image);
         }
         return image;
     }
@@ -89,17 +88,17 @@ public class ImageServiceImpl implements ImageService {
         return BaseEncoding.base64().decodingStream(reader);
     }
 
-    private ImageEntity persistImageMetadata(Integer locationId, Integer imageOnFileSystemId) {
+    private ImageLinkEntity persistImageMetadata(Integer locationId, Integer imageOnFileSystemId) {
         /* Build and assign URL. */
-        ImageEntity imageEntity = new ImageEntity(
+        ImageLinkEntity imageLinkEntity = new ImageLinkEntity(
                 buildImageUrlString(
                         locationId,
                         imageOnFileSystemId
                 )
         );
 
-        imageStore.addNewToLocation(imageEntity, locationId);
-        return imageEntity;
+        imageStore.addNewToLocation(imageLinkEntity, locationId);
+        return imageLinkEntity;
     }
 
     private String buildImageUrlString(Integer locationId, Integer imageOnFileSystemId) {
