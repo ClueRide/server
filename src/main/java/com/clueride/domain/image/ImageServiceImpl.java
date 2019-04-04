@@ -53,6 +53,12 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public boolean isLocationMultiImaged(Integer locationId) {
+        requireNonNull(locationId, "Must specify location");
+        return (imageStore.getImagesForLocation(locationId).size() > 1);
+    }
+
+    @Override
     public ImageLinkEntity saveLocationImage(ImageUploadRequest imageUploadRequest) {
         Integer locationId = imageUploadRequest.getLocationId();
         requireNonNull(locationId, "Must specify location to associate with image");

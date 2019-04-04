@@ -34,6 +34,13 @@ public interface ImageService {
     List<ImageLinkEntity> getImagesForLocation(Integer locationId);
 
     /**
+     * Returns true if the given location has more than one image.
+     * @param locationId unique identifier for the Location.
+     * @return true if there are more than one image for the given location.
+     */
+    boolean isLocationMultiImaged(Integer locationId);
+
+    /**
      * Uploads and persists a new Image.
      * By providing a latlon, we can show nearby images for other
      * {@link Location} instances.
