@@ -53,6 +53,15 @@ public class ImageWebService {
         return imageService.getImagesForLocation(locationId);
     }
 
+    @GET
+    @Secured
+    @Path("{locationId}/multi-image")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean isLocationMultiImaged(@PathParam("locationId") Integer locationId) {
+        return imageService.isLocationMultiImaged(locationId);
+    }
+
     /**
      * Handles upload request for a new image at the given location.
      * @param imageUploadRequest Object containing lat/lon, Location ID and
