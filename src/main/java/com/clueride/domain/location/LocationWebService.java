@@ -23,7 +23,9 @@ import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -103,6 +105,17 @@ public class LocationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Location deleteById(@QueryParam("id") Integer locationId) {
         return locationService.deleteById(locationId);
+    }
+
+    @PUT
+    @Secured
+    @Path("featured/{locId}/{imageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location unlinkFeaturedImage(
+            @PathParam("locId") Integer locationId,
+            @PathParam("imageId") Integer imageId
+    ) {
+        return locationService.linkFeaturedImage(locationId, imageId);
     }
 
     @DELETE

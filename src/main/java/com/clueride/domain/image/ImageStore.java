@@ -33,6 +33,14 @@ import com.clueride.domain.location.Location;
  * file system implementations.
  */
 public interface ImageStore {
+
+    /**
+     * Retrieves {@link ImageLink} matching the given ID.
+     * @param imageId unique identifier for the ImageLink.
+     * @return matching ImageLink.
+     */
+    ImageLinkEntity getImageLink(int imageId);
+
     /**
      * Retrieves the list of {@link ImageLinkEntity} instances for the given location.
      * @param locationId unique identifier for the location.
@@ -64,4 +72,5 @@ public interface ImageStore {
      * @return unique identifier for the link record.
      */
     Integer addNewToLocation(ImageLinkEntity imageLinkEntity, Integer locationId);
+
 }

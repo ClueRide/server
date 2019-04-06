@@ -30,6 +30,8 @@ import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.course.CourseService;
+import com.clueride.domain.image.ImageLinkEntity;
+import com.clueride.domain.image.ImageStore;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.location.loctype.LocationType;
@@ -55,6 +57,7 @@ public class LocationServiceImpl implements LocationService {
     private final LatLonService latLonService;
     private final ScoredLocationService scoredLocationService;
     private final LocationTypeService locationTypeService;
+    private final ImageStore imageStore;
 
     @Inject
     public LocationServiceImpl(
@@ -62,13 +65,15 @@ public class LocationServiceImpl implements LocationService {
             LocationStore locationStore,
             LatLonService latLonService,
             ScoredLocationService scoredLocationService,
-            LocationTypeService locationTypeService
+            LocationTypeService locationTypeService,
+            ImageStore imageStore
     ) {
         this.courseService = courseService;
         this.locationStore = locationStore;
         this.latLonService = latLonService;
         this.scoredLocationService = scoredLocationService;
         this.locationTypeService = locationTypeService;
+        this.imageStore = imageStore;
     }
 
     @Override
@@ -80,6 +85,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location proposeLocation(LatLon latLon) {
         latLonService.addNew(latLon);
+        // TODO: SVR-36 Tidy LocType
         LocationType locationType = locationTypeService.getById(0);
         LocationBuilder locationBuilder = LocationBuilder.builder()
                 .withLatLon(latLon)
@@ -97,6 +103,7 @@ public class LocationServiceImpl implements LocationService {
     public Location updateLocation(LocationBuilder locationBuilder) {
         requireNonNull(locationBuilder.getId(), "Location ID not found; cannot update non-existent record");
         requireNonNull(locationBuilder.getLocationTypeId(), "Location Type not specified; cannot update");
+        // TODO: SVR-36 Tidy LocType
         locationBuilder.withLocationType(locationTypeService.getById(locationBuilder.getLocationTypeId()));
         locationBuilder.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationBuilder));
         locationStore.update(locationBuilder);
@@ -126,6 +133,7 @@ public class LocationServiceImpl implements LocationService {
         List<Location> locations = new ArrayList<>();
 
         for (LocationBuilder builder : locationStore.getLocationBuilders()) {
+            // TODO: LE-76 Layer Thing going on right here:
             if (!builder.getLocationTypeBuilder().getId().equals(15)) {
                 fillAndGradeLocation(builder);
                 locations.add(builder.build());
@@ -144,18 +152,39 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public Location linkFeaturedImage(Integer locationId, Integer imageId) {
+        requireNonNull(locationId, "Location ID required");
+        requireNonNull(imageId, "Image ID required");
+        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
+        /* First, break any existing link. */
+        if (!locationBuilder.hasNoFeaturedImage()) {
+            locationBuilder.clearFeaturedImage();
+        }
+        // TODO: SVR-36 Tidy LocType
+        locationBuilder.withLocationTypeId(locationBuilder.getLocationTypeBuilder().getId());
+
+        ImageLinkEntity imageLinkEntity = imageStore.getImageLink(imageId);
+        locationBuilder.withFeaturedImage(imageLinkEntity);
+        return updateLocation(locationBuilder);
+    }
+
+    @Override
     public Location unlinkFeaturedImage(Integer locationId) {
         requireNonNull(locationId, "Location ID required");
         LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
+
+        // TODO: SVR-36 Tidy LocType
         locationBuilder.withLocationType(locationTypeService.getById(
                 locationBuilder.getLocationTypeBuilder().getId()
         ));
         locationBuilder.withLocationTypeId(locationBuilder.getLocationTypeBuilder().getId());
+
         locationBuilder.clearFeaturedImage();
         /* Update Location will set new readiness level and persist the updated Location. */
         return updateLocation(locationBuilder);
     }
 
+    // TODO: SVR-36 Tidy LocType (maybe)
     private void fillAndGradeLocation(LocationBuilder builder) {
         /* Assemble the derived transient fields. */
         builder.withLatLon(latLonService.getLatLonById(builder.getNodeId()));

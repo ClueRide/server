@@ -75,6 +75,14 @@ public interface LocationService {
     Location deleteById(Integer locationId);
 
     /**
+     * Designates an existing image to be the featured image for the Location.
+     * @param locationId unique identifier for the Location.
+     * @param imageId unique identifier for an existing Image.
+     * @return the updated Location instance.
+     */
+    Location linkFeaturedImage(Integer locationId, Integer imageId);
+
+    /**
      * Drops the link between this Location and the Featured Image.
      * @param locationId unique Identifier for the Location whose featured image we want to unlink.
      * @return The updated and re-evaluated Location.

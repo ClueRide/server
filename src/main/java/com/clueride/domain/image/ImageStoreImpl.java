@@ -46,7 +46,7 @@ import com.clueride.config.ConfigService;
  * Image Web Server.
  */
 public class ImageStoreImpl implements ImageStore {
-    private Map<Integer,File> locationDirectories = new HashMap<>();
+    private final Map<Integer,File> locationDirectories = new HashMap<>();
 
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
@@ -58,8 +58,13 @@ public class ImageStoreImpl implements ImageStore {
     private ConfigService config;
 
     @Override
+    public ImageLinkEntity getImageLink(int imageId) {
+        return entityManager.find(ImageLinkEntity.class, imageId);
+    }
+
+    @Override
     public List<ImageLinkEntity> getImagesForLocation(Integer locationId) {
-        List<ImageLinkEntity> images = entityManager
+        return entityManager
                 .createQuery(
                         "select i from Image i, image_by_location l" +
                                 " where i.id = l.imageId" +
@@ -68,7 +73,6 @@ public class ImageStoreImpl implements ImageStore {
                 )
                 .setParameter("locationId", locationId)
                 .getResultList();
-        return images;
     }
 
     @Override

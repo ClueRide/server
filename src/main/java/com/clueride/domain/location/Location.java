@@ -33,17 +33,19 @@ import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.puzzle.PuzzleBuilder;
 
 /**
- * Holds the data for a Location, and provides some of the logic to provide derived properties.
+ * Holds the data for a Location presented both to the Game Player as well as Editors.
+ *
+ * {@link LocationBuilder} holds mutable instances.
  *
  * @author jett
  */
 @Immutable
 public class Location {
-    private final Integer id;
+    private final int id;
+    private final int nodeId;
     private final String name;
     private final String description;
     private final LocationType locationType;
-    private final Integer nodeId;
     private final ImageLink featuredImage;
     private final Integer googlePlaceId;
     private final LatLon latLon;
@@ -53,7 +55,6 @@ public class Location {
     private final String establishment;
     private final Integer establishmentId;
     private final Map<String,Optional<Double>> tagScores;
-    private final static Integer SYNCH_LOCK = -1;
 
     /**
      * Constructor accepting Builder instance.
@@ -89,7 +90,7 @@ public class Location {
         establishment = builder.getEstablishment();
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
