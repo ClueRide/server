@@ -28,10 +28,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Immutable
 public class LocationType {
-    private Integer id;
+    private int id;
     private String name;
     private String description;
     private String icon;
+    // TODO: LE-76: Layers
 
     // TODO: Temporary constructor in service of JSON
     public LocationType() {}
@@ -43,7 +44,7 @@ public class LocationType {
         this.icon = builder.getIcon();
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
