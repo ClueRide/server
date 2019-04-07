@@ -48,7 +48,7 @@ public class MemberWebService {
     @Secured
     @Path("active")
     @Produces(MediaType.APPLICATION_JSON)
-    public Member getActiveMembers() {
+    public Member getActiveMember() {
         return memberService.getActiveMember();
     }
 

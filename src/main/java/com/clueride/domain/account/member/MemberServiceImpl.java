@@ -29,7 +29,6 @@ import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 
 import com.clueride.RecordNotFoundException;
-import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
@@ -59,8 +58,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @BadgeCapture
-    /* TODO: Testing only; not an actual call that needs BadgeCapture. */
     public List<Member> getAllMembers() {
         LOGGER.debug("Requesting All Members");
         List<MemberBuilder> builders = memberStore.getAllMembers();
@@ -96,7 +93,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    // TODO: CA-405 connect this more tightly
+    // TODO: CA-405 connect this more tightly (SVR-37 addresses this in part).
     public Member createNewMember(ClueRideIdentity clueRideIdentity) {
         MemberBuilder memberBuilder = memberStore.addNew(
                 MemberBuilder.from(clueRideIdentity)

@@ -54,6 +54,9 @@ public class MemberBuilder {
     private String phone;
     //        private Phonenumber.PhoneNumber phone;
 
+    @Column(name="image_url")
+    private String imageUrl;
+
     public MemberBuilder() {
     }
 
@@ -83,6 +86,7 @@ public class MemberBuilder {
                 .withLastName(clueRideIdentity.getFamilyName().get())
                 .withEmailAddress(clueRideIdentity.getEmail().toString())
                 .withDisplayName(clueRideIdentity.getDisplayName())
+                .withImageUrl(clueRideIdentity.getPictureUrl().toString())
                 ;
     }
 
@@ -162,6 +166,19 @@ public class MemberBuilder {
 
     public MemberBuilder withPhone(String phone) {
         this.phone = phone;
+        return this;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public MemberBuilder withImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
         return this;
     }
 
