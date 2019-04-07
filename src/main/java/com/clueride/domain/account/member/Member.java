@@ -24,10 +24,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import static java.util.Objects.requireNonNull;
-
 public class Member implements Serializable {
-    private Integer id;
+    private int id;
     private String displayName;
     private String firstName;
     private String lastName;
@@ -37,6 +35,7 @@ public class Member implements Serializable {
     // TODO: CA-272 Bring in support for Phone Numbers
 //    private Phonenumber.PhoneNumber phone;
     private String phoneNumber;
+    private String imageUrl;
 
     /** Supporting Jackson. */
     public Member() {}
@@ -52,9 +51,10 @@ public class Member implements Serializable {
         this.lastName = builder.getLastName();
         this.emailAddress = builder.getEmailAddress();
         this.phoneNumber = builder.getPhone();
+        this.imageUrl = builder.getImageUrl();
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -84,6 +84,10 @@ public class Member implements Serializable {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     @Override
