@@ -55,7 +55,7 @@ public class ImageWebService {
 
     @GET
     @Secured
-    @Path("{locationId}/multi-image")
+    @Path("multi-image/{locationId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean isLocationMultiImaged(@PathParam("locationId") Integer locationId) {
