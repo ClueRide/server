@@ -59,6 +59,7 @@ public class AuthenticationConnectionAuth0 implements AuthenticationConnection {
                 LOGGER.debug(String.format("Raw JSON Response:\n%s", jsonResponse));
                 break;
             case 401:
+                LOGGER.debug("Unauthorized against " + auth0Url);
                 break;
             default:
                 LOGGER.error(String.format(
