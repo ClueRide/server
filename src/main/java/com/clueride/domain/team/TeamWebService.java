@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.team;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -33,6 +35,13 @@ import com.clueride.auth.Secured;
 public class TeamWebService {
     @Inject
     private TeamService teamService;
+
+    @GET
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Team> getTeams() {
+        return teamService.getTeams();
+    }
 
     @GET
     @Secured

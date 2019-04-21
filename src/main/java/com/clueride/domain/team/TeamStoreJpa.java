@@ -45,7 +45,13 @@ public class TeamStoreJpa implements TeamStore {
     @Override
     public List<TeamBuilder> getTeams() {
         LOGGER.info("Retrieving full list of Teams");
-        List<TeamBuilder> builders = entityManager.createQuery("SELECT t FROM teamBuilder t").getResultList();
+        List<TeamBuilder> builders = entityManager.createQuery(
+                "SELECT t FROM teamBuilder t " +
+                "left outer join outing_view o " +
+                "on o.teamId = t.id " +
+                "order by o.courseId, " +
+                "o.scheduledTime desc"
+        ).getResultList();
         return builders;
     }
 
