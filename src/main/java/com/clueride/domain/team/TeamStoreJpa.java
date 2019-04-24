@@ -19,9 +19,16 @@ package com.clueride.domain.team;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.slf4j.Logger;
 
@@ -32,13 +39,27 @@ public class TeamStoreJpa implements TeamStore {
     @Inject
     private Logger LOGGER;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
     @Override
     public TeamBuilder addNew(TeamBuilder teamBuilder) {
         LOGGER.info("Creating a new Team: " + teamBuilder.getName());
-        entityManager.persist(teamBuilder);
+        try {
+            userTransaction.begin();
+            entityManager.persist(teamBuilder);
+            userTransaction.commit();
+        } catch (NotSupportedException
+                | RollbackException
+                | HeuristicMixedException
+                | HeuristicRollbackException
+                | SystemException e
+        ) {
+            e.printStackTrace();
+        }
         return teamBuilder;
     }
 
