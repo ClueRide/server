@@ -101,4 +101,14 @@ public class MemberServiceImpl implements MemberService {
         return memberBuilder.build();
     }
 
+    @Override
+    public List<Member> getMatchingMembers(String pattern) {
+        List<Member> members = new ArrayList<>();
+        List<MemberBuilder> memberBuilders = memberStore.getMatchingMembers(pattern);
+        for (MemberBuilder builder : memberBuilders) {
+            members.add(builder.build());
+        }
+        return members;
+    }
+
 }

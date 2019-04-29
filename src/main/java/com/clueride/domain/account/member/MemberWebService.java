@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
@@ -50,6 +51,13 @@ public class MemberWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Member getActiveMember() {
         return memberService.getActiveMember();
+    }
+
+    @GET@Secured
+    @Path("matching")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Member> getMatchingMembers(@QueryParam("pattern") String pattern) {
+        return memberService.getMatchingMembers(pattern);
     }
 
 }

@@ -69,4 +69,12 @@ public interface MemberService {
      * @return Member instance built from ClueRideIdentity.
      */
     Member createNewMember(ClueRideIdentity clueRideIdentity);
+
+    /**
+     * Given a pattern, return a list of members that match the pattern.
+     * @param pattern case-insensitive string to be matched.
+     * @return List of matching {@link Member} instances.
+     */
+    List<Member> getMatchingMembers(String pattern);
+
 }

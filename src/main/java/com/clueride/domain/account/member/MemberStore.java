@@ -68,4 +68,11 @@ public interface MemberStore {
      */
     List<MemberBuilder> getAllMembers();
 
+    /**
+     * Given a string pattern, find member records that contain the pattern.
+     * @param pattern String pattern to be matched.
+     * @return List of {@link MemberBuilder} records.
+     */
+    List<MemberBuilder> getMatchingMembers(String pattern);
+
 }
