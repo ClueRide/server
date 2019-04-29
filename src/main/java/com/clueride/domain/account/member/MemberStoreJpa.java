@@ -89,4 +89,15 @@ public class MemberStoreJpa implements MemberStore {
         return entityManager.createQuery("SELECT m FROM member m").getResultList();
     }
 
+    @Override
+    public List<MemberBuilder> getMatchingMembers(String pattern) {
+        return entityManager.createQuery(
+                "SELECT m FROM member m " +
+                        " WHERE lower(m.displayName) like :pattern"
+        ).setParameter(
+                "pattern",
+                "%"+pattern.toLowerCase()+"%")
+                .getResultList();
+    }
+
 }
