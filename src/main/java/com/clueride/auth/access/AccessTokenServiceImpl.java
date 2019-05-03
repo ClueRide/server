@@ -19,6 +19,7 @@ package com.clueride.auth.access;
 
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -44,16 +45,11 @@ public class AccessTokenServiceImpl implements AccessTokenService, Serializable 
     @Inject
     private Logger LOGGER;
 
-    @Override
-    // TODO: CA-381 Expire Tokens
-    public void emptyCache() {
-        LOGGER.debug("Clearing the Access Token Cache");
-    }
-
     private static IdentityStore identityStore;
 
     private static LoadingCache<String, ClueRideIdentity> identityCache =
             CacheBuilder.newBuilder()
+                    .expireAfterWrite(24, TimeUnit.HOURS)
                     .build(
                             new CacheLoader<String, ClueRideIdentity>() {
                                 @Override
