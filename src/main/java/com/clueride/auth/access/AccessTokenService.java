@@ -60,11 +60,6 @@ public interface AccessTokenService {
      */
     String getPrincipalString(String token);
 
-    /**
-     * Clears the cache of all data.
-     */
-    void emptyCache();
-
     void addIdentity(String token, ClueRideIdentity identity);
 
     /** Returns true if this session is known to be active.
