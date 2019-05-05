@@ -18,10 +18,15 @@
 package com.clueride.domain.location.loctype;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+
+import com.clueride.domain.location.category.CategoryEntity;
 
 /**
  * Persistable Builder for {@link LocationType} instances.
@@ -36,6 +41,10 @@ public final class LocationTypeBuilder {
     private String name;
     private String icon;
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private CategoryEntity categoryEntity;
 
     /**
      * Generate instance from Builder's values.
@@ -98,6 +107,15 @@ public final class LocationTypeBuilder {
 
     public LocationTypeBuilder withIcon(String icon) {
         this.icon = icon;
+        return this;
+    }
+
+    public CategoryEntity getCategoryEntity() {
+        return categoryEntity;
+    }
+
+    public LocationTypeBuilder withCategoryEntity(CategoryEntity categoryEntity) {
+        this.categoryEntity = categoryEntity;
         return this;
     }
 
