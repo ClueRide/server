@@ -23,6 +23,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.clueride.domain.location.category.Category;
+
 /**
  * Domain object that can be persisted, but generally is read-only.
  */
@@ -32,7 +34,7 @@ public class LocationType {
     private String name;
     private String description;
     private String icon;
-    // TODO: LE-76: Layers
+    private Category category;
 
     // TODO: Temporary constructor in service of JSON
     public LocationType() {}
@@ -42,6 +44,9 @@ public class LocationType {
         this.name = builder.getName();
         this.description = builder.getDescription();
         this.icon = builder.getIcon();
+        if (builder.getCategoryEntity() != null) {
+            this.category = builder.getCategoryEntity().build();
+        }
     }
 
     public int getId() {
@@ -58,6 +63,10 @@ public class LocationType {
 
     public String getIcon() {
         return icon;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     @Override

@@ -34,11 +34,15 @@ public class Category {
     private final int id;
     private final String name;
     private final String description;
+    private final String icon;
+    private final String iconColor;
 
     Category(CategoryEntity categoryEntity) {
         this.id = categoryEntity.getId();
         this.name = categoryEntity.getName();
         this.description = categoryEntity.getDescription();
+        this.icon = categoryEntity.getIcon();
+        this.iconColor = categoryEntity.getIconColor();
     }
 
     public int getId() {
@@ -51,6 +55,14 @@ public class Category {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public String getIconColor() {
+        return iconColor;
     }
 
     @Override

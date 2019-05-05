@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.location.category;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +40,9 @@ public class CategoryEntity {
 
     private String name;
     private String description;
+    private String icon;
+    @Column(name="icon_color")
+    private String iconColor;
 
     public static CategoryEntity builder() {
         return new CategoryEntity();
@@ -72,6 +76,24 @@ public class CategoryEntity {
 
     public CategoryEntity withDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public CategoryEntity withIcon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    public String getIconColor() {
+        return iconColor;
+    }
+
+    public CategoryEntity withIconColor(String iconColor) {
+        this.iconColor = iconColor;
         return this;
     }
 
