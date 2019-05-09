@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 5/4/19.
+ * Created by jett on 5/6/19.
  */
-package com.clueride.domain.location.category;
+package com.clueride.domain.location.loclink;
 
-import java.util.List;
+import java.net.MalformedURLException;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -28,19 +29,20 @@ import javax.ws.rs.core.MediaType;
 import com.clueride.auth.Secured;
 
 /**
- * REST API for Location Categories, groupings of Location Types.
+ * Endpoint for managing Location Links.
  */
-@Path("category")
-public class CategoryWebService {
+@Path("locLink")
+public class LocLinkWebService {
 
     @Inject
-    private CategoryService categoryService;
+    private LocLinkService locLinkService;
 
-    @GET
+    @POST
     @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Category> fetchAll() {
-        return categoryService.fetchAll();
+    public LocLink createNewLocationLink(LocLinkEntity locLinkEntity) throws MalformedURLException {
+        return locLinkService.createNewLocationLink(locLinkEntity);
     }
 
 }

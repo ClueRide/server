@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.clueride.domain.course.Course;
 import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.loclink.LocLink;
 
 /**
  * Defines operations on {@link Location} instances.
@@ -88,5 +89,20 @@ public interface LocationService {
      * @return The updated and re-evaluated Location.
      */
     Location unlinkFeaturedImage(Integer locationId);
+
+    /**
+     * Connects an established Location with an established LocLink record.
+     * @param locationId unique identifier for the Location.
+     * @param locLinkId unique identifier for the LocLink.
+     * @return Updated Location instance.
+     */
+    Location linkMainLocLink(Integer locationId, Integer locLinkId);
+
+    /**
+     * Given a Location ID, retrieve the list of Location Links for that Location.
+     * @param locationId unique identifier for the Location -- must not be null.
+     * @return List of Location Links for the Location. May be empty; will not include the main link.
+     */
+    List<LocLink> getLocationLinksByLocation(Integer locationId);
 
 }

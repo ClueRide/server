@@ -18,6 +18,7 @@
 package com.clueride.domain.location;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,8 @@ import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.image.ImageStore;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.latlon.LatLonService;
+import com.clueride.domain.location.loclink.LocLink;
+import com.clueride.domain.location.loclink.LocLinkService;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
 import com.clueride.domain.outing.OutingView;
@@ -58,6 +61,7 @@ public class LocationServiceImpl implements LocationService {
     private final ScoredLocationService scoredLocationService;
     private final LocationTypeService locationTypeService;
     private final ImageStore imageStore;
+    private final LocLinkService locLinkService;
 
     @Inject
     public LocationServiceImpl(
@@ -66,7 +70,8 @@ public class LocationServiceImpl implements LocationService {
             LatLonService latLonService,
             ScoredLocationService scoredLocationService,
             LocationTypeService locationTypeService,
-            ImageStore imageStore
+            ImageStore imageStore,
+            LocLinkService locLinkService
     ) {
         this.courseService = courseService;
         this.locationStore = locationStore;
@@ -74,6 +79,7 @@ public class LocationServiceImpl implements LocationService {
         this.scoredLocationService = scoredLocationService;
         this.locationTypeService = locationTypeService;
         this.imageStore = imageStore;
+        this.locLinkService = locLinkService;
     }
 
     @Override
@@ -106,6 +112,25 @@ public class LocationServiceImpl implements LocationService {
         // TODO: SVR-36 Tidy LocType
         locationBuilder.withLocationType(locationTypeService.getById(locationBuilder.getLocationTypeId()));
         locationBuilder.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationBuilder));
+
+        if (locationBuilder.getMainLink().getId() == null) {
+            try {
+                LocLink locLink  = locLinkService.createNewLocationLink(locationBuilder.getMainLink());
+                locationBuilder.withLocLink(locLink);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else if (locationBuilder.getMainLink().getLink().length() > 0) {
+            try {
+                LocLink locLink = locLinkService.getLocLinkByUrl(
+                        locationBuilder.getMainLink().getLink()
+                );
+                locationBuilder.withLocLink(locLink);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
         locationStore.update(locationBuilder);
         return locationBuilder.build();
     }
@@ -182,6 +207,16 @@ public class LocationServiceImpl implements LocationService {
         locationBuilder.clearFeaturedImage();
         /* Update Location will set new readiness level and persist the updated Location. */
         return updateLocation(locationBuilder);
+    }
+
+    @Override
+    public Location linkMainLocLink(Integer locationId, Integer locLinkId) {
+        return null;
+    }
+
+    @Override
+    public List<LocLink> getLocationLinksByLocation(Integer locationId) {
+        return null;
     }
 
     // TODO: SVR-36 Tidy LocType (maybe)
