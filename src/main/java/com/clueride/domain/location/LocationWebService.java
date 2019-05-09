@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
 import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
 
@@ -46,6 +47,11 @@ public class LocationWebService {
     @Inject
     private LocationTypeService locationTypeService;
 
+    /**
+     * Retrieves a specific Location by ID.
+     * @param locationId unique ID of the Location
+     * @return {@link Location} instance matching the ID.
+     */
     @GET
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +59,10 @@ public class LocationWebService {
         return locationService.getById(locationId);
     }
 
+    /**
+     * This is the list of Locations that are attached to a session's Course.
+     * @return List of {@link Location} for the active course.
+     */
     @GET
     @Secured
     @Path("active")
@@ -61,6 +71,11 @@ public class LocationWebService {
         return locationService.getSessionLocationsWithGeoJson();
     }
 
+    /**
+     * Accepts updates for a given Location -- the Location ID is part of the Builder that is provided.
+     * @param locationBuilder Builder instance containing complete set of changes.
+     * @return The updated {@link Location}instance.
+     */
     @POST
     @Secured
     @Path("update")
@@ -69,6 +84,20 @@ public class LocationWebService {
         return locationService.updateLocation(locationBuilder);
     }
 
+    @GET
+    @Secured
+    @Path("{locationId}/links")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<LocLink> getLocationLinks(@PathParam("locationId") Integer locationId) {
+        return locationService.getLocationLinksByLocation(locationId);
+    }
+
+    /**
+     * Initializes a new Node along with a (mostly empty) Location at that Node.
+     * @param lat Latitude of the new Node/Location.
+     * @param lon Longitude of the new Node/Location.
+     * @return new partially-filled Location; has enough information to at least show it on the map.
+     */
     @POST
     @Secured
     @Path("propose")
@@ -81,6 +110,13 @@ public class LocationWebService {
         return locationService.proposeLocation(latLon);
     }
 
+    /**
+     * Retrieves a list of all the locations, but eventually, will be just
+     * the locations closest to the given lat/lon pair.
+     * @param lat Latitude of the center of the locations to be retrieved.
+     * @param lon Longitude of the center of the locations to be retrieved.
+     * @return List of {@link Location} instances matching input.
+     */
     @GET
     @Secured
     @Path("nearest-marker")
@@ -111,7 +147,7 @@ public class LocationWebService {
     @Secured
     @Path("featured/{locId}/{imageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Location unlinkFeaturedImage(
+    public Location linkFeaturedImage(
             @PathParam("locId") Integer locationId,
             @PathParam("imageId") Integer imageId
     ) {
@@ -124,6 +160,18 @@ public class LocationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Location unlinkFeaturedImage(@QueryParam("id") Integer locationId) {
         return locationService.unlinkFeaturedImage(locationId);
+    }
+
+    // TODO: Is this being used?
+    @PUT
+    @Secured
+    @Path("main/{locId}/{locLinkId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Location linkMainLocLink(
+            @PathParam("locId") Integer locationId,
+            @PathParam("locLinkId") Integer locLinkId
+    ) {
+        return locationService.linkMainLocLink(locationId, locLinkId);
     }
 
 }

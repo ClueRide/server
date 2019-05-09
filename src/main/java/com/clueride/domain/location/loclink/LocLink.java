@@ -13,34 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 5/4/19.
+ * Created by jett on 5/5/19.
  */
-package com.clueride.domain.location.category;
+package com.clueride.domain.location.loclink;
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import com.clueride.auth.Secured;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * REST API for Location Categories, groupings of Location Types.
+ * Represents a URL that is associated with one or more Locations.
  */
-@Path("category")
-public class CategoryWebService {
+@Immutable
+public class LocLink {
+    private final Integer id;
+    private final String link;
 
-    @Inject
-    private CategoryService categoryService;
+    LocLink(LocLinkEntity locLinkEntity) {
+        this.id = locLinkEntity.getId();
+        this.link = locLinkEntity.getLink();
+    }
 
-    @GET
-    @Secured
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Category> fetchAll() {
-        return categoryService.fetchAll();
+    public Integer getId() {
+        return id;
+    }
+
+    public String getLink() {
+        return link;
     }
 
 }

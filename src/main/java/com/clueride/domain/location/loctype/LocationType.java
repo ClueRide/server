@@ -44,8 +44,8 @@ public class LocationType {
         this.name = builder.getName();
         this.description = builder.getDescription();
         this.icon = builder.getIcon();
-        if (builder.getCategoryEntity() != null) {
-            this.category = builder.getCategoryEntity().build();
+        if (builder.getCategory() != null) {
+            this.category = builder.getCategory().build();
         }
     }
 

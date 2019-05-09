@@ -26,12 +26,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import com.clueride.domain.location.category.CategoryEntity;
 
 /**
  * Persistable Builder for {@link LocationType} instances.
  */
 @Entity(name = "location_type")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class LocationTypeBuilder {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_type_pk_sequence")
@@ -110,11 +113,11 @@ public final class LocationTypeBuilder {
         return this;
     }
 
-    public CategoryEntity getCategoryEntity() {
+    public CategoryEntity getCategory() {
         return categoryEntity;
     }
 
-    public LocationTypeBuilder withCategoryEntity(CategoryEntity categoryEntity) {
+    public LocationTypeBuilder withCategory(CategoryEntity categoryEntity) {
         this.categoryEntity = categoryEntity;
         return this;
     }

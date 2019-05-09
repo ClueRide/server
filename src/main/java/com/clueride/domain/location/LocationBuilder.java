@@ -35,11 +35,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.base.Optional;
 
 import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.loclink.LocLink;
+import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeBuilder;
 import com.clueride.domain.puzzle.PuzzleBuilder;
@@ -72,6 +76,10 @@ public class LocationBuilder {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="featured_image_id")
     private ImageLinkEntity featuredImage;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name= "main_link_id")
+    private LocLinkEntity mainLink;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_type_id")
@@ -182,6 +190,7 @@ public class LocationBuilder {
         return this;
     }
 
+    @JsonGetter("locationType")
     public LocationType getLocationType() {
         return locationType;
     }
@@ -226,6 +235,7 @@ public class LocationBuilder {
         return locationTypeBuilder;
     }
 
+    @JsonSetter("locationType")
     public void setLocationTypeBuilder(LocationTypeBuilder locationTypeBuilder) {
         this.locationTypeBuilder = locationTypeBuilder;
         this.locationType = locationTypeBuilder.build();
@@ -333,7 +343,25 @@ public class LocationBuilder {
         return this;
     }
 
+
     /* End of Image Methods */
+    public LocLinkEntity getMainLink() {
+        return mainLink;
+    }
+
+    public LocationBuilder withMainLink(LocLinkEntity locLink) {
+        // TODO: This is SVR-36 too
+        this.mainLink = locLink;
+        return this;
+    }
+
+    public LocationBuilder withLocLink(LocLink locLink) {
+        // TODO: This is SVR-36 too
+        this.mainLink = LocLinkEntity.builder()
+                .withId(locLink.getId())
+                .withLink(locLink.getLink());
+        return this;
+    }
 
     public List<PuzzleBuilder> getPuzzleBuilders() {
         return puzzleBuilders;
@@ -368,6 +396,7 @@ public class LocationBuilder {
                 .withId(locationBuilder.id)
                 .withDescription(locationBuilder.description)
                 .withNodeId(locationBuilder.nodeId)
+                // TODO: SVR-36
 //                .withLocationTypeId(locationBuilder.locationTypeId)
                 .withLocationGroupId(locationBuilder.locationGroupId)
         ;

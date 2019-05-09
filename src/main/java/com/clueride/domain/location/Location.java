@@ -29,6 +29,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.clueride.domain.image.ImageLink;
 import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.puzzle.PuzzleBuilder;
 
@@ -47,6 +48,7 @@ public class Location {
     private final String description;
     private final LocationType locationType;
     private final ImageLink featuredImage;
+    private final LocLink mainLink;
     private final Integer googlePlaceId;
     private final LatLon latLon;
     private final ReadinessLevel readinessLevel;
@@ -76,6 +78,13 @@ public class Location {
             featuredImage = builder.getFeaturedImage().build();
         } else {
             featuredImage = null;
+        }
+
+        /* OK for Location to be missing its Main Link -- TODO: officially Optional?. */
+        if (builder.getMainLink() != null) {
+            mainLink = builder.getMainLink().build();
+        } else {
+            mainLink = null;
         }
 
         // Featured Level requires the following
@@ -167,6 +176,10 @@ public class Location {
         return featuredImage;
     }
 
+    public LocLink getMainLink() {
+        return mainLink;
+    }
+
     /**
      * Determines progress against criteria described here: http://bikehighways.wikidot.com/clueride-location-details
      * @return Readiness level based on completeness of the fields for this object.
@@ -177,20 +190,6 @@ public class Location {
 
     public Integer getGooglePlaceId() {
         return googlePlaceId;
-    }
-
-    /**
-     * List of Strings that in addition to LocationType, each categorize the location.
-     * Perhaps a placeholder at this time until I think through further what sorts of tags might be applied.
-     * @return Set of Strings, one for each tag added to this location.
-    public Set<String> getTags() {
-    return tagScores.keySet();
-    }
-     */
-
-    // TODO: not settled on this API
-    public Optional<Double> getScorePerTag(String tag) {
-        return tagScores.get(tag);
     }
 
     @Override
