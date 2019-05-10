@@ -19,10 +19,10 @@ package com.clueride.domain.location;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.google.common.base.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -56,7 +56,7 @@ public class Location {
     private final Integer locationGroupId;
     private final String establishment;
     private final Integer establishmentId;
-    private final Map<String,Optional<Double>> tagScores;
+    private final Map<String, Optional<Double>> tagScores;
 
     /**
      * Constructor accepting Builder instance.
@@ -80,9 +80,9 @@ public class Location {
             featuredImage = null;
         }
 
-        /* OK for Location to be missing its Main Link -- TODO: officially Optional?. */
-        if (builder.getMainLink() != null) {
-            mainLink = builder.getMainLink().build();
+        /* OK for Location to be missing its Main Link. */
+        if (builder.getMainLink().isPresent()) {
+            mainLink = builder.getMainLink().get().build();
         } else {
             mainLink = null;
         }

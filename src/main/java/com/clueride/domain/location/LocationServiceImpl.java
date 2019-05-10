@@ -36,6 +36,7 @@ import com.clueride.domain.image.ImageStore;
 import com.clueride.domain.location.latlon.LatLon;
 import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.location.loclink.LocLink;
+import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loclink.LocLinkService;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
@@ -113,21 +114,25 @@ public class LocationServiceImpl implements LocationService {
         locationBuilder.withLocationType(locationTypeService.getById(locationBuilder.getLocationTypeId()));
         locationBuilder.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationBuilder));
 
-        if (locationBuilder.getMainLink().getId() == null) {
-            try {
-                LocLink locLink  = locLinkService.createNewLocationLink(locationBuilder.getMainLink());
-                locationBuilder.withLocLink(locLink);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        } else if (locationBuilder.getMainLink().getLink().length() > 0) {
-            try {
-                LocLink locLink = locLinkService.getLocLinkByUrl(
-                        locationBuilder.getMainLink().getLink()
-                );
-                locationBuilder.withLocLink(locLink);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+        // TODO: SVR-36 and this too -- unit testing will help flatten this
+        if (locationBuilder.getMainLink().isPresent()) {
+            LocLinkEntity proposedLocLinkEntity = locationBuilder.getMainLink().get();
+            if (proposedLocLinkEntity.getId() == null) {
+                try {
+                    LocLink locLink  = locLinkService.createNewLocationLink(proposedLocLinkEntity);
+                    locationBuilder.withLocLink(locLink);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            } else if (proposedLocLinkEntity.getLink().length() > 0) {
+                try {
+                    LocLink locLink = locLinkService.getLocLinkByUrl(
+                            proposedLocLinkEntity.getLink()
+                    );
+                    locationBuilder.withLocLink(locLink);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

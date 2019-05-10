@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,7 +39,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.google.common.base.Optional;
+import com.sun.istack.internal.Nullable;
 
 import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.latlon.LatLon;
@@ -105,7 +106,8 @@ public class LocationBuilder {
     private Integer establishmentId;
 
     @Transient
-    private Map<String,Optional<Double>> tagScores = new HashMap<>();
+    @Nullable
+    private Map<String, Optional<Double>> tagScores = new HashMap<>();
 
     @Transient
     private String establishment;
@@ -343,10 +345,11 @@ public class LocationBuilder {
         return this;
     }
 
-
     /* End of Image Methods */
-    public LocLinkEntity getMainLink() {
-        return mainLink;
+
+
+    public Optional<LocLinkEntity> getMainLink() {
+        return Optional.ofNullable(this.mainLink);
     }
 
     public LocationBuilder withMainLink(LocLinkEntity locLink) {
