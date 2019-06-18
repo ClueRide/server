@@ -1,5 +1,5 @@
-/*
- * Copyright 2018 Jett Marks
+package com.clueride.domain.achievement;/*
+ * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 8/27/18.
+ * Created by jett on 5/28/19.
  */
-package com.clueride.domain.badge;
+// TODO: Website page discussing these levels:
+public enum ALevel {
+    NO_LEVEL,
+    AWARE,
+    ADEPT,
+    ADVOCATE,
+    ANGEL;
 
-/**
- * Maps from a Badge to a Badge Type.
- */
-public interface BadgeTypeService {
-
-    /**
-     * Given a BadgeFeatures, determine the BadgeType.
-     * @param builder instance of Builder populated from source that doesn't know about ClueRide's Badge Types.
-     * @return Enumeration of the BadgeType which provides authorization for certain activities.
-     */
-    BadgeType getTypeOfBadge(BadgeFeaturesEntity builder);
+    public static ALevel toALevel(String value) {
+        ALevel aLevel;
+        try {
+            aLevel = valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException iae) {
+            aLevel = NO_LEVEL;
+        }
+        return aLevel;
+    }
 
 }

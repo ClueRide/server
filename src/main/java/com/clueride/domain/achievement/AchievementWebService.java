@@ -15,7 +15,7 @@
  *
  * Created by jett on 6/17/19.
  */
-package com.clueride.domain.achievement.parser;
+package com.clueride.domain.achievement;
 
 import java.util.List;
 
@@ -28,18 +28,18 @@ import javax.ws.rs.core.MediaType;
 import com.clueride.auth.Secured;
 
 /**
- * Temporary, just to give an execution thread.
+ * Temporary, just to give an execution thread to the "parser".
  */
 @Path("/parsed-achievement")
-public class ParsedAchievementWebService {
+public class AchievementWebService {
     @Inject
-    private ParsedAchievementService parsedAchievementService;
+    private AchievementService achievementService;
 
     @GET
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ParsedAchievement> getAchievementsForUser() {
-        return parsedAchievementService.getAchievementForUser(47);
+    public List<Achievement> getAchievementsForUser() {
+        return achievementService.getAchievementsForUser(47);
     }
 
 }

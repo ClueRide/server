@@ -31,6 +31,6 @@ public interface BadgeStore {
      * Retrieves list of currently awarded badges for the session's user.
      * @return List of Badges for display.
      */
-    List<BadgeBuilder> getAwardedBadgesForUser(Integer userId);
+    List<BadgeFeaturesEntity> getAwardedBadgesForUser(Integer userId);
 
 }

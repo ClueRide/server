@@ -15,7 +15,7 @@
  *
  * Created by jett on 6/17/19.
  */
-package com.clueride.domain.achievement.parser;
+package com.clueride.domain.achievement.raw;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

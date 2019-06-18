@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Jett Marks
+ * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 12/1/18.
+ * Created by jett on 6/15/19.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.badge.progress;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
 
 /**
- * REST API for Badges.
+ * REST API for Badge Progress supporting client-side progress chips.
  */
-@Path("/badge")
-@RequestScoped
-public class BadgeWebService {
+@Path("/badge/progress")
+public class BadgeProgressWebService {
 
     @Inject
-    private BadgeService badgeService;
+    private BadgeProgressService badgeProgressService;
 
     @GET
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BadgeFeatures> getBadges() {
-        return badgeService.getBadges();
+    public List<BadgeProgress> getBadgeProgressForSession() {
+        return badgeProgressService.getBadgeProgressForSession();
+    }
+
+    @GET
+    @Secured
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BadgeProgress> getBadgeProgressForUser(@PathParam("id") Integer userId) {
+        return badgeProgressService.getBadgeProgressForUser(userId);
     }
 
 }
