@@ -15,7 +15,7 @@
  *
  * Created by jett on 6/17/19.
  */
-package com.clueride.domain.achievement.parser;
+package com.clueride.domain.achievement;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,10 +27,13 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.clueride.domain.achievement.raw.RawAchievement;
+import com.clueride.domain.achievement.raw.RawAchievementStore;
+
 /**
  * Knows how to parse the '_badgeos_achievements' value for the 'wp_usermeta' table.
  */
-public class ParsedAchievementServiceImpl implements ParsedAchievementService {
+public class AchievementServiceImpl implements AchievementService {
     @Inject
     private Logger LOGGER;
 
@@ -38,14 +41,23 @@ public class ParsedAchievementServiceImpl implements ParsedAchievementService {
     private RawAchievementStore rawAchievementStore;
 
     @Override
-    public List<ParsedAchievement> getAchievementForUser(int userId) {
+    public List<Achievement> getAchievementsForUser(int userId) {
         return parseRawAchievement(
-                rawAchievementStore.getRawAchievementsForUser(userId)
+            rawAchievementStore.getRawAchievementsForUser(userId)
         );
     }
 
-    private List<ParsedAchievement> parseRawAchievement(RawAchievement rawAchievement) {
-        List<ParsedAchievement> achievements = new ArrayList<>();
+    /**
+     * Turns Single field from BadgeOS into a list of Achievements.
+     *
+     * "Lines" are delineated by enclosing curly-brackets.
+     * Each line is an achievement with a set of name-value pairs.
+     *
+     * @param rawAchievement from BadgeOS.
+     * @return List of Achievements.
+     */
+    private List<Achievement> parseRawAchievement(RawAchievement rawAchievement) {
+        List<Achievement> achievements = new ArrayList<>();
         if (rawAchievement.getValue().length() > 0) {
             String[] lines = rawAchievement.getValue().split("\\{");
             for (String line : lines) {
@@ -64,27 +76,28 @@ public class ParsedAchievementServiceImpl implements ParsedAchievementService {
         return achievements;
     }
 
-    private ParsedAchievement elementStringToAchievement(String[] attributes) {
+    // TODO: May want to filter by either step or non-step
+    private Achievement elementStringToAchievement(String[] attributes) {
         Map<String, String> attributeMap = mapKeyValuePairs(attributes);
 
-        ParsedAchievement parsedAchievement = new ParsedAchievement();
+        Achievement achievement = new Achievement();
         for (String key : attributeMap.keySet()) {
             String value = attributeMap.get(key);
             if (key.contains("ID")) {
-                parsedAchievement.withPostId(getId(value));
+                achievement.withPostId(getId(value));
             } else if (key.contains("title")) {
-                parsedAchievement.withTitle(getTitle(value));
+                achievement.withTitle(getTitle(value));
             } else if (key.contains("post_type")) {
-                parsedAchievement.withPostType(getPostType(value));
+                achievement.withPostType(getPostType(value));
             } else if (key.contains("date_earned")) {
-                parsedAchievement.withEarned(getDateEarned(value));
+                achievement.withEarned(getDateEarned(value));
             }
         }
 
-        return parsedAchievement;
+        return achievement;
     }
 
-    /* Map the raw WP line into Key:Value pairs. */
+    /* Map the raw BadgeOS line into Key:Value pairs. */
     private Map<String, String> mapKeyValuePairs(String[] attributes) {
         Map<String, String> attributeMap = new HashMap<>();
         for (int i=0; i<attributes.length-1; i+=2) {
@@ -92,6 +105,8 @@ public class ParsedAchievementServiceImpl implements ParsedAchievementService {
         }
         return attributeMap;
     }
+
+    /* Field-specific parsing. */
 
     private int getId(String attribute) {
         if (attribute.startsWith("i")) {
@@ -110,7 +125,7 @@ public class ParsedAchievementServiceImpl implements ParsedAchievementService {
 
     private String getTitle(String attribute) {
         int indexOfColon = attribute.indexOf(":",2);
-        return attribute.substring(indexOfColon).replace("\"", "");
+        return attribute.substring(indexOfColon + 1).replace("\"", "");
     }
 
     private Date getDateEarned(String attribute) {

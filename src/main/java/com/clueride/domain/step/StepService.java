@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/17/19.
+ * Created by jett on 6/16/19.
  */
-package com.clueride.domain.achievement.parser;
+package com.clueride.domain.step;
+
+import java.util.List;
 
 /**
- * Defines operations on the Raw Achievement information
- * available under the `meta_key` named `_badgeos_achievements`.
+ * Defines operations on {@link Step} instances.
  */
-public interface RawAchievementStore {
+public interface StepService {
 
     /**
-     * Retrieves the record available for a given user.
-     * @param userId Unique identifier for the User.
-     * @return Instance of {@link RawAchievement} for the given user.
+     * Retrieves full list of Steps.
+     * @return Complete List of Steps.
      */
-    RawAchievement getRawAchievementsForUser(int userId);
+    List<Step> getAllSteps();
 
 }

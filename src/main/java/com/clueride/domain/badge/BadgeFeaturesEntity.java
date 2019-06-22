@@ -34,23 +34,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.clueride.MalformedUrlWithinDBException;
+import com.clueride.domain.achievement.ALevel;
+import com.clueride.domain.step.StepEntity;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Persistable Builder for {@link Badge} instances.
+ * Read-only Entity for {@link BadgeFeatures} instances.
+ *
+ * This defines the attributes of a Step which either builds
+ * to a higher level Achievement, or is comprised of child
+ * achievements. The {@link StepEntity} provides this structure
+ * relating the `post_id` of these BadgeFeatures instances.
  */
-@Entity(name = "badge_display_per_user")
-@Table(name = "badge_display_per_user")
-public class BadgeBuilder {
+@Entity
+@Table(name = "badge_features")
+public class BadgeFeaturesEntity {
     @Transient
     private static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Id
-    @Column(name = "achievement_id")
+    @Column(name = "post_id")
     private Integer id;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "post_title")
+    private String badgeDisplayName;
 
     @Column(name = "base_url")
     private String baseUrlString;
@@ -62,31 +69,25 @@ public class BadgeBuilder {
     private String badgeName;
 
     @Column(name = "badge_level")
-    private String badgeLevel;
-
-    @Transient
-    private BadgeType badgeType;
+    private String level;
 
     @Transient
     private URL imageUrl;
 
-    public BadgeBuilder() {}
+    public BadgeFeaturesEntity() {}
 
-    public Badge build() {
-        return new Badge(this);
+    public BadgeFeatures build() {
+        return new BadgeFeatures(this);
     }
 
-    public static BadgeBuilder builder() {
-        return new BadgeBuilder();
+    public static BadgeFeaturesEntity builder() {
+        return new BadgeFeaturesEntity();
     }
 
-    public static BadgeBuilder from(BadgeBuilder builderToCopy) {
+    public static BadgeFeaturesEntity from(BadgeFeaturesEntity builderToCopy) {
         return builder()
                 .withId(builderToCopy.getId())
-                .withUserId(builderToCopy.getUserId())
                 .withBadgeName(builderToCopy.getBadgeName())
-                .withBadgeLevel(builderToCopy.getBadgeLevel())
-                .withBadgeType(builderToCopy.getBadgeType())
                 .withBaseUrlString(builderToCopy.getBaseUrlString())
                 .withImageUrlString(builderToCopy.getImageUrlString());
     }
@@ -99,32 +100,17 @@ public class BadgeBuilder {
         this.id = id;
     }
 
-    public BadgeBuilder withId(Integer id) {
+    public BadgeFeaturesEntity withId(Integer id) {
         this.id = id;
         return this;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getBadgeDisplayName() {
+        return badgeDisplayName;
     }
 
-    public BadgeBuilder withUserId(Integer userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public BadgeType getBadgeType() {
-        return badgeType;
-    }
-
-    public BadgeBuilder withBadgeType(BadgeType badgeType) {
-        this.badgeType = badgeType;
-        return this;
-    }
-
-    public BadgeBuilder withBadgeTypeString(String badgeTypeString) {
-        this.badgeType = BadgeType.valueOf(badgeTypeString);
-        return this;
+    public ALevel getLevel() {
+        return ALevel.toALevel(this.level);
     }
 
     public URL getImageUrl() {
@@ -140,12 +126,12 @@ public class BadgeBuilder {
         return imageUrlString;
     }
 
-    BadgeBuilder withImageUrl(URL imageUrl) {
+    BadgeFeaturesEntity withImageUrl(URL imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
 
-    public BadgeBuilder withImageUrlString(String imageUrlString) {
+    public BadgeFeaturesEntity withImageUrlString(String imageUrlString) {
         this.imageUrlString = imageUrlString;
         return this;
     }
@@ -154,7 +140,7 @@ public class BadgeBuilder {
         return criteriaUrlFromBaseAndLevel(
                 this.baseUrlString,
                 this.badgeName,
-                this.badgeLevel
+                this.level
         );
     }
 
@@ -198,7 +184,7 @@ public class BadgeBuilder {
         return baseUrlString;
     }
 
-    public BadgeBuilder withBaseUrlString(String baseUrlString) {
+    public BadgeFeaturesEntity withBaseUrlString(String baseUrlString) {
         this.baseUrlString = baseUrlString;
         return this;
     }
@@ -207,17 +193,17 @@ public class BadgeBuilder {
         return badgeName;
     }
 
-    public BadgeBuilder withBadgeName(String badgeName) {
+    public BadgeFeaturesEntity withBadgeName(String badgeName) {
         this.badgeName = badgeName;
         return this;
     }
 
-    String getBadgeLevel() {
-        return badgeLevel;
+    String getBadgeLevelAsString() {
+        return level;
     }
 
-    public BadgeBuilder withBadgeLevel(String badgeLevel) {
-        this.badgeLevel = badgeLevel;
+    public BadgeFeaturesEntity withBadgeLevel(String badgeLevel) {
+        this.level = badgeLevel;
         return this;
     }
 
@@ -235,4 +221,5 @@ public class BadgeBuilder {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
 }

@@ -29,5 +29,5 @@ public interface BadgeService {
      * by this user.
      * @return List of user's Badges.
      */
-    List<Badge> getBadges();
+    List<BadgeFeatures> getBadges();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Jett Marks
+ * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 8/27/18.
+ * Created by jett on 6/15/19.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.badge.progress;
 
 /**
- * Maps from a Badge to a Badge Type.
+ * Defines persistence operations on {@link BadgeProgress} instances.
+ *
+ * BadgeProgress instances are not directly created from this server --
+ * this is a read-only service.
  */
-public interface BadgeTypeService {
+public interface BadgeProgressStore {
 
     /**
-     * Given a BadgeFeatures, determine the BadgeType.
-     * @param builder instance of Builder populated from source that doesn't know about ClueRide's Badge Types.
-     * @return Enumeration of the BadgeType which provides authorization for certain activities.
+     * Return the BadgeProgress record matching the given ID.
+     * @param badgeId unique identifier for a Badge and its Features.
+     * @return Entity instance for assembling {@link BadgeProgress}.
      */
-    BadgeType getTypeOfBadge(BadgeFeaturesEntity builder);
+    BadgeProgressEntity getBadgeProgressById(int badgeId);
 
 }

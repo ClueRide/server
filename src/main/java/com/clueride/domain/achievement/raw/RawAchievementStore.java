@@ -15,20 +15,19 @@
  *
  * Created by jett on 6/17/19.
  */
-package com.clueride.domain.achievement.parser;
-
-import java.util.List;
+package com.clueride.domain.achievement.raw;
 
 /**
- * Creates ParsedAchievement instances from the RawAchievement records
- * maintained by the BadgeOS system.
+ * Defines operations on the Raw Achievement information
+ * available under the `meta_key` named `_badgeos_achievements`.
  */
-public interface ParsedAchievementService {
-   /**
-    * Given a User ID, retrieve the achievements for that user.
-    * @param userId Unique ID for the user (WordPress ID).
-    * @return List of ParsedAchievements for the User.
-    */
-   List<ParsedAchievement> getAchievementForUser(int userId);
+public interface RawAchievementStore {
+
+    /**
+     * Retrieves the record available for a given user.
+     * @param userId Unique identifier for the User.
+     * @return Instance of {@link RawAchievement} for the given user.
+     */
+    RawAchievement getRawAchievementsForUser(int userId);
 
 }

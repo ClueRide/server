@@ -16,6 +16,7 @@ package com.clueride.domain.badge;/*
  * Created by jett on 8/4/18.
  */
 
+// TODO: Revisit these.
 public enum BadgeType {
     SEEKER,
     GUIDE,

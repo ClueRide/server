@@ -48,17 +48,16 @@ public class BadgeServiceImpl implements BadgeService {
     private BadgeTypeService badgeTypeService;
 
     @Override
-    public List<Badge> getBadges() {
+    public List<BadgeFeatures> getBadges() {
         BadgeOsPrincipal badgeOsPrincipal = clueRideSessionDto.getBadgeOsPrincipal();
         Integer userId = badgeOsPrincipal.getBadgeOsUserId();
-        List<Badge> badgeList = new ArrayList<>();
+        List<BadgeFeatures> badgeFeaturesList = new ArrayList<>();
         LOGGER.info("Looking up Badges for User ID " + userId);
-        List<BadgeBuilder> builderList = badgeStore.getAwardedBadgesForUser(userId);
-        for (BadgeBuilder builder : builderList) {
-            builder.withBadgeType(badgeTypeService.getTypeOfBadge(builder));
-            badgeList.add(builder.build());
+        List<BadgeFeaturesEntity> builderList = badgeStore.getAwardedBadgesForUser(userId);
+        for (BadgeFeaturesEntity builder : builderList) {
+            badgeFeaturesList.add(builder.build());
         }
-        return badgeList;
+        return badgeFeaturesList;
     }
 
 }

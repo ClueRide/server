@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Jett Marks
+ * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 8/27/18.
+ * Created by jett on 6/16/19.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.step;
+
+import java.util.List;
 
 /**
- * Maps from a Badge to a Badge Type.
+ * Defines persistence operations on {@link Step} instances.
+ *
+ * These are read-only; the BadgeOS system is used to create
+ * new Step records.
  */
-public interface BadgeTypeService {
+public interface StepStore {
 
     /**
-     * Given a BadgeFeatures, determine the BadgeType.
-     * @param builder instance of Builder populated from source that doesn't know about ClueRide's Badge Types.
-     * @return Enumeration of the BadgeType which provides authorization for certain activities.
+     * Retrieve all instances of Steps.
+     * @return Complete List of all Steps.
      */
-    BadgeType getTypeOfBadge(BadgeFeaturesEntity builder);
+    List<StepEntity> getAllSteps();
 
 }

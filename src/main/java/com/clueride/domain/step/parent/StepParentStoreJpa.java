@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Jett Marks
+ * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 8/26/18.
+ * Created by jett on 6/19/19.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.step.parent;
 
 import java.util.List;
 
@@ -26,9 +26,9 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 
 /**
- * JPA implementation of Badge Store.
+ * JPA implementation of {@link StepParentStore}.
  */
-public class BadgeStoreJpa implements BadgeStore {
+public class StepParentStoreJpa implements StepParentStore {
     @Inject
     private Logger LOGGER;
 
@@ -36,15 +36,12 @@ public class BadgeStoreJpa implements BadgeStore {
     private EntityManager entityManager;
 
     @Override
-    public List<BadgeFeaturesEntity> getAwardedBadgesForUser(Integer userId) {
-        LOGGER.debug("Retrieving Badges for User ID {}", userId);
-        List<BadgeFeaturesEntity> builderList;
-        builderList = entityManager.createQuery(
-                    "SELECT b FROM badge_display_per_user b WHERE b.userId = :userId"
-        )
-                .setParameter("userId", userId)
-                .getResultList();
-        return builderList;
+    public List<StepParentEntity> getAllStepParents() {
+        LOGGER.debug("Retrieving all Step Parents");
+
+        return entityManager.createQuery(
+                "SELECT s FROM StepParentEntity s"
+        ).getResultList();
     }
 
 }

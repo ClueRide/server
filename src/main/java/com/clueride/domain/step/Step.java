@@ -13,52 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/17/19.
+ * Created by jett on 5/30/19.
  */
-package com.clueride.domain.achievement.parser;
+package com.clueride.domain.step;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.annotation.concurrent.Immutable;
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * What comes out of the BadgeOS system for a user's Achievements.
+ * Defines what needs to be accomplished to earn this part
+ * of the BadgeFeatures.
  */
-@Entity
-@Table(name = "wp_usermeta")
-public class RawAchievement {
-    @Id
-    @Column(name = "umeta_id")
-    private int id;
+@Immutable
+public class Step {
+    private final int id;
+    private final String name;
+    private final int badgeId;  // From the Parent ID
 
-    @Column(name = "user_id")
-    private int userId;
-
-    @Column(name = "meta_value")
-    private String value;
-
-    /** Only used for the queries. */
-    @Column(name = "meta_key")
-    private String metaKey;
-
-    public RawAchievement() {
+    @Inject
+    public Step(StepEntity stepEntity) {
+        this.id = stepEntity.getId();
+        this.name = stepEntity.getName();
+        this.badgeId = stepEntity.getBadgeId();
     }
 
     public int getId() {
         return id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public String getValue() {
-        return value;
+    public int getBadgeId() {
+        return badgeId;
     }
 
     @Override

@@ -25,48 +25,46 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.clueride.domain.achievement.ALevel;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Pojo for Badges.
- *
- * Each instance of awarding a badge type is a Badge, so the IDs are
- * unique instances of an awarded badge.
+ * Pojo for BadgeFeatures.
  */
 @Immutable
-public class Badge {
+public class BadgeFeatures {
     private final Integer id;
-    private final Integer userId;
-    private final BadgeType badgeType;
-    private final URL badgeImageUrl;
-    private final URL badgeCriteriaUrl;
+    private final String displayName;
+    private final ALevel level;
+    private final URL imageUrl;
+    private final URL criteriaUrl;
 
-    public Badge(BadgeBuilder builder) {
+    public BadgeFeatures(BadgeFeaturesEntity builder) {
         this.id = requireNonNull(builder.getId());
-        this.userId = requireNonNull(builder.getUserId());
-        this.badgeType = requireNonNull(builder.getBadgeType());
-        this.badgeImageUrl = requireNonNull(builder.getImageUrl());
-        this.badgeCriteriaUrl = requireNonNull(builder.getCriteriaUrl());
+        this.displayName = requireNonNull(builder.getBadgeDisplayName());
+        this.level = requireNonNull(builder.getLevel());
+        this.imageUrl = requireNonNull(builder.getImageUrl());
+        this.criteriaUrl = requireNonNull(builder.getCriteriaUrl());
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public BadgeType getBadgeType() {
-        return badgeType;
+    public ALevel getLevel() {
+        return level;
     }
 
-    public URL getBadgeImageUrl() {
-        return badgeImageUrl;
+    public URL getImageUrl() {
+        return imageUrl;
     }
 
-    public URL getBadgeCriteriaUrl() {
-        return badgeCriteriaUrl;
+    public URL getCriteriaUrl() {
+        return criteriaUrl;
     }
 
     @Override

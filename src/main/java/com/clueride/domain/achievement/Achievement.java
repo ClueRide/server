@@ -15,25 +15,26 @@
  *
  * Created by jett on 6/17/19.
  */
-package com.clueride.domain.achievement.parser;
+package com.clueride.domain.achievement;
 
 import java.util.Date;
 
 /**
  * Attributes for an Achievement for a given user.
  */
-public class ParsedAchievement {
-    private int postId;
+public class Achievement {
+    private int stepId;
     private String title;
     private String postType;
     private Date earned;
 
-    public int getPostId() {
-        return postId;
+    public int getStepId() {
+        return stepId;
     }
 
-    public ParsedAchievement withPostId(int postId) {
-        this.postId = postId;
+    /** PostID == StepID. */
+    public Achievement withPostId(int postId) {
+        this.stepId = postId;
         return this;
     }
 
@@ -41,7 +42,7 @@ public class ParsedAchievement {
         return title;
     }
 
-    public ParsedAchievement withTitle(String title) {
+    public Achievement withTitle(String title) {
         this.title = title;
         return this;
     }
@@ -50,7 +51,7 @@ public class ParsedAchievement {
         return postType;
     }
 
-    public ParsedAchievement withPostType(String postType) {
+    public Achievement withPostType(String postType) {
         this.postType = postType;
         return this;
     }
@@ -59,7 +60,7 @@ public class ParsedAchievement {
         return earned;
     }
 
-    public ParsedAchievement withEarned(Date earned) {
+    public Achievement withEarned(Date earned) {
         this.earned = earned;
         return this;
     }
