@@ -1,4 +1,4 @@
-package com.clueride.domain.achievement;/*
+package com.clueride.domain.badge.features;/*
  * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
+import com.clueride.domain.badge.features.BadgeFeatures;
+import com.clueride.domain.badge.features.BadgeFeaturesEntity;
 
 /**
  * Default Implementation of BadgeService.

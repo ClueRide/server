@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.clueride.domain.achievement.Achievement;
-import com.clueride.domain.badge.BadgeFeatures;
+import com.clueride.domain.badge.features.BadgeFeatures;
 import com.clueride.domain.step.Step;
 
 /**

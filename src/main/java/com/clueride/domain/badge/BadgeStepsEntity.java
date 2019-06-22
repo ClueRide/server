@@ -29,6 +29,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.clueride.domain.badge.features.BadgeFeatures;
+import com.clueride.domain.badge.features.BadgeFeaturesEntity;
 import com.clueride.domain.step.Step;
 import com.clueride.domain.step.StepEntity;
 

@@ -15,7 +15,7 @@
  *
  * Created by jett on 8/4/18.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.badge.features;
 
 import java.net.URL;
 
@@ -25,7 +25,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.achievement.ALevel;
 import static java.util.Objects.requireNonNull;
 
 /**

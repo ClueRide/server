@@ -25,6 +25,8 @@ import javax.persistence.PersistenceContext;
 
 import org.slf4j.Logger;
 
+import com.clueride.domain.badge.features.BadgeFeaturesEntity;
+
 /**
  * JPA implementation of Badge Store.
  */
