@@ -20,6 +20,8 @@ package com.clueride.domain.badge;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.clueride.domain.badge.features.BadgeFeaturesEntity;
+
 /**
  * Implementation that "hard-codes" the relationships between certain Post IDs
  * and the corresponding BadgeType.

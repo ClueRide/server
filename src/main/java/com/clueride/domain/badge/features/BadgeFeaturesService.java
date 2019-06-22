@@ -15,7 +15,7 @@
  *
  * Created by jett on 6/15/19.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.badge.features;
 
 import java.util.List;
 

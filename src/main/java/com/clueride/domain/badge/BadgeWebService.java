@@ -27,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.badge.features.BadgeFeatures;
 
 /**
  * REST API for Badges.

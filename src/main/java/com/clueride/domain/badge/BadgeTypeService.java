@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.badge;
 
+import com.clueride.domain.badge.features.BadgeFeaturesEntity;
+
 /**
  * Maps from a Badge to a Badge Type.
  */

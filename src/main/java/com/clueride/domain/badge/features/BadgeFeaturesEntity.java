@@ -15,7 +15,7 @@
  *
  * Created by jett on 1/13/19.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.badge.features;
 
 import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.clueride.MalformedUrlWithinDBException;
-import com.clueride.domain.achievement.ALevel;
 import com.clueride.domain.step.StepEntity;
 import static java.util.Objects.requireNonNull;
 

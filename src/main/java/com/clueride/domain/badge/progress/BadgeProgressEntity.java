@@ -31,7 +31,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.clueride.domain.achievement.Achievement;
-import com.clueride.domain.badge.BadgeFeaturesEntity;
+import com.clueride.domain.badge.features.BadgeFeaturesEntity;
 import com.clueride.domain.step.Step;
 import com.clueride.domain.step.StepEntity;
 import static java.util.Objects.requireNonNull;
