@@ -92,4 +92,19 @@ public class ConfigServiceImpl implements ConfigService {
         return get("clueride.image.baseDirectory");
     }
 
+    @Override
+    public String getBadgeOSAccountName() {
+        return get("badgeos.account");
+    }
+
+    @Override
+    public String getBadgeOSPassword() {
+        return get("badgeos.password");
+    }
+
+    @Override
+    public String getBadgeOSLoginUrlAsString() {
+        return get("badgeos.loginUrl");
+    }
+
 }

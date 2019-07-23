@@ -58,4 +58,13 @@ public interface ConfigService {
     /** Base Directory for images on the Image Server. */
     String getImageBaseDirectory();
 
+    /** Account Name for the BadgeOS System account assigned to this Server. */
+    String getBadgeOSAccountName();
+
+    /** Password for the BadgeOS account assigned to this server. */
+    String getBadgeOSPassword();
+
+    /** URL of the BadgeOS Login page. */
+    String getBadgeOSLoginUrlAsString();
+
 }
