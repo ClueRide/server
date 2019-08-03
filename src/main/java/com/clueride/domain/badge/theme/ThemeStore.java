@@ -13,28 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/16/19.
+ * Created by jett on 7/28/19.
  */
-package com.clueride.domain.step;
+package com.clueride.domain.badge.theme;
 
 import java.util.List;
 
 /**
- * Defines operations on {@link Step} instances.
+ * Persistence operations for {@link ThemeEntity} instances.
  */
-public interface StepService {
+public interface ThemeStore {
+    /**
+     * Retrieve the list of Themes -- open or closed.
+     * @return List of all ThemeEntity instances.
+     */
+    List<ThemeEntity> getThemes();
 
     /**
-     * Retrieves full list of Steps.
-     * @return Complete List of Steps.
+     * Retrieve the list of Closed Themes.
+     * @return List of all closed ThemeEntity instances.
      */
-    List<Step> getAllSteps();
+    List<ThemeEntity> getClosedThemes();
 
     /**
-     * Retrieves list of Steps for a given Badge.
-     * @param badgeId unique identifier for a Badge.
-     * @return List of the steps just for the given Badge.
+     * Retrieve the list of Open Themes.
+     * @return List of all open ThemeEntity instances.
      */
-    List<Step> getAllStepsForBadge(int badgeId);
+    List<ThemeEntity> getOpenThemes();
 
 }

@@ -86,6 +86,9 @@ public class LocationBuilder {
     @JoinColumn(name = "location_type_id")
     private LocationTypeBuilder locationTypeBuilder;
 
+    @Column(name="location_type_id", updatable = false, insertable = false)
+    private Integer locationTypeId;
+
     @Column(name="location_group_id") private Integer locationGroupId;
 
     @Transient
@@ -114,8 +117,6 @@ public class LocationBuilder {
 
     @Transient
     private ReadinessLevel readinessLevel;
-    @Transient
-    private Integer locationTypeId;
 
     public LocationBuilder() {}
 

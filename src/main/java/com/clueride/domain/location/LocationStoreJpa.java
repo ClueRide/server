@@ -103,4 +103,17 @@ public class LocationStoreJpa implements LocationStore {
         }
     }
 
+    @Override
+    public Iterable<? extends LocationBuilder> getThemedLocationBuilders() {
+        Collection<LocationBuilder> builderCollection = new ArrayList<>();
+        List<LocationBuilder> locationList = entityManager.createQuery(
+                "SELECT l FROM location l" +
+                        " WHERE l.locationTypeId IN (" +
+                        "SELECT lt.id from location_type lt WHERE lt.themeId IN (" +
+                        "SELECT t.id from ThemeEntity t) )"
+        ).getResultList();
+        builderCollection.addAll(locationList);
+        return builderCollection;
+    }
+
 }

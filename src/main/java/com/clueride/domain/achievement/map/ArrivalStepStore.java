@@ -13,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/16/19.
+ * Created by jett on 7/29/19.
  */
-package com.clueride.domain.step;
+package com.clueride.domain.achievement.map;
 
 import java.util.List;
 
 /**
- * Defines operations on {@link Step} instances.
+ * Defines Persistence operations on {@link ArrivalStepEntity} records
  */
-public interface StepService {
+public interface ArrivalStepStore {
 
     /**
-     * Retrieves full list of Steps.
-     * @return Complete List of Steps.
+     * Reads all the records in the Map table.
+     * @return List of all {@link ArrivalStepEntity} instances.
      */
-    List<Step> getAllSteps();
-
-    /**
-     * Retrieves list of Steps for a given Badge.
-     * @param badgeId unique identifier for a Badge.
-     * @return List of the steps just for the given Badge.
-     */
-    List<Step> getAllStepsForBadge(int badgeId);
+    List<ArrivalStepEntity> getAllRecords();
 
 }
+

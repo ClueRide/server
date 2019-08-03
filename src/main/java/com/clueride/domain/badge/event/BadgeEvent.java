@@ -36,6 +36,7 @@ public class BadgeEvent {
     private Date timestamp;
     private Principal principal;
     private Integer memberId;
+    private Integer badgeOSId;
     private String methodName;
     private Class methodClass;
     private Object returnValue;
@@ -46,6 +47,7 @@ public class BadgeEvent {
         this.timestamp = builder.getTimestamp();
         this.principal = builder.getPrincipal();
         this.memberId = builder.getMemberId();
+        this.badgeOSId = builder.getBadgeOSId();
         this.methodClass = builder.getMethodClass();
         this.methodName = builder.getMethodName();
         this.returnValue = builder.getReturnValue();
@@ -66,6 +68,10 @@ public class BadgeEvent {
 
     public Integer getMemberId() {
         return memberId;
+    }
+
+    public Integer getBadgeOSId() {
+        return badgeOSId;
     }
 
     public String getMethodName() {
@@ -98,5 +104,4 @@ public class BadgeEvent {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-
 }

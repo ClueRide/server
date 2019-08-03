@@ -55,4 +55,10 @@ public interface LocationStore {
      */
     void delete(LocationBuilder location);
 
+    /**
+     * Retrieves list of Themed Location Builders.
+     * @return Iterable over themed LocationBuilders
+     */
+    Iterable<? extends LocationBuilder> getThemedLocationBuilders();
+
 }

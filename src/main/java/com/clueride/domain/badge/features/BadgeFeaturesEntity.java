@@ -70,7 +70,7 @@ public class BadgeFeaturesEntity {
     @Column(name = "badge_level")
     private String level;
 
-    @Transient
+    @Transient      // Derived from String imageUrlString
     private URL imageUrl;
 
     public BadgeFeaturesEntity() {}

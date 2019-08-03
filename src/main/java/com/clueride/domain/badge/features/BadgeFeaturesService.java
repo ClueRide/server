@@ -30,4 +30,10 @@ public interface BadgeFeaturesService {
      */
     List<BadgeFeatures> getAllBadgeFeatures();
 
+    /**
+     * Retrieve all Badge Features instances for Themed Badges; both open and closed.
+     * @return List of {@link BadgeFeatures} that are Themed.
+     */
+    List<BadgeFeatures> getThemedBadgeFeatures();
+
 }

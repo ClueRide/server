@@ -93,7 +93,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    // TODO: CA-405 connect this more tightly (SVR-37 addresses this in part).
+    // TODO: CA-405 connects the Image URL more tightly (SVR-37 addresses this in part).
     public Member createNewMember(ClueRideIdentity clueRideIdentity) {
         MemberBuilder memberBuilder = memberStore.addNew(
                 MemberBuilder.from(clueRideIdentity)

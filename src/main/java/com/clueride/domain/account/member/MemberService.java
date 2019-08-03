@@ -25,7 +25,7 @@ import javax.mail.internet.InternetAddress;
 import com.clueride.auth.identity.ClueRideIdentity;
 
 /**
- * Provides business-layer services for Members and their Badges.
+ * Provides business-layer services for Clue Ride Members.
  */
 public interface MemberService {
 

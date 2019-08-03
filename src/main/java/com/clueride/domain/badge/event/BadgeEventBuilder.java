@@ -60,6 +60,9 @@ public class BadgeEventBuilder {
     @Column(name="member_id")
     private Integer memberId;
 
+    @Column(name = "badgeos_id")
+    private Integer badgeOSId;
+
     @Column(name="method_name")
     private String methodName;
 
@@ -95,6 +98,7 @@ public class BadgeEventBuilder {
                 .withId(badgeEvent.getId())
                 .withPrincipal(badgeEvent.getPrincipal())
                 .withMemberId(badgeEvent.getMemberId())
+                .withBadgeOSId(badgeEvent.getBadgeOSId())
                 .withTimestamp(badgeEvent.getTimestamp())
                 .withMethodClass(badgeEvent.getMethodClass())
                 .withClassName(badgeEvent.getMethodClass().getCanonicalName())
@@ -128,6 +132,15 @@ public class BadgeEventBuilder {
 
     public BadgeEventBuilder withMemberId(Integer memberId) {
         this.memberId = memberId;
+        return this;
+    }
+
+    public Integer getBadgeOSId() {
+        return badgeOSId;
+    }
+
+    public BadgeEventBuilder withBadgeOSId(Integer badgeOSId) {
+        this.badgeOSId = badgeOSId;
         return this;
     }
 

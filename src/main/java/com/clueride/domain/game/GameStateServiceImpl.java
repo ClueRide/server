@@ -198,11 +198,16 @@ public class GameStateServiceImpl implements GameStateService {
      * @param badgeEventName specific Team Event.
      */
     private void recordTeamBadgeEvent(String badgeEventName) {
+        OutingView outingView = clueRideSessionDto.getOutingView();
+        OutingPlusGameState outingPlusGameState = new OutingPlusGameState(
+                gameStateMap.get(outingView.getId()).build(),
+                outingView
+        );
         BadgeEventBuilder badgeEventBuilder = BadgeEventBuilder.builder()
                 .withTimestamp(new Date())
                 .withMethodName(badgeEventName)
                 .withMethodClass(this.getClass())
-                .withReturnValue(clueRideSessionDto.getOutingView());
+                .withReturnValue(outingPlusGameState);
         badgeEventService.sendToTeam(badgeEventBuilder, clueRideSessionDto.getOutingView().getTeamId());
     }
 

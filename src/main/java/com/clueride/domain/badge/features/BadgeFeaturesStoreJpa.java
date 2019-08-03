@@ -46,4 +46,15 @@ public class BadgeFeaturesStoreJpa implements BadgeFeaturesStore {
         return badgeFeaturesEntityList;
     }
 
+    @Override
+    public List<BadgeFeaturesEntity> getThemedBadgeFeatures() {
+        LOGGER.debug("Retrieving list of Themed Badges that can be earned");
+        List<BadgeFeaturesEntity> badgeFeaturesEntityList;
+        badgeFeaturesEntityList = entityManager.createQuery(
+                "SELECT bfe FROM BadgeFeaturesEntity bfe " +
+                        "WHERE bfe.badgeName = 'theme-close-ended' OR bfe.badgeName = 'theme-open-ended'"
+        ).getResultList();
+        return badgeFeaturesEntityList;
+    }
+
 }

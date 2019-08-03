@@ -39,4 +39,13 @@ public class StepServiceImpl implements StepService {
         return steps;
     }
 
+    @Override
+    public List<Step> getAllStepsForBadge(int badgeId) {
+        List<Step> steps = new ArrayList<>();
+        for (StepEntity entity : stepStore.getStepsForBadge(badgeId)) {
+            steps.add(entity.build());
+        }
+        return steps;
+    }
+
 }

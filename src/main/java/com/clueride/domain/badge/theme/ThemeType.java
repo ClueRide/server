@@ -1,4 +1,4 @@
-/*
+package com.clueride.domain.badge.theme;/*
  * Copyright 2019 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/16/19.
+ * Created by jett on 7/28/19.
  */
-package com.clueride.domain.step;
 
-import java.util.List;
+public enum ThemeType {
 
-/**
- * Defines operations on {@link Step} instances.
- */
-public interface StepService {
+    OPEN("open"),
+    CLOSED("closed");
 
-    /**
-     * Retrieves full list of Steps.
-     * @return Complete List of Steps.
-     */
-    List<Step> getAllSteps();
+    private final String label;
 
-    /**
-     * Retrieves list of Steps for a given Badge.
-     * @param badgeId unique identifier for a Badge.
-     * @return List of the steps just for the given Badge.
-     */
-    List<Step> getAllStepsForBadge(int badgeId);
+    ThemeType(String label) {
+        this.label = label;
+    }
 
 }

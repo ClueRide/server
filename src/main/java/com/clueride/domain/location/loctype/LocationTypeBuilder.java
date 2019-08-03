@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.location.loctype;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -48,6 +49,9 @@ public final class LocationTypeBuilder {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
+
+    @Column(name = "theme_id")
+    private Integer themeId;
 
     /**
      * Generate instance from Builder's values.
@@ -120,6 +124,10 @@ public final class LocationTypeBuilder {
     public LocationTypeBuilder withCategory(CategoryEntity categoryEntity) {
         this.categoryEntity = categoryEntity;
         return this;
+    }
+
+    public Integer getThemeId() {
+        return themeId;
     }
 
 }

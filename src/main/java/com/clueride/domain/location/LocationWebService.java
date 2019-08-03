@@ -174,4 +174,11 @@ public class LocationWebService {
         return locationService.linkMainLocLink(locationId, locLinkId);
     }
 
+    @GET
+    @Path("themed")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Location> getThemedLocations() {
+        return locationService.getThemeLocations();
+    }
+
 }
