@@ -41,6 +41,9 @@ public class MemberBuilder {
     @SequenceGenerator(name = "member_pk_sequence", sequenceName = "member_id_seq", allocationSize = 1)
     private Integer id;
 
+    @Column(name = "badgeos_id")
+    private Integer badgeOSId;
+
     @Column(name = "display_name")
     private String displayName;
     @Column(name = "first_name")
@@ -72,6 +75,7 @@ public class MemberBuilder {
         requireNonNull(member);
         return builder()
                 .withId(member.getId())
+                .withBadgeOSId(member.getBadgeOSId())
                 .withPhone(member.getPhoneNumber())
                 .withFirstName(member.getFirstName())
                 .withLastName(member.getLastName())
@@ -101,6 +105,15 @@ public class MemberBuilder {
 
     public MemberBuilder withId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public Integer getBadgeOSId() {
+        return badgeOSId;
+    }
+
+    public MemberBuilder withBadgeOSId(Integer badgeOSId) {
+        this.badgeOSId = badgeOSId;
         return this;
     }
 

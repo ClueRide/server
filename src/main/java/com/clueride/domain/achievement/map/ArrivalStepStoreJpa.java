@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/16/19.
+ * Created by jett on 7/29/19.
  */
-package com.clueride.domain.step;
+package com.clueride.domain.achievement.map;
 
 import java.util.List;
 
@@ -26,35 +26,24 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 
 /**
- * JPA implementation of {@link StepStore}.
+ * JPA implementation of {@link ArrivalStepStore}.
  */
-public class StepStoreJpa implements StepStore {
+public class ArrivalStepStoreJpa implements ArrivalStepStore {
+
     @Inject
     private Logger LOGGER;
 
-    @PersistenceContext(unitName = "badgeOS")
+    @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
     @Override
-    public List<StepEntity> getAllSteps() {
+    public List<ArrivalStepEntity> getAllRecords() {
         LOGGER.debug("Retrieving all Steps");
-        List<StepEntity> entities;
+        List<ArrivalStepEntity> entities;
         entities = entityManager.createQuery(
-                "SELECT s FROM StepEntity s"
+                "SELECT s FROM ArrivalStepEntity s"
         ).getResultList();
         return entities;
     }
-
-    @Override
-    public Iterable<? extends StepEntity> getStepsForBadge(int badgeId) {
-        LOGGER.debug("Retrieving Steps for Badge ID {}", badgeId);
-        List<StepEntity> entities = entityManager.createQuery(
-                "SELECT s FROM StepEntity s WHERE s.parentId = :badgeId"
-        ).setParameter(
-                "badgeId", badgeId
-        ).getResultList();
-        return entities;
-    }
-
 
 }

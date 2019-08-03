@@ -25,6 +25,17 @@ import org.apache.http.client.CookieStore;
 public interface BadgeOSSessionService {
 
     /**
+     * Recognize an Achievement for the User.
+     *
+     * This is the beginning of an asynchronous operation that will eventually
+     * either be successful or not.
+     *
+     * @param userId Word Press unique identifier.
+     * @param achievementId Corresponds to a specific Step or Badge within BadgeOS.
+     */
+    void awardAchievement(Integer userId, Integer achievementId);
+
+    /**
      * Refreshes the session cookies for BadgeOS sessions.
      */
     void refreshSession();

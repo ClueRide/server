@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/16/19.
+ * Created by jett on 7/26/19.
  */
-package com.clueride.domain.step;
-
-import java.util.List;
+package com.clueride.domain.achievement.award;
 
 /**
- * Defines operations on {@link Step} instances.
+ * Defines operations for awarding achievements.
  */
-public interface StepService {
+public interface AwardAchievementService {
 
     /**
-     * Retrieves full list of Steps.
-     * @return Complete List of Steps.
+     * Award the Arrival Achievement for the Attraction specified in the BadgeEvent.
+     *
+     * @param memberId WordPress identifier for the User being awarded the arrival.
+     * @param nextLocationName Name of the Attraction arrived.
+     * @param locationId ID of the Attraction arrived.
      */
-    List<Step> getAllSteps();
-
-    /**
-     * Retrieves list of Steps for a given Badge.
-     * @param badgeId unique identifier for a Badge.
-     * @return List of the steps just for the given Badge.
-     */
-    List<Step> getAllStepsForBadge(int badgeId);
+    void awardArrival(
+            Integer memberId,
+            String nextLocationName,
+            Integer locationId
+    );
 
 }

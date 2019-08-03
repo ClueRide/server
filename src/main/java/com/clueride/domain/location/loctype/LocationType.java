@@ -35,6 +35,7 @@ public class LocationType {
     private String description;
     private String icon;
     private Category category;
+    private Integer themeId;
 
     // TODO: Temporary constructor in service of JSON
     public LocationType() {}
@@ -47,6 +48,7 @@ public class LocationType {
         if (builder.getCategory() != null) {
             this.category = builder.getCategory().build();
         }
+        this.themeId = builder.getThemeId();
     }
 
     public int getId() {
@@ -67,6 +69,10 @@ public class LocationType {
 
     public Category getCategory() {
         return category;
+    }
+
+    public Integer getThemeId() {
+        return themeId;
     }
 
     @Override

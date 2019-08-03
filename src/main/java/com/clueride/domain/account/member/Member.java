@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Member implements Serializable {
     private int id;
+    private Integer badgeOSId;
     private String displayName;
     private String firstName;
     private String lastName;
@@ -46,6 +47,7 @@ public class Member implements Serializable {
 
     public Member(MemberBuilder builder) {
         this.id = builder.getId();
+        this.badgeOSId = builder.getBadgeOSId();
         this.displayName = builder.getDisplayName();
         this.firstName = builder.getFirstName();
         this.lastName = builder.getLastName();
@@ -58,16 +60,12 @@ public class Member implements Serializable {
         return id;
     }
 
-    public void withId(Integer id) {
-        this.id = id;
+    public Integer getBadgeOSId() {
+        return badgeOSId;
     }
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public void withDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 
     public String getFirstName() {

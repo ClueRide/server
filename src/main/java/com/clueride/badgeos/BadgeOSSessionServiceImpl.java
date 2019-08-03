@@ -73,6 +73,29 @@ public class BadgeOSSessionServiceImpl implements BadgeOSSessionService {
     }
 
     @Override
+    public void awardAchievement(Integer userId, Integer achievementId) {
+        Nonce nonce = getAwardNonce();
+        String urlString = String.format("https://clueride.com/wp-admin/user-edit.php" +
+                "?user_id=%d" +
+                "&wp_http_referer=/wp-admin/users.php" +
+                "&action=award" +
+                "&achievement_id=%d" +
+                "&_wpnonce=%s",
+                userId,
+                achievementId,
+                nonce.getValue()
+        );
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpGet httpGet = new HttpGet(urlString);
+            CloseableHttpResponse userGetResponse = httpClient.execute(httpGet, badgeOSContext);
+        } catch (IOException e) {
+            LOGGER.error("Problem connecting to BadgeOS");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void refreshSession() {
         /* Establish Context if needed. */
         badgeOSContext = establishContext();

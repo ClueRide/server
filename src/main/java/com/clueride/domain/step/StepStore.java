@@ -33,4 +33,11 @@ public interface StepStore {
      */
     List<StepEntity> getAllSteps();
 
+    /**
+     * Retrieve instances of Step for the given Badge.
+     * @param badgeId unique identifier for a given Badge.
+     * @return List of Steps to complete before Badge can be earned.
+     */
+    Iterable<? extends StepEntity> getStepsForBadge(int badgeId);
+
 }

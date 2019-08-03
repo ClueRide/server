@@ -56,7 +56,7 @@ public class BadgeOsPrincipalServiceImpl implements BadgeOsPrincipalService, Ser
     @Override
     public BadgeOsPrincipal getBadgeOsPrincipal(InternetAddress emailAddress) {
         requireNonNull(emailAddress, "Email Address must be non-null");
-        LOGGER.debug("Looking up Principal for {}", emailAddress.toString());
+        LOGGER.debug("Looking up BadgeOS Principal for {}", emailAddress.toString());
 
         return badgeOsPrincipalStore.getBadgeOsPrincipalForEmailAddress(
                 emailAddress

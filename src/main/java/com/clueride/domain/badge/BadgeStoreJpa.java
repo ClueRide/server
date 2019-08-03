@@ -38,9 +38,11 @@ public class BadgeStoreJpa implements BadgeStore {
     private EntityManager entityManager;
 
     @Override
+    // TODO: This won't work - no "DB" joins retrieve the records by User.
     public List<BadgeFeaturesEntity> getAwardedBadgesForUser(Integer userId) {
         LOGGER.debug("Retrieving Badges for User ID {}", userId);
         List<BadgeFeaturesEntity> builderList;
+        // TODO: Retrieve the Badge IDs awarded to a user, and then lookup the set of matching BadgeFeature instances.
         builderList = entityManager.createQuery(
                     "SELECT b FROM badge_display_per_user b WHERE b.userId = :userId"
         )

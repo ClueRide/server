@@ -26,7 +26,6 @@
       <jta-data-source>java:/DS/PostgreSQL</jta-data-source>
       <properties>
          <!-- Properties for Hibernate -->
-         <property name="hibernate.hbm2ddl.auto" value="update" />
          <property name="hibernate.show_sql" value="false" />
          <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisPG9Dialect" />
       </properties>

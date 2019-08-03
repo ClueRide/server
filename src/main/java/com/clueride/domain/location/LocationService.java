@@ -105,4 +105,10 @@ public interface LocationService {
      */
     List<LocLink> getLocationLinksByLocation(Integer locationId);
 
+    /**
+     * Retrieves List of Locations expected to be part of a Theme.
+     * @return List of Themed Locations.
+     */
+    List<Location> getThemeLocations();
+
 }

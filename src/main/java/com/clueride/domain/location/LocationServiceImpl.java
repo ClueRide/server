@@ -224,6 +224,20 @@ public class LocationServiceImpl implements LocationService {
         return null;
     }
 
+    @Override
+    public List<Location> getThemeLocations() {
+        LOGGER.info("Retrieving Themed Locations");
+        List<Location> locations = new ArrayList<>();
+
+        for (LocationBuilder builder : locationStore.getThemedLocationBuilders()) {
+            /* For these Location instances, what we certainly need is the IDs and the Type.
+             * Unclear if we need the readiness level at this time.
+             */
+            locations.add(builder.build());
+        }
+        return locations;
+    }
+
     // TODO: SVR-36 Tidy LocType (maybe)
     private void fillAndGradeLocation(LocationBuilder builder) {
         /* Assemble the derived transient fields. */

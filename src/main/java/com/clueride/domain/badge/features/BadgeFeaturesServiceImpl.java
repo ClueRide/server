@@ -44,4 +44,14 @@ public class BadgeFeaturesServiceImpl implements BadgeFeaturesService {
         return badgeFeatures;
     }
 
+    @Override
+    public List<BadgeFeatures> getThemedBadgeFeatures() {
+        List<BadgeFeatures> badgeFeatures = new ArrayList<>();
+        List<BadgeFeaturesEntity> entities = badgeFeaturesStore.getThemedBadgeFeatures();
+        for (BadgeFeaturesEntity entity : entities) {
+            badgeFeatures.add(entity.build());
+        }
+        return badgeFeatures;
+    }
+
 }

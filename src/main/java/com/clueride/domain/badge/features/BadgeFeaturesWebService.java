@@ -42,4 +42,12 @@ public class BadgeFeaturesWebService {
         return badgeFeaturesService.getAllBadgeFeatures();
     }
 
+    @GET
+    @Path("themed")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BadgeFeatures> getThemedBadgeFeatures() {
+        return badgeFeaturesService.getThemedBadgeFeatures();
+    }
+
 }

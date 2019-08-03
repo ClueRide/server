@@ -29,10 +29,14 @@ import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 
+import com.clueride.aop.badge.MethodName;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.PrincipalService;
+import com.clueride.domain.achievement.award.AwardAchievementService;
+import com.clueride.domain.game.OutingPlusGameState;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
 import com.clueride.domain.team.Team;
 import com.clueride.domain.team.TeamService;
 
@@ -58,6 +62,8 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     private PrincipalService principalService;
     @Inject
     private TeamService teamService;
+    @Inject
+    private AwardAchievementService awardAchievementService;
 
     @PostConstruct
     public void postConstruction() {
@@ -110,11 +116,12 @@ public class BadgeEventServiceImpl implements BadgeEventService {
 
     private void fillClientBuilder(BadgeEventBuilder badgeEventBuilder) throws AddressException {
         BadgeOsPrincipal principal = (BadgeOsPrincipal) badgeEventBuilder.getPrincipal();
-        Integer memberId = memberService.getMemberByEmail(
+        Member member = memberService.getMemberByEmail(
                 principal.getEmailAddress().toString()
-        ).getId();
+        );
 
-        badgeEventBuilder.withMemberId(memberId);
+        badgeEventBuilder.withMemberId(member.getId());
+        badgeEventBuilder.withBadgeOSId(member.getBadgeOSId());
     }
 
     public class Worker implements Runnable {
@@ -128,6 +135,8 @@ public class BadgeEventServiceImpl implements BadgeEventService {
                     fillClientBuilder(badgeEventBuilder);
                     LOGGER.info("Captured Event: " + badgeEventBuilder.toString());
                     badgeEventStore.add(badgeEventBuilder);
+                    // TODO: SVR-61 Send the event to BadgeOS if appropriate
+                    awardAchievementIfAppropriate(badgeEventBuilder.build());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     runnable = false;
@@ -144,6 +153,36 @@ public class BadgeEventServiceImpl implements BadgeEventService {
                     e.printStackTrace();
                 }
 
+            }
+        }
+
+        private void awardAchievementIfAppropriate(BadgeEvent badgeEvent) {
+            if (badgeEvent.getReturnValue() instanceof OutingPlusGameState) {
+                awardGameStateAchievement(badgeEvent);
+            } else if (badgeEvent.getReturnValue() instanceof AnswerSummary) {
+                LOGGER.info("Checking if we can award Answering a question");
+            } else {
+                LOGGER.warn("Not yet checking if we can award this event");
+            }
+        }
+
+        private void awardGameStateAchievement(BadgeEvent badgeEvent) {
+            OutingPlusGameState outingPlusGameState = (OutingPlusGameState) badgeEvent.getReturnValue();
+            MethodName methodName = MethodName.fromMethodName(badgeEvent.getMethodName());
+            switch (methodName) {
+                case ARRIVAL:
+                    awardAchievementService.awardArrival(
+                            badgeEvent.getBadgeOSId(),
+                            outingPlusGameState.getGameState().getNextLocationName(),
+                            outingPlusGameState.getGameState().getLocationId()
+                    );
+                    break;
+                case TEAM_ASSEMBLED:
+                    LOGGER.debug("Awarding Team Assembled");
+                    break;
+                default:
+                    LOGGER.error("Unrecognized methodName: {}", badgeEvent.getMethodName());
+                    break;
             }
         }
 

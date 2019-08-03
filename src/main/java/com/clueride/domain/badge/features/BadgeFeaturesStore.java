@@ -34,4 +34,10 @@ public interface BadgeFeaturesStore {
      */
     List<BadgeFeaturesEntity> getAllBadgeFeatures();
 
+    /**
+     * Retrieves list of Themed Badges; both open and closed.
+     * @return List of Themed {@link BadgeFeaturesEntity}.
+     */
+    List<BadgeFeaturesEntity> getThemedBadgeFeatures();
+
 }
