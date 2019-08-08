@@ -32,6 +32,7 @@ import com.clueride.RecordNotFoundException;
 import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.domain.account.register.RegisterService;
 
 /**
  * Implementation of {@link MemberService}.
@@ -46,10 +47,15 @@ public class MemberServiceImpl implements MemberService {
     private ClueRideSessionDto clueRideSessionDto;
 
     private final MemberStore memberStore;
+    private final RegisterService registerService;
 
     @Inject
-    public MemberServiceImpl(MemberStore memberStore) {
+    public MemberServiceImpl(
+            MemberStore memberStore,
+            RegisterService registerService
+    ) {
         this.memberStore = memberStore;
+        this.registerService = registerService;
     }
 
     @Override
@@ -109,6 +115,31 @@ public class MemberServiceImpl implements MemberService {
             members.add(builder.build());
         }
         return members;
+    }
+
+    /**
+     * This implementation performs a brief verification that the email addresses
+     * match up. There is also an opportunity to update / create the BadgeOS account
+     * if it doesn't exist.
+     *
+     * This does invoke the registration of the device.
+     *
+     * @param member to be checked.
+     * @return same (or updated?) member.
+     */
+    @Override
+    public Member crossCheck(Member member) {
+        Member sessionMember = clueRideSessionDto.getMember();
+        /* TODO: Check that we have the BadgeOS Account. */
+        if (sessionMember.getEmailAddress().equals(member.getEmailAddress())) {
+            registerService.register();
+        } else {
+            LOGGER.warn("Session address ({}) doesn't match chosen address ({})",
+                    sessionMember.getEmailAddress(),
+                    member.getEmailAddress()
+            );
+        }
+        return member;
     }
 
 }

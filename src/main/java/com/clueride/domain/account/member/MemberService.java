@@ -77,4 +77,19 @@ public interface MemberService {
      */
     List<Member> getMatchingMembers(String pattern);
 
+    /**
+     * Given a {@link Member} instance, check the details against what we have
+     * as provided by the 3rd-party Auth service based on the Access Token.
+     *
+     * This is also an opportunity for these actions:
+     * <ul>
+     *     <li>Create/Update WordPress/BadgeOS account.</li>
+     *     <li>Award Achievement for Registering the device.</li>
+     * </ul>
+     *
+     * @param member to be checked.
+     * @return Updates for conflicting information, if appropriate.
+     */
+    Member crossCheck(Member member);
+
 }
