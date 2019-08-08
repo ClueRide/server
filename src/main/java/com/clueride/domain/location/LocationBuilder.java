@@ -39,7 +39,6 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.sun.istack.internal.Nullable;
 
 import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.latlon.LatLon;
@@ -99,7 +98,8 @@ public class LocationBuilder {
     private LatLon latLon;
     @Transient
     private URL featuredImageUrl;
-    @Transient private Integer featuredImageId;
+    @Transient
+    private Integer featuredImageId;
     @Transient
     private List<PuzzleBuilder> puzzleBuilders;
     @Transient
@@ -109,7 +109,6 @@ public class LocationBuilder {
     private Integer establishmentId;
 
     @Transient
-    @Nullable
     private Map<String, Optional<Double>> tagScores = new HashMap<>();
 
     @Transient
