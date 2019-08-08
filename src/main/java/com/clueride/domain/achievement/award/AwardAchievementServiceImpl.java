@@ -26,8 +26,13 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import com.clueride.aop.badge.MethodName;
 import com.clueride.badgeos.BadgeOSSessionService;
 import com.clueride.domain.achievement.map.ArrivalStepsMapService;
+import com.clueride.domain.badge.event.BadgeEvent;
+import com.clueride.domain.game.OutingPlusGameState;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
+import static com.clueride.aop.badge.MethodName.REGISTER;
 
 /**
  * Implementation of {@link AwardAchievementService}.
@@ -73,6 +78,45 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
             awardAchievement(badgeOSId, stepId);
         }
 
+    }
+
+    @Override
+    public void awardPotentialAchievement(BadgeEvent badgeEvent) {
+        // TODO: SVR-61 Send the event to BadgeOS if appropriate
+        if (badgeEvent.getReturnValue() instanceof OutingPlusGameState) {
+            awardGameStateAchievement(badgeEvent);
+        } else if (badgeEvent.getReturnValue() instanceof AnswerSummary) {
+            LOGGER.info("Checking if we can award Answering a question");
+        } else if (MethodName.fromMethodName(badgeEvent.getMethodName()) == REGISTER) {
+            LOGGER.info("Awarding Registration Achievement");
+            this.awardAchievement(
+                    badgeEvent.getBadgeOSId(),
+                    3615
+            );
+        } else {
+            LOGGER.warn("Not yet checking if we can award this event");
+        }
+    }
+
+    private void awardGameStateAchievement(BadgeEvent badgeEvent) {
+        OutingPlusGameState outingPlusGameState = (OutingPlusGameState) badgeEvent.getReturnValue();
+        MethodName methodName = MethodName.fromMethodName(badgeEvent.getMethodName());
+        switch (methodName) {
+            case ARRIVAL:
+                LOGGER.debug("Awarding Arrival");
+                this.awardArrival(
+                        badgeEvent.getBadgeOSId(),
+                        outingPlusGameState.getGameState().getNextLocationName(),
+                        outingPlusGameState.getGameState().getLocationId()
+                );
+                break;
+            case TEAM_ASSEMBLED:
+                LOGGER.debug("Awarding Team Assembled");
+                break;
+            default:
+                LOGGER.error("Unrecognized methodName: {}", badgeEvent.getMethodName());
+                break;
+        }
     }
 
     /**

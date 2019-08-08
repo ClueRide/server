@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.achievement.award;
 
+import com.clueride.domain.badge.event.BadgeEvent;
+
 /**
  * Defines operations for awarding achievements.
  */
@@ -34,5 +36,13 @@ public interface AwardAchievementService {
             String nextLocationName,
             Integer locationId
     );
+
+    /**
+     * Accepts BadgeEvent, checks to see if it is associated with an achievement, and if so,
+     * invokes the BadgeOS system to award the achievement.
+     *
+     * @param badgeEvent instance of BadgeEvent captured when the session user performed some action.
+     */
+    void awardPotentialAchievement(BadgeEvent badgeEvent);
 
 }

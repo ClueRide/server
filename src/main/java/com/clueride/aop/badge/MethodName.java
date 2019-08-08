@@ -28,6 +28,7 @@ public enum MethodName {
     ADD_NEW_TO_LOCATION("addNewToLocation"),    // New Image
     COURSE_COMPLETED("courseCompleted"),
     POST_ANSWER_FOR_SESSION("postAnswerForSession"),
+    REGISTER("register"),
     TEAM_ASSEMBLED("teamAssembled"),
     UPDATE_LOCATION("updateLocation"),
     UPLOAD_IMAGE("uploadImage"),
