@@ -157,6 +157,11 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
 
     }
 
+    /**
+     * Awards achievements for Game State events, which are typically for the entire team at once.
+     * The Game State service takes care of generating a BadgeEvent for each team member.
+     * @param badgeEvent details of the Game State change which affects the award being awarded.
+     */
     private void awardGameStateAchievement(BadgeEvent badgeEvent) {
         OutingPlusGameState outingPlusGameState = (OutingPlusGameState) badgeEvent.getReturnValue();
         MethodName methodName = MethodName.fromMethodName(badgeEvent.getMethodName());
@@ -169,9 +174,12 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
                         outingPlusGameState.getGameState().getLocationId()
                 );
                 break;
+
             case TEAM_ASSEMBLED:
-                LOGGER.debug("Awarding Team Assembled");
+                LOGGER.debug("Awarding Team Assembled (Training Complete)");
+                awardAchievement(badgeEvent.getBadgeOSId(), 3621);
                 break;
+
             default:
                 LOGGER.error("Unrecognized methodName: {}", badgeEvent.getMethodName());
                 break;
