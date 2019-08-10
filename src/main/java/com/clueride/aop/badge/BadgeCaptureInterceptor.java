@@ -62,7 +62,6 @@ public class BadgeCaptureInterceptor {
         Object returnValue = invocation.proceed();
         badgeEventBuilder.withReturnValue(returnValue);
         badgeEventService.send(badgeEventBuilder);
-        LOGGER.debug(badgeEventBuilder.toString());
         return returnValue;
     }
 

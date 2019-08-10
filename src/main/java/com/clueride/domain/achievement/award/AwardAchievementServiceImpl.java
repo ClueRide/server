@@ -29,10 +29,11 @@ import org.slf4j.Logger;
 import com.clueride.aop.badge.MethodName;
 import com.clueride.badgeos.BadgeOSSessionService;
 import com.clueride.domain.achievement.map.ArrivalStepsMapService;
+import com.clueride.domain.achievement.map.PageStepsMapService;
 import com.clueride.domain.badge.event.BadgeEvent;
 import com.clueride.domain.game.OutingPlusGameState;
+import com.clueride.domain.page.Page;
 import com.clueride.domain.puzzle.answer.AnswerSummary;
-import static com.clueride.aop.badge.MethodName.REGISTER;
 
 /**
  * Implementation of {@link AwardAchievementService}.
@@ -43,17 +44,93 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
 
     private final ArrivalStepsMapService arrivalStepsMapService;
     private final BadgeOSSessionService badgeOSSessionService;
+    private final PageStepsMapService pageStepsMapService;
 
     private static Map<Integer, List<Integer>> arrivalStepsMap;
+    private static Map<Integer, List<Integer>> pageStepsMap;
 
     @Inject
     public AwardAchievementServiceImpl(
             ArrivalStepsMapService arrivalStepsMapService,
-            BadgeOSSessionService badgeOSSessionService
+            BadgeOSSessionService badgeOSSessionService,
+            PageStepsMapService pageStepsMapService
     ) {
         this.arrivalStepsMapService = arrivalStepsMapService;
         this.badgeOSSessionService = badgeOSSessionService;
+        this.pageStepsMapService = pageStepsMapService;
         arrivalStepsMap = populateArrivalStepsMap();
+        pageStepsMap = pageStepsMapService.loadMap();
+    }
+
+    @Override
+    public void awardPotentialAchievement(BadgeEvent badgeEvent) {
+        // TODO: SVR-61 Send the event to BadgeOS if appropriate
+        if (badgeEvent.getReturnValue() instanceof OutingPlusGameState) {
+            awardGameStateAchievement(badgeEvent);
+            return;
+        } else if (badgeEvent.getReturnValue() instanceof AnswerSummary) {
+            LOGGER.info("Checking if we can award Answering a question");
+            return;
+        }
+
+        MethodName methodName = MethodName.fromMethodName(badgeEvent.getMethodName());
+        switch (methodName) {
+            case REGISTER:
+                LOGGER.info("Awarding Registration Achievement");
+                this.awardAchievement(
+                        badgeEvent.getBadgeOSId(),
+                        3615
+                );
+                return;
+            case VISIT_PAGE:
+                LOGGER.info("Checking if we can award Visit Page Achievement");
+                Page page = (Page) badgeEvent.getReturnValue();
+                if (page != null) {
+                    if (page.getPageSlug() != null) {
+                        awardPageVisit(
+                                badgeEvent.getBadgeOSId(),
+                                page
+                        );
+                    } else {
+                        LOGGER.error("Not yet handling pages outside of Word Press");
+                    }
+                }
+                return;
+            default:
+                break;
+        }
+
+        LOGGER.warn("Not yet checking if we can award this event");
+
+    }
+
+    @Override
+    public void awardPageVisit(
+            Integer badgeOSId,
+            Page page
+    ) {
+        if (!pageStepsMap.containsKey(page.getPostId())) {
+            LOGGER.error("Missing the page {} in the map", page.getPageSlug());
+            return;
+        }
+
+        List<Integer> pageStepIds = pageStepsMap.get(page.getPostId());
+
+        for (Integer pageStepId : pageStepIds) {
+            awardAchievement(
+                    badgeOSId,
+                    pageStepId
+            );
+        }
+
+    }
+
+    @Override
+    public void awardPageVisit(
+            Integer badgeOSId,
+            Page page,
+            Integer attractionId
+    ) {
     }
 
     @Override
@@ -78,24 +155,6 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
             awardAchievement(badgeOSId, stepId);
         }
 
-    }
-
-    @Override
-    public void awardPotentialAchievement(BadgeEvent badgeEvent) {
-        // TODO: SVR-61 Send the event to BadgeOS if appropriate
-        if (badgeEvent.getReturnValue() instanceof OutingPlusGameState) {
-            awardGameStateAchievement(badgeEvent);
-        } else if (badgeEvent.getReturnValue() instanceof AnswerSummary) {
-            LOGGER.info("Checking if we can award Answering a question");
-        } else if (MethodName.fromMethodName(badgeEvent.getMethodName()) == REGISTER) {
-            LOGGER.info("Awarding Registration Achievement");
-            this.awardAchievement(
-                    badgeEvent.getBadgeOSId(),
-                    3615
-            );
-        } else {
-            LOGGER.warn("Not yet checking if we can award this event");
-        }
     }
 
     private void awardGameStateAchievement(BadgeEvent badgeEvent) {

@@ -100,7 +100,7 @@ public class ArrivalStepsMapServiceImpl implements ArrivalStepsMapService {
             int locationId = arrivalStepEntity.getLocationId();
             int stepId = arrivalStepEntity.getStepId();
             List<Integer> attractionStepIds;
-            if (arrivalStepsMap.containsKey(arrivalStepEntity.getLocationId())) {
+            if (arrivalStepsMap.containsKey(locationId)) {
                 attractionStepIds = arrivalStepsMap.get(locationId);
             } else {
                 attractionStepIds = new ArrayList<>();
