@@ -32,6 +32,7 @@ public enum MethodName {
     TEAM_ASSEMBLED("teamAssembled"),
     UPDATE_LOCATION("updateLocation"),
     UPLOAD_IMAGE("uploadImage"),
+    VISIT_PAGE("visitPage"),
     ;
 
     public final String methodName;

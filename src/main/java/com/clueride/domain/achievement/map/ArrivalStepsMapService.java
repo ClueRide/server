@@ -35,7 +35,7 @@ public interface ArrivalStepsMapService {
 
     /**
      * Retrieves Map (which may be cached).
-     * @return Map from Attraction Name to a List of Integer Achievement IDs.
+     * @return Map from Attraction ID to a List of Integer Achievement IDs.
      */
     Map<Integer, List<Integer>> loadArrivalStepsMap();
 

@@ -18,24 +18,12 @@
 package com.clueride.domain.achievement.award;
 
 import com.clueride.domain.badge.event.BadgeEvent;
+import com.clueride.domain.page.Page;
 
 /**
  * Defines operations for awarding achievements.
  */
 public interface AwardAchievementService {
-
-    /**
-     * Award the Arrival Achievement for the Attraction specified in the BadgeEvent.
-     *
-     * @param memberId WordPress identifier for the User being awarded the arrival.
-     * @param nextLocationName Name of the Attraction arrived.
-     * @param locationId ID of the Attraction arrived.
-     */
-    void awardArrival(
-            Integer memberId,
-            String nextLocationName,
-            Integer locationId
-    );
 
     /**
      * Accepts BadgeEvent, checks to see if it is associated with an achievement, and if so,
@@ -44,5 +32,49 @@ public interface AwardAchievementService {
      * @param badgeEvent instance of BadgeEvent captured when the session user performed some action.
      */
     void awardPotentialAchievement(BadgeEvent badgeEvent);
+
+    /**
+     * Award the Arrival Achievement for the Attraction specified in the BadgeEvent.
+     *
+     * @param badgeOSId WordPress identifier for the User being awarded the arrival.
+     * @param attractionName Name of the Attraction arrived.
+     * @param attractionId ID of the Attraction arrived.
+     */
+    void awardArrival(
+            Integer badgeOSId,
+            String attractionName,
+            Integer attractionId
+    );
+
+    /**
+     * Award a Page Visit achievement to the given user for the given URL.
+     *
+     * Each page visit -- as far as I can see -- will be to a page found
+     * within the Word Press website OR be related to a given Attraction. This
+     * method handles the Word Press Page Slug case without a location.
+     *
+     * @param badgeOSId WordPress identifier for the User being awarded the arrival.
+     * @param page instance of the page visited.
+     */
+    void awardPageVisit(
+            Integer badgeOSId,
+            Page page
+    );
+
+    /**
+     * Award a Page Visit achievement to the given user for the given URL.
+     *
+     * Each page visit -- as far as I can see -- will be to a page found
+     * within the Word Press website OR be related to a given Attraction.
+     *
+     * @param badgeOSId WordPress identifier for the User being awarded the arrival.
+     * @param page instance of the page visited.
+     * @param attractionId ID of the Attraction whose page is visited.
+     */
+    void awardPageVisit(
+            Integer badgeOSId,
+            Page page,
+            Integer attractionId
+    );
 
 }

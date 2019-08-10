@@ -102,6 +102,11 @@ public class BadgeEvent {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return new ToStringBuilder(this)
+                .append("\nbadgeOSId", badgeOSId)
+                .append("\nmethodName", methodName)
+                .append("\nmethodClass", methodClass)
+                .append("\nreturnValueAsJson", returnValueAsJson)
+                .toString();
     }
 }
