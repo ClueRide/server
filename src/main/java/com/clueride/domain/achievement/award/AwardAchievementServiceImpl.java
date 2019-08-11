@@ -44,7 +44,6 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
 
     private final ArrivalStepsMapService arrivalStepsMapService;
     private final BadgeOSSessionService badgeOSSessionService;
-    private final PageStepsMapService pageStepsMapService;
 
     private static Map<Integer, List<Integer>> arrivalStepsMap;
     private static Map<Integer, List<Integer>> pageStepsMap;
@@ -57,7 +56,6 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
     ) {
         this.arrivalStepsMapService = arrivalStepsMapService;
         this.badgeOSSessionService = badgeOSSessionService;
-        this.pageStepsMapService = pageStepsMapService;
         arrivalStepsMap = populateArrivalStepsMap();
         pageStepsMap = pageStepsMapService.loadMap();
     }
@@ -176,14 +174,21 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
                 break;
 
             case TEAM_ASSEMBLED:
+                /* This is also when the Pre-Ride Training is completed. */
                 LOGGER.debug("Awarding Team Assembled (Training Complete)");
-                awardAchievement(badgeEvent.getBadgeOSId(), 3621);
+                awardAchievement(badgeEvent.getBadgeOSId(), 3622);
+                break;
+
+            case COURSE_COMPLETED:
+                LOGGER.debug("Awarding Course Completed");
+                awardAchievement(badgeEvent.getBadgeOSId(), 3409);
                 break;
 
             default:
                 LOGGER.error("Unrecognized methodName: {}", badgeEvent.getMethodName());
                 break;
         }
+
     }
 
     /**
