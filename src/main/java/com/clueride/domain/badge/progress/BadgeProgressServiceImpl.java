@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -33,8 +34,8 @@ import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.achievement.Achievement;
 import com.clueride.domain.achievement.AchievementService;
-import com.clueride.domain.step.parent.StepParentEntity;
-import com.clueride.domain.step.parent.StepParentStore;
+import com.clueride.domain.step.StepEntity;
+import com.clueride.domain.step.StepService;
 
 /**
  * Implementation of BadgeProgressService.
@@ -56,7 +57,7 @@ public class BadgeProgressServiceImpl implements BadgeProgressService {
     private AchievementService achievementService;
 
     @Inject
-    private StepParentStore stepParentStore;
+    private StepService stepService;
 
 
     /**
@@ -81,13 +82,25 @@ public class BadgeProgressServiceImpl implements BadgeProgressService {
         LOGGER.info("Looking up Badges for User ID " + userId);
         List<BadgeProgress> badgeProgressList = new ArrayList<>();
 
-        Map<Integer, List<Achievement>> childMap;
-        childMap = getChildAchievementsPerParentBadge(userId);
+        Map<Integer, List<Achievement>> childMap = getChildAchievementsPerParentBadge(userId);
+        Map<Integer, Set<Integer>> parentMap = stepService.getParentMap();
 
         for (int badgeId : childMap.keySet()) {
             BadgeProgressEntity badgeProgress = badgeProgressStore.getBadgeProgressById(badgeId);
-            badgeProgress.withAchievements(childMap.get(badgeId));
-            badgeProgressList.add(badgeProgress.build());
+
+            /* If this isn't a top-level badge, we won't find a BadgeProgress instance. */
+            if (badgeProgress != null) {
+                List<StepEntity> stepEntities = new ArrayList<>();
+                for (Integer stepId : parentMap.get(badgeId)) {
+                    stepEntities.add(stepService.getStep(stepId));
+                }
+
+                badgeProgress
+                        .withAchievements(childMap.get(badgeId))
+                        .withStepEntities(stepEntities);
+
+                badgeProgressList.add(badgeProgress.build());
+            }
         }
         return badgeProgressList;
     }
@@ -102,38 +115,26 @@ public class BadgeProgressServiceImpl implements BadgeProgressService {
             achievements = new ArrayList<>();
         }
 
-        /* Get the (static) child to parent relationship across all badges/steps. */
-        Map<Integer, Integer> parentMap = getParentMap();
+        /* Get the (static) flattened children per badge relationship across all badges with steps. */
+        Map<Integer, Set<Integer>> parentMap = stepService.getParentMap();
 
-        /* Map out the list of children per parent. */
+        /* For each Achievement, check to see if there are badges that are advanced by that achievement. */
         for (Achievement achievement : achievements) {
             int achievementId = achievement.getStepId();
-            Integer parentId = parentMap.get(achievementId);
-            if (parentId != null) {
-                LOGGER.debug("Achievement {} is earned by Step {}", parentMap.get(achievementId), achievementId);
-                List<Achievement> children = childMap.computeIfAbsent(
-                        parentId,
-                        k -> new ArrayList<>()
-                );
-                children.add(achievement);
+            for (Integer badgeId : parentMap.keySet()) {
+                Set<Integer> badgeSteps = parentMap.get(badgeId);
+                if (badgeSteps.contains(achievementId)) {
+                    LOGGER.debug("Badge {} is earned by Step {}", badgeId, achievementId);
+                    List<Achievement> children = childMap.computeIfAbsent(
+                            badgeId,
+                            k -> new ArrayList<>()
+                    );
+                    children.add(achievement);
+                }
             }
         }
-        LOGGER.info("List of Achievements in Progress: {}", childMap.keySet());
+        LOGGER.info("List of Badges in Progress: {}", childMap.keySet());
         return childMap;
-    }
-
-    /**
-     * Retrieves the mapping between Steps and their Parents.
-     *
-     * @return Map with StepID as the key and ParentID as the value.
-     */
-    private Map<Integer, Integer> getParentMap() {
-        Map<Integer, Integer> parentMap = new HashMap<>();
-        List<StepParentEntity> stepParents = stepParentStore.getAllStepParents();
-        for (StepParentEntity stepParent : stepParents) {
-            parentMap.put(stepParent.getId(), stepParent.getParentId());
-        }
-        return parentMap;
     }
 
 }

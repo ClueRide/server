@@ -66,22 +66,25 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
         if (badgeEvent.getReturnValue() instanceof OutingPlusGameState) {
             awardGameStateAchievement(badgeEvent);
             return;
-        } else if (badgeEvent.getReturnValue() instanceof AnswerSummary) {
-            LOGGER.info("Checking if we can award Answering a question");
-            return;
         }
 
         MethodName methodName = MethodName.fromMethodName(badgeEvent.getMethodName());
         switch (methodName) {
             case REGISTER:
-                LOGGER.info("Awarding Registration Achievement");
+                LOGGER.debug("Awarding Registration Achievement");
                 this.awardAchievement(
                         badgeEvent.getBadgeOSId(),
                         3615
                 );
                 return;
+
+            case POST_ANSWER_FOR_SESSION:
+                LOGGER.debug("Awarding Answering a question");
+                awardAnswer(badgeEvent);
+                return;
+
             case VISIT_PAGE:
-                LOGGER.info("Checking if we can award Visit Page Achievement");
+                LOGGER.debug("Checking if we can award Visit Page Achievement");
                 Page page = (Page) badgeEvent.getReturnValue();
                 if (page != null) {
                     if (page.getPageSlug() != null) {
@@ -94,12 +97,28 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
                     }
                 }
                 return;
+
             default:
                 break;
         }
 
         LOGGER.warn("Not yet checking if we can award this event");
 
+    }
+
+    void awardAnswer(BadgeEvent badgeEvent) {
+        /* Tight coupling. */
+        AnswerSummary answerSummary = (AnswerSummary) badgeEvent.getReturnValue();
+        if (answerSummary.getMyAnswer() == answerSummary.getCorrectAnswer()) {
+            this.awardAchievement(
+                    badgeEvent.getBadgeOSId(),
+                    3404
+            );
+        }
+        this.awardAchievement(
+                badgeEvent.getBadgeOSId(),
+                3403
+        );
     }
 
     @Override

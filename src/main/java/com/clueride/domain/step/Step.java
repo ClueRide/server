@@ -32,13 +32,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Step {
     private final int id;
     private final String name;
-    private final int badgeId;  // From the Parent ID
+    private final int badgeId;
+    private final String badgeName;
+    private final int classId;
+    private final String className;
 
     @Inject
     public Step(StepEntity stepEntity) {
         this.id = stepEntity.getId();
         this.name = stepEntity.getName();
         this.badgeId = stepEntity.getBadgeId();
+        this.badgeName = stepEntity.getBadgeName();
+        this.classId = stepEntity.getClassId();
+        this.className = stepEntity.getClassName();
     }
 
     public int getId() {
@@ -51,6 +57,18 @@ public class Step {
 
     public int getBadgeId() {
         return badgeId;
+    }
+
+    public String getBadgeName() {
+        return badgeName;
+    }
+
+    public int getClassId() {
+        return classId;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     @Override

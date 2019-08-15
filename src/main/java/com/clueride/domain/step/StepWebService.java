@@ -18,6 +18,7 @@
 package com.clueride.domain.step;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -47,7 +48,7 @@ public class StepWebService {
     @Secured
     @Path("badge/{badgeId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Step> getStepsForBadge(@PathParam("badgeId") Integer badgeId) {
+    public Set<Step> getStepsForBadge(@PathParam("badgeId") Integer badgeId) {
         return stepService.getAllStepsForBadge(badgeId);
     }
 

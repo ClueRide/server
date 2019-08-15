@@ -44,7 +44,7 @@ public class BadgeStoreJpa implements BadgeStore {
         List<BadgeFeaturesEntity> builderList;
         // TODO: Retrieve the Badge IDs awarded to a user, and then lookup the set of matching BadgeFeature instances.
         builderList = entityManager.createQuery(
-                    "SELECT b FROM badge_display_per_user b WHERE b.userId = :userId"
+                    "SELECT b FROM BadgeFeaturesEntity b WHERE b.userId = :userId"
         )
                 .setParameter("userId", userId)
                 .getResultList();
