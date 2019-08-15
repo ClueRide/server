@@ -39,6 +39,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * Read-only instance of {@link BadgeProgress} with the exception of
  * the Achievements which cannot be directly accessed via table relationships.
+ *
+ * Also, this Entity object is only able to read one level deep. The {@link #stepEntities}
+ * property needs to be expanded for any Steps that are sub-achievements.
  */
 @Entity
 @Table(name = "badge_features")
@@ -52,7 +55,7 @@ public class BadgeProgressEntity {
     private BadgeFeaturesEntity badgeFeatures;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "badge_id")
     private List<StepEntity> stepEntities;
 
     @Transient
@@ -99,10 +102,15 @@ public class BadgeProgressEntity {
         return steps;
     }
 
+    public BadgeProgressEntity withStepEntities(List<StepEntity> stepEntities) {
+        this.stepEntities = stepEntities;
+        return this;
+    }
+
     /**
      * Allows adding the list of completed steps -- which
      * isn't part of the BadgeOS's relational table structure.
-     * @param achievements
+     * @param achievements List of Achievement instances from parsing wp_usermeta.
      * @return this instance for chaining.
      */
     public BadgeProgressEntity withAchievements(List<Achievement> achievements) {

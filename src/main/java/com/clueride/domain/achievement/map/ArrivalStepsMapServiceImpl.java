@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -97,16 +98,13 @@ public class ArrivalStepsMapServiceImpl implements ArrivalStepsMapService {
 
         List<ArrivalStepEntity> arrivalStepEntityList = arrivalStepStore.getAllRecords();
         for (ArrivalStepEntity arrivalStepEntity : arrivalStepEntityList) {
-            int locationId = arrivalStepEntity.getLocationId();
-            int stepId = arrivalStepEntity.getStepId();
-            List<Integer> attractionStepIds;
-            if (arrivalStepsMap.containsKey(locationId)) {
-                attractionStepIds = arrivalStepsMap.get(locationId);
-            } else {
-                attractionStepIds = new ArrayList<>();
-                arrivalStepsMap.put(locationId, attractionStepIds);
-            }
-            attractionStepIds.add(stepId);
+            List<Integer> attractionStepIds = arrivalStepsMap.computeIfAbsent(
+                    arrivalStepEntity.getLocationId(),
+                    k -> new ArrayList<>()
+            );
+            attractionStepIds.add(
+                    arrivalStepEntity.getStepId()
+            );
         }
         return arrivalStepsMap;
     }
@@ -124,7 +122,7 @@ public class ArrivalStepsMapServiceImpl implements ArrivalStepsMapService {
         List<BadgeFeatures> badgeFeaturesList = badgeFeaturesService.getThemedBadgeFeatures();
         Map<Integer, String> stepNamePerId = new HashMap<>();
         for (BadgeFeatures badgeFeatures : badgeFeaturesList) {
-            List<Step> steps = stepService.getAllStepsForBadge(badgeFeatures.getId());
+            Set<Step> steps = stepService.getAllStepsForBadge(badgeFeatures.getId());
             for (Step step : steps) {
                 stepNamePerId.put(step.getId(), step.getName());
             }

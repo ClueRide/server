@@ -18,6 +18,8 @@
 package com.clueride.domain.step;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Defines operations on {@link Step} instances.
@@ -35,6 +37,20 @@ public interface StepService {
      * @param badgeId unique identifier for a Badge.
      * @return List of the steps just for the given Badge.
      */
-    List<Step> getAllStepsForBadge(int badgeId);
+    Set<Step> getAllStepsForBadge(int badgeId);
+
+    /**
+     * Returns a full set of Step IDs for each Badge ID.
+     * @return Map from Badge ID to Set of Step IDs flattened out.
+     */
+    Map<Integer, Set<Integer>> getParentMap();
+
+    /**
+     * For the given Step ID, return the matching Step Entity.
+     *
+     * @param stepId
+     * @return StepEntity instance.
+     */
+    StepEntity getStep(Integer stepId);
 
 }
