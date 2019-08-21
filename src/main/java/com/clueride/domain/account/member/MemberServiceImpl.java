@@ -33,6 +33,7 @@ import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.account.register.RegisterService;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of {@link MemberService}.
@@ -129,6 +130,8 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public Member crossCheck(Member member) {
+        requireNonNull(member, "Unable to run cross check without Member");
+
         Member sessionMember = clueRideSessionDto.getMember();
         /* TODO: Check that we have the BadgeOS Account. */
         if (sessionMember.getEmailAddress().equals(member.getEmailAddress())) {

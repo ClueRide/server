@@ -86,7 +86,9 @@ public class AwardAchievementServiceImpl implements AwardAchievementService {
             case VISIT_PAGE:
                 LOGGER.debug("Checking if we can award Visit Page Achievement");
                 Page page = (Page) badgeEvent.getReturnValue();
-                if (page != null) {
+                if (page == null) {
+                    LOGGER.warn("No Page returned");
+                } else {
                     if (page.getPageSlug() != null) {
                         awardPageVisit(
                                 badgeEvent.getBadgeOSId(),

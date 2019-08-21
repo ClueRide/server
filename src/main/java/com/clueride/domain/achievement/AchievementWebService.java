@@ -28,9 +28,9 @@ import javax.ws.rs.core.MediaType;
 import com.clueride.auth.Secured;
 
 /**
- * Temporary, just to give an execution thread to the "parser".
+ * Temporary, just to give an execution thread to this service.
  */
-@Path("/parsed-achievement")
+@Path("/achievement")
 public class AchievementWebService {
     @Inject
     private AchievementService achievementService;
