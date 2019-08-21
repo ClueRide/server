@@ -7,6 +7,7 @@ An Achievement carries the following properties:
 * Type of Post
 * Step / Post ID
 * Date Earned
+* User ID
 
 # Collaboration
 
@@ -14,6 +15,8 @@ An Achievement carries the following properties:
 An Achievement may be a Badge, but more typically, it is a completed step
 toward earning a badge.
 
+## Step Rollup
+Ties the Step to the Badge that it earns or it is the badge.
+
 ## User
-Achievements are closely related to a User. (In BadgeOS, they are stored
-in the WP_USERMETA table.)
+Achievements are awarded to a User.

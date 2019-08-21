@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 6/17/19.
+ * Created by jett on 8/20/19.
  */
-package com.clueride.domain.achievement.raw;
+package com.clueride.domain.achievement;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -24,9 +26,9 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 
 /**
- * JPA implementation of {@link RawAchievementStore}.
+ * JPA-based implementation of {@link AchievementStore}.
  */
-public class RawAchievementStoreJpa implements RawAchievementStore {
+public class AchievementStoreJpa implements AchievementStore {
     @Inject
     private Logger LOGGER;
 
@@ -34,15 +36,22 @@ public class RawAchievementStoreJpa implements RawAchievementStore {
     private EntityManager entityManager;
 
     @Override
-    public RawAchievement getRawAchievementsForUser(int userId) {
-        LOGGER.debug("Retrieving Raw Achievement record for User ID {}", userId);
-        RawAchievement rawAchievement = (RawAchievement) entityManager.createQuery(
-                "SELECT a FROM RawAchievement a WHERE a.userId = :userId" +
-                        " AND a.metaKey = '_badgeos_achievements'"
-        )
+    public List<AchievementEntity> getAllAchievements() {
+        return entityManager.createQuery("SELECT ach FROM AchievementEntity ach")
+                .getResultList();
+    }
+
+    @Override
+    public List<AchievementEntity> getAchievementsForUser(Integer userId) {
+        return entityManager.createQuery("SELECT ach FROM AchievementEntity ach " +
+                "WHERE ach.userId = :userId")
                 .setParameter("userId", userId)
-                .getSingleResult();
-        return rawAchievement;
+                .getResultList();
+    }
+
+    @Override
+    public void removeAchievement(Integer achievementId) {
+        LOGGER.warn("Not yet implemented");
     }
 
 }

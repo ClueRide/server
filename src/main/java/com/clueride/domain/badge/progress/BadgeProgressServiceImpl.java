@@ -79,7 +79,7 @@ public class BadgeProgressServiceImpl implements BadgeProgressService {
 
     @Override
     public List<BadgeProgress> getBadgeProgressForUser(Integer userId) {
-        LOGGER.info("Looking up Badges for User ID " + userId);
+        LOGGER.info("Looking up incomplete Badges for User ID " + userId);
         List<BadgeProgress> badgeProgressList = new ArrayList<>();
 
         Map<Integer, List<Achievement>> childMap = getChildAchievementsPerParentBadge(userId);

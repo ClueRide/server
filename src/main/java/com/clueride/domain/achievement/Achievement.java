@@ -19,50 +19,51 @@ package com.clueride.domain.achievement;
 
 import java.util.Date;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * Attributes for an Achievement for a given user.
  */
+@Immutable
 public class Achievement {
-    private int stepId;
-    private String title;
-    private String postType;
-    private Date earned;
+    private final int id;
+    private final int stepId;
+    private final int userId;
+    private final String title;
+    private final String postType;
+    private final Date earned;
+
+    public Achievement(AchievementEntity achievementEntity) {
+        this.id = achievementEntity.getId();
+        this.stepId = achievementEntity.getStepId();
+        this.userId = achievementEntity.getUserId();
+        this.title = achievementEntity.getTitle();
+        this.postType = achievementEntity.getPostType();
+        this.earned = achievementEntity.getEarned();
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public int getStepId() {
         return stepId;
     }
 
-    /** PostID == StepID. */
-    public Achievement withPostId(int postId) {
-        this.stepId = postId;
-        return this;
+    public int getUserId() {
+        return userId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Achievement withTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
     public String getPostType() {
         return postType;
     }
 
-    public Achievement withPostType(String postType) {
-        this.postType = postType;
-        return this;
-    }
-
     public Date getEarned() {
         return earned;
-    }
-
-    public Achievement withEarned(Date earned) {
-        this.earned = earned;
-        return this;
     }
 
 }
