@@ -15,7 +15,7 @@
  *
  * Created by jett on 8/27/18.
  */
-package com.clueride.domain.badge;
+package com.clueride.domain.badge.type;
 
 import java.util.HashMap;
 import java.util.Map;

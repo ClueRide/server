@@ -1,4 +1,4 @@
-/*
+package com.clueride.domain.badge.type;/*
  * Copyright 2018 Jett Marks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by jett on 8/27/18.
+ * Created by jett on 8/4/18.
  */
-package com.clueride.domain.badge;
 
-import com.clueride.domain.badge.features.BadgeFeaturesEntity;
-
-/**
- * Maps from a Badge to a Badge Type.
- */
-public interface BadgeTypeService {
-
-    /**
-     * Given a BadgeFeatures, determine the BadgeType.
-     * @param builder instance of Builder populated from source that doesn't know about ClueRide's Badge Types.
-     * @return Enumeration of the BadgeType which provides authorization for certain activities.
-     */
-    BadgeType getTypeOfBadge(BadgeFeaturesEntity builder);
-
+// TODO: SVR-73 Revisit these.
+public enum BadgeType {
+    SEEKER,
+    GUIDE,
+    LOCATION_EDITOR,
+    COURSE_EDITOR
 }
