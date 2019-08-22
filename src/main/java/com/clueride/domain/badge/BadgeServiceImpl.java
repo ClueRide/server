@@ -30,6 +30,7 @@ import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.badge.features.BadgeFeatures;
 import com.clueride.domain.badge.features.BadgeFeaturesEntity;
+import com.clueride.domain.badge.type.BadgeTypeService;
 
 /**
  * Default Implementation of BadgeService.
