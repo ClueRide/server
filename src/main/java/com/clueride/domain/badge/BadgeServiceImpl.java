@@ -28,8 +28,6 @@ import org.slf4j.Logger;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
-import com.clueride.domain.badge.features.BadgeFeatures;
-import com.clueride.domain.badge.features.BadgeFeaturesEntity;
 import com.clueride.domain.badge.type.BadgeTypeService;
 
 /**
@@ -51,16 +49,16 @@ public class BadgeServiceImpl implements BadgeService {
     private BadgeTypeService badgeTypeService;
 
     @Override
-    public List<BadgeFeatures> getBadges() {
+    public List<Badge> getBadges() {
         BadgeOsPrincipal badgeOsPrincipal = clueRideSessionDto.getBadgeOsPrincipal();
         Integer userId = badgeOsPrincipal.getBadgeOsUserId();
-        List<BadgeFeatures> badgeFeaturesList = new ArrayList<>();
+        List<Badge> badgeList = new ArrayList<>();
         LOGGER.info("Looking up Badges for User ID " + userId);
-        List<BadgeFeaturesEntity> builderList = badgeStore.getAwardedBadgesForUser(userId);
-        for (BadgeFeaturesEntity builder : builderList) {
-            badgeFeaturesList.add(builder.build());
+        List<BadgeEntity> builderList = badgeStore.getAwardedBadgesForUser(userId);
+        for (BadgeEntity builder : builderList) {
+            badgeList.add(builder.build());
         }
-        return badgeFeaturesList;
+        return badgeList;
     }
 
 }

@@ -19,8 +19,6 @@ package com.clueride.domain.badge;
 
 import java.util.List;
 
-import com.clueride.domain.badge.features.BadgeFeaturesEntity;
-
 /**
  * Defines the DAO for Badges.
  *
@@ -33,6 +31,6 @@ public interface BadgeStore {
      * Retrieves list of currently awarded badges for the session's user.
      * @return List of Badges for display.
      */
-    List<BadgeFeaturesEntity> getAwardedBadgesForUser(Integer userId);
+    List<BadgeEntity> getAwardedBadgesForUser(Integer userId);
 
 }

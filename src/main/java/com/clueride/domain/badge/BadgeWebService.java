@@ -27,10 +27,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
-import com.clueride.domain.badge.features.BadgeFeatures;
 
 /**
- * REST API for Badges.
+ * REST API for Completed Badges.
+ *
+ * See {@link com.clueride.domain.badge.progress.BadgeProgressWebService} for
+ * Badges in Progress.
  */
 @Path("/badge")
 @RequestScoped
@@ -42,7 +44,7 @@ public class BadgeWebService {
     @GET
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BadgeFeatures> getBadges() {
+    public List<Badge> getBadges() {
         return badgeService.getBadges();
     }
 

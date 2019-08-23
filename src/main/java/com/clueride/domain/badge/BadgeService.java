@@ -19,8 +19,6 @@ package com.clueride.domain.badge;
 
 import java.util.List;
 
-import com.clueride.domain.badge.features.BadgeFeatures;
-
 /**
  * Defines what operations are provided for Badges.
  */
@@ -31,5 +29,6 @@ public interface BadgeService {
      * by this user.
      * @return List of user's Badges.
      */
-    List<BadgeFeatures> getBadges();
+    List<Badge> getBadges();
+
 }
