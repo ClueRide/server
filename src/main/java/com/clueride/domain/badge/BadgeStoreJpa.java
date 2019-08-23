@@ -25,8 +25,6 @@ import javax.persistence.PersistenceContext;
 
 import org.slf4j.Logger;
 
-import com.clueride.domain.badge.features.BadgeFeaturesEntity;
-
 /**
  * JPA implementation of Badge Store.
  */
@@ -39,12 +37,11 @@ public class BadgeStoreJpa implements BadgeStore {
 
     @Override
     // TODO: This won't work - no "DB" joins retrieve the records by User.
-    public List<BadgeFeaturesEntity> getAwardedBadgesForUser(Integer userId) {
+    public List<BadgeEntity> getAwardedBadgesForUser(Integer userId) {
         LOGGER.debug("Retrieving Badges for User ID {}", userId);
-        List<BadgeFeaturesEntity> builderList;
-        // TODO: Retrieve the Badge IDs awarded to a user, and then lookup the set of matching BadgeFeature instances.
+        List<BadgeEntity> builderList;
         builderList = entityManager.createQuery(
-                    "SELECT b FROM BadgeFeaturesEntity b WHERE b.userId = :userId"
+                    "SELECT b FROM BadgeEntity b WHERE b.userId = :userId"
         )
                 .setParameter("userId", userId)
                 .getResultList();
