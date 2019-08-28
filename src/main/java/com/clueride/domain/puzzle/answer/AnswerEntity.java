@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.puzzle.PuzzleBuilder;
+import com.clueride.domain.puzzle.PuzzleEntity;
 
 /**
  * Copyright 2015 Jett Marks
@@ -34,9 +34,9 @@ import com.clueride.domain.puzzle.PuzzleBuilder;
  * <p/>
  * Created by jett on 11/23/15.
  */
-@Entity(name = "Answer")
+@Entity
 @Table(name = "answer")
-public class Answer {
+public class AnswerEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="answer_pk_sequence")
     @SequenceGenerator(name="answer_pk_sequence",sequenceName="answer_id_seq", allocationSize=1)
@@ -44,14 +44,14 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "puzzle_id")
-    private PuzzleBuilder puzzleBuilder;
+    private PuzzleEntity puzzleEntity;
 
     @Column(name = "answer_key") private AnswerKey answerKey;
     @Column(name = "answer") private String answer;
 
-    public Answer() {}
+    public AnswerEntity() {}
 
-    public Answer(AnswerKey answerKey, String answer) {
+    public AnswerEntity(AnswerKey answerKey, String answer) {
         this.answerKey = answerKey;
         this.answer = answer;
     }
@@ -60,7 +60,7 @@ public class Answer {
         return id;
     }
 
-    public Answer withId(Integer id) {
+    public AnswerEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -69,7 +69,7 @@ public class Answer {
         return answerKey;
     }
 
-    public Answer setKey(AnswerKey answerKey) {
+    public AnswerEntity setKey(AnswerKey answerKey) {
         this.answerKey = answerKey;
         return this;
     }
@@ -78,22 +78,22 @@ public class Answer {
         return answer;
     }
 
-    public Answer setAnswer(String answer) {
+    public AnswerEntity setAnswer(String answer) {
         this.answer = answer;
         return this;
     }
 
-    public Answer withPuzzleBuilder(PuzzleBuilder puzzleBuilder) {
-        this.puzzleBuilder = puzzleBuilder;
+    public AnswerEntity withPuzzleBuilder(PuzzleEntity puzzleEntity) {
+        this.puzzleEntity = puzzleEntity;
         return this;
     }
 
-    public Answer withAnswerKey(AnswerKey answerKey) {
+    public AnswerEntity withAnswerKey(AnswerKey answerKey) {
         this.answerKey = answerKey;
         return this;
     }
 
-    public Answer withAnswer(String answer) {
+    public AnswerEntity withAnswer(String answer) {
         this.answer = answer;
         return this;
     }

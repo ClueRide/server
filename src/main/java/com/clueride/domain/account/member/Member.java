@@ -45,7 +45,7 @@ public class Member implements Serializable {
         this.displayName = name;
     }
 
-    public Member(MemberBuilder builder) {
+    public Member(MemberEntity builder) {
         this.id = builder.getId();
         this.badgeOSId = builder.getBadgeOSId();
         this.displayName = builder.getDisplayName();

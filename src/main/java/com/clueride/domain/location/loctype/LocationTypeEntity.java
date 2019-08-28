@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -34,9 +35,10 @@ import com.clueride.domain.location.category.CategoryEntity;
 /**
  * Persistable Builder for {@link LocationType} instances.
  */
-@Entity(name = "location_type")
+@Entity
+@Table(name = "location_type")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class LocationTypeBuilder {
+public final class LocationTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_type_pk_sequence")
     @SequenceGenerator(name = "location_type_pk_sequence", sequenceName = "location_type_id_seq", allocationSize = 1)
@@ -62,8 +64,8 @@ public final class LocationTypeBuilder {
         return new LocationType(this);
     }
 
-    public static LocationTypeBuilder builder() {
-        return new LocationTypeBuilder();
+    public static LocationTypeEntity builder() {
+        return new LocationTypeEntity();
     }
 
     /**
@@ -72,7 +74,7 @@ public final class LocationTypeBuilder {
      * @param locationType the instance whose data to use.
      * @return Mutable instance of the Builder for the Location Type.
      */
-    public static LocationTypeBuilder from(LocationType locationType) {
+    public static LocationTypeEntity from(LocationType locationType) {
         return builder()
                 .withId(locationType.getId())
                 .withName(locationType.getName())
@@ -85,7 +87,7 @@ public final class LocationTypeBuilder {
         return id;
     }
 
-    public LocationTypeBuilder withId(Integer id) {
+    public LocationTypeEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -94,7 +96,7 @@ public final class LocationTypeBuilder {
         return name;
     }
 
-    public LocationTypeBuilder withName(String name) {
+    public LocationTypeEntity withName(String name) {
         this.name = name;
         return this;
     }
@@ -103,7 +105,7 @@ public final class LocationTypeBuilder {
         return description;
     }
 
-    public LocationTypeBuilder withDescription(String description) {
+    public LocationTypeEntity withDescription(String description) {
         this.description = description;
         return this;
     }
@@ -112,7 +114,7 @@ public final class LocationTypeBuilder {
         return icon;
     }
 
-    public LocationTypeBuilder withIcon(String icon) {
+    public LocationTypeEntity withIcon(String icon) {
         this.icon = icon;
         return this;
     }
@@ -121,7 +123,7 @@ public final class LocationTypeBuilder {
         return categoryEntity;
     }
 
-    public LocationTypeBuilder withCategory(CategoryEntity categoryEntity) {
+    public LocationTypeEntity withCategory(CategoryEntity categoryEntity) {
         this.categoryEntity = categoryEntity;
         return this;
     }

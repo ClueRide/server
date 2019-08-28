@@ -33,12 +33,12 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
     @Override
     public List<LocationType> getLocationTypes() {
         List<LocationType> locationTypes = new ArrayList<>();
-        List<LocationTypeBuilder> locTypeBuilders =
+        List<LocationTypeEntity> locTypeBuilders =
                 entityManager.createQuery(
-                        "SELECT lt from location_type lt"
+                        "SELECT lt from LocationTypeEntity lt"
                 ).getResultList();
 
-        for (LocationTypeBuilder locTypeBuilder : locTypeBuilders) {
+        for (LocationTypeEntity locTypeBuilder : locTypeBuilders) {
             locationTypes.add(locTypeBuilder.build());
         }
         return locationTypes;
@@ -47,13 +47,13 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
     @Override
     public LocationType getLocationTypeByName(String locationTypeName) {
 
-        List<LocationTypeBuilder> builders = entityManager.createQuery(
-                "SELECT lt FROM location_type lt WHERE lt.name = :locTypeName"
+        List<LocationTypeEntity> locationTypeEntities = entityManager.createQuery(
+                "SELECT lt FROM LocationTypeEntity lt WHERE lt.name = :locTypeName"
         ).setParameter("locTypeName", locationTypeName)
                 .getResultList();
 
-        if (builders.size() == 1) {
-            return builders.get(0).build();
+        if (locationTypeEntities.size() == 1) {
+            return locationTypeEntities.get(0).build();
         } else {
             throw new RuntimeException("Multiple records found for location type name: " + locationTypeName );
         }
@@ -61,11 +61,10 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
 
     @Override
     public LocationType getLocationTypeById(Integer locationTypeId) {
-        LocationType locationType = entityManager.find(
-                LocationTypeBuilder.class,
+        return entityManager.find(
+                LocationTypeEntity.class,
                 locationTypeId
         ).build();
-        return locationType;
     }
 
 }

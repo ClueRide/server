@@ -33,7 +33,7 @@ public class Outing {
     private Date scheduledTime;
     private Integer guideMemberId;
 
-    Outing(OutingViewBuilder builder) {
+    Outing(OutingViewEntity builder) {
         this.id = builder.getId();
         this.teamId = builder.getTeamId();
         this.courseId = builder.getCourseId();

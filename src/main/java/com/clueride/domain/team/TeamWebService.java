@@ -57,8 +57,8 @@ public class TeamWebService {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Team createNewTeam(TeamBuilder teamBuilder) {
-        return teamService.newTeam(teamBuilder.getName());
+    public Team createNewTeam(TeamEntity teamEntity) {
+        return teamService.newTeam(teamEntity.getName());
     }
 
 }

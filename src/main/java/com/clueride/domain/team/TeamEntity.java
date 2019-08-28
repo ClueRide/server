@@ -35,14 +35,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.clueride.domain.account.member.Member;
-import com.clueride.domain.account.member.MemberBuilder;
+import com.clueride.domain.account.member.MemberEntity;
 
 /**
  * Persistable Builder for {@link Team} instances.
  */
-@Entity(name = "teamBuilder")
+@Entity
 @Table(name = "team")
-public final class TeamBuilder {
+public final class TeamEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "team_pk_sequence")
     @SequenceGenerator(name = "team_pk_sequence", sequenceName = "team_id_seq", allocationSize = 1)
@@ -57,15 +57,15 @@ public final class TeamBuilder {
             joinColumns = {@JoinColumn(name = "team_id")},
             inverseJoinColumns = {@JoinColumn(name = "member_id")}
     )
-    private Set<MemberBuilder> memberBuilders = new HashSet<>();
+    private Set<MemberEntity> memberEntities = new HashSet<>();
 
     /* Allows Jackson to construct. */
-    public TeamBuilder() {
+    public TeamEntity() {
     }
 
     /* Normal pattern for constructing a Builder. */
-    public static TeamBuilder builder() {
-        return new TeamBuilder();
+    public static TeamEntity builder() {
+        return new TeamEntity();
     }
 
     public Team build() {
@@ -76,7 +76,7 @@ public final class TeamBuilder {
         return id;
     }
 
-    public TeamBuilder withId(Integer id) {
+    public TeamEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -85,26 +85,26 @@ public final class TeamBuilder {
         return name;
     }
 
-    public TeamBuilder withName(String name) {
+    public TeamEntity withName(String name) {
         this.name = name;
         return this;
     }
 
     public List<Member> getMembers() {
         List<Member> members = new ArrayList<>();
-        for (MemberBuilder builder : memberBuilders) {
+        for (MemberEntity builder : memberEntities) {
             members.add(builder.build());
         }
         return members;
     }
 
-    public TeamBuilder withMembers(Set<MemberBuilder> memberBuilders) {
-        this.memberBuilders = memberBuilders;
+    public TeamEntity withMembers(Set<MemberEntity> memberEntities) {
+        this.memberEntities = memberEntities;
         return this;
     }
 
-    public TeamBuilder withNewMember(Member newMember) {
-        this.memberBuilders.add(MemberBuilder.from(newMember));
+    public TeamEntity withNewMember(Member newMember) {
+        this.memberEntities.add(MemberEntity.from(newMember));
         return this;
     }
 }

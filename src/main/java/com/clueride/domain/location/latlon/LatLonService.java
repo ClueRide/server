@@ -18,21 +18,21 @@
 package com.clueride.domain.location.latlon;
 
 /**
- * Handles LatLon pairs; Nodes which are not necessarily on the Network yet.
+ * Handles LatLonEntity pairs; Nodes which are not necessarily on the Network yet.
  */
 public interface LatLonService {
     /**
-     * Provide a candidate LatLon and this will persist it to the store.
-     * @param latLon Candidate LatLon.
-     * @return the newly created LatLon complete with the ID from the DB.
+     * Provide a candidate LatLonEntity and this will persist it to the store.
+     * @param latLonEntity Candidate LatLonEntity.
+     * @return the newly created LatLonEntity complete with the ID from the DB.
      */
-    LatLon addNew(LatLon latLon);
+    LatLonEntity addNew(LatLonEntity latLonEntity);
 
     /**
-     * Given a LatLon ID, retrieve the corresponding LatLon.
-     * @param id unique ID for the LatLon.
-     * @return Location-supporting LatLon.
+     * Given a LatLonEntity ID, retrieve the corresponding LatLonEntity.
+     * @param id unique ID for the LatLonEntity.
+     * @return Location-supporting LatLonEntity.
      */
-    LatLon getLatLonById(Integer id);
+    LatLonEntity getLatLonById(Integer id);
 
 }

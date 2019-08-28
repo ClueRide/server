@@ -38,16 +38,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.location.LocationBuilder;
-import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.location.LocationEntity;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
 import com.clueride.domain.puzzle.answer.AnswerKey;
 
 /**
  * Persistable Builder for {@link Puzzle} instances.
  */
-@Entity(name = "PuzzleBuilder")
+@Entity
 @Table(name = "puzzle")
-public final class PuzzleBuilder {
+public final class PuzzleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "puzzle_pk_sequence")
     @SequenceGenerator(name = "puzzle_pk_sequence", sequenceName = "puzzle_id_seq", allocationSize = 1)
@@ -59,9 +59,9 @@ public final class PuzzleBuilder {
     @OneToMany(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
-            mappedBy = "puzzleBuilder"
+            mappedBy = "puzzleEntity"
     )
-    private List<Answer> answers = new ArrayList<>();
+    private List<AnswerEntity> answerEntities = new ArrayList<>();
 
     @Column(name = "correct_answer")
     private AnswerKey correctAnswer;
@@ -69,7 +69,7 @@ public final class PuzzleBuilder {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
-    private LocationBuilder locationBuilder;
+    private LocationEntity locationEntity;
 
     /* Supports REST API. */
     @Transient
@@ -77,17 +77,17 @@ public final class PuzzleBuilder {
     @Transient
     private String locationName;
 
-    public static PuzzleBuilder builder() {
-        return new PuzzleBuilder();
+    public static PuzzleEntity builder() {
+        return new PuzzleEntity();
     }
 
-    public static PuzzleBuilder from(Puzzle instance) {
+    public static PuzzleEntity from(Puzzle instance) {
         return builder()
                 .withId(instance.getId())
                 .withName(instance.getName())
                 .withQuestion(instance.getQuestion())
                 .withCorrectAnswer(instance.getCorrectAnswer())
-                .withAnswers(instance.getAnswers())
+                .withAnswers(instance.getAnswerEntities())
                 .withPoints(instance.getPoints())
                 ;
     }
@@ -110,17 +110,17 @@ public final class PuzzleBuilder {
         return question;
     }
 
-    public PuzzleBuilder withQuestion(String question) {
+    public PuzzleEntity withQuestion(String question) {
         this.question = question;
         return this;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
+    public List<AnswerEntity> getAnswerEntities() {
+        return answerEntities;
     }
 
-    public PuzzleBuilder withAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public PuzzleEntity withAnswers(List<AnswerEntity> answerEntities) {
+        this.answerEntities = answerEntities;
         return this;
     }
 
@@ -128,7 +128,7 @@ public final class PuzzleBuilder {
         return correctAnswer;
     }
 
-    public PuzzleBuilder withCorrectAnswer(AnswerKey correctAnswer) {
+    public PuzzleEntity withCorrectAnswer(AnswerKey correctAnswer) {
         this.correctAnswer = correctAnswer;
         return this;
     }
@@ -137,7 +137,7 @@ public final class PuzzleBuilder {
         return points;
     }
 
-    public PuzzleBuilder withPoints(Integer points) {
+    public PuzzleEntity withPoints(Integer points) {
         this.points = points;
         return this;
     }
@@ -146,25 +146,25 @@ public final class PuzzleBuilder {
         return id;
     }
 
-    public PuzzleBuilder withId(Integer id) {
+    public PuzzleEntity withId(Integer id) {
         this.id = id;
         return this;
     }
 
-    public PuzzleBuilder withLocationBuilder(LocationBuilder locationBuilder) {
-        this.locationBuilder = locationBuilder;
+    public PuzzleEntity withLocationBuilder(LocationEntity locationEntity) {
+        this.locationEntity = locationEntity;
         return this;
     }
 
-    public LocationBuilder getLocationBuilder() {
-        return locationBuilder;
+    public LocationEntity getLocationEntity() {
+        return locationEntity;
     }
 
     public String getName() {
         return name;
     }
 
-    public PuzzleBuilder withName(String name) {
+    public PuzzleEntity withName(String name) {
         this.name = name;
         return this;
     }
@@ -173,32 +173,32 @@ public final class PuzzleBuilder {
         return new Puzzle(this);
     }
 
-    public PuzzleBuilder setId(Integer id) {
+    public PuzzleEntity setId(Integer id) {
         this.id = id;
         return this;
     }
 
-    public PuzzleBuilder setName(String name) {
+    public PuzzleEntity setName(String name) {
         this.name = name;
         return this;
     }
 
-    public PuzzleBuilder setQuestion(String question) {
+    public PuzzleEntity setQuestion(String question) {
         this.question = question;
         return this;
     }
 
-    public PuzzleBuilder setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public PuzzleEntity setAnswerEntities(List<AnswerEntity> answerEntities) {
+        this.answerEntities = answerEntities;
         return this;
     }
 
-    public PuzzleBuilder setCorrectAnswer(AnswerKey correctAnswer) {
+    public PuzzleEntity setCorrectAnswer(AnswerKey correctAnswer) {
         this.correctAnswer = correctAnswer;
         return this;
     }
 
-    public PuzzleBuilder setPoints(Integer points) {
+    public PuzzleEntity setPoints(Integer points) {
         this.points = points;
         return this;
     }

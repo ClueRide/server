@@ -23,6 +23,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -31,7 +32,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  * This maps a file's URL with a unique ID via database table.
  */
-@Entity(name = "Image")
+@Entity
+@Table(name = "image")
 public class ImageLinkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_pk_sequence")

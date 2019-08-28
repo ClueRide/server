@@ -25,40 +25,40 @@ public interface LocationStore {
     /**
      * Accepts a partially constructed Location to the store and returns the ID.
      * Implementations are expected to write to permanent storage.
-     * @param locationBuilder newly proposed Location, ready to persist.
+     * @param locationEntity newly proposed Location, ready to persist.
      * @return ID of the new Location.
      */
-    Integer addNew(LocationBuilder locationBuilder) throws IOException;
+    Integer addNew(LocationEntity locationEntity) throws IOException;
 
     /**
      * Returns the Location Builder matching the unique ID.
      * @param id unique identifier for the Location Builder.
      * @return fully-populated Location Builder.
      */
-    LocationBuilder getLocationBuilderById(Integer id);
+    LocationEntity getLocationBuilderById(Integer id);
 
     /**
      * Returns the list of Location Builders maintained by this store.
      * @return Collection of all Locations in the store.
      */
-    Collection<LocationBuilder> getLocationBuilders();
+    Collection<LocationEntity> getLocationBuilders();
 
     /**
      * Accepts an existing Location and updates the persistent record with new information.
-     * @param locationBuilder to be updated.
+     * @param locationEntity to be updated.
      */
-    void update(LocationBuilder locationBuilder);
+    void update(LocationEntity locationEntity);
 
     /**
      * Given the Location record, remove it from storage.
      * @param location Instance to be deleted.
      */
-    void delete(LocationBuilder location);
+    void delete(LocationEntity location);
 
     /**
      * Retrieves list of Themed Location Builders.
      * @return Iterable over themed LocationBuilders
      */
-    Iterable<? extends LocationBuilder> getThemedLocationBuilders();
+    Iterable<? extends LocationEntity> getThemedLocationBuilders();
 
 }

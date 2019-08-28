@@ -37,7 +37,7 @@ public class BadgeOsPrincipal implements Principal {
     private String name;
     private InternetAddress emailAddress;
 
-    BadgeOsPrincipal(BadgeOsPrincipalBuilder builder) {
+    BadgeOsPrincipal(BadgeOsPrincipalEntity builder) {
         this.name = requireNonNull(builder.getName());
         this.badgeOsUserId = requireNonNull(builder.getBadgeOsUserId());
         this.emailAddress = requireNonNull(builder.getEmailAddress());

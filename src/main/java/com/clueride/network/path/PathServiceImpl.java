@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
-import com.clueride.domain.path.PathForCourseBuilder;
+import com.clueride.domain.path.PathForCourseEntity;
 import com.clueride.domain.path.PathForCourseStore;
 import static java.util.Objects.requireNonNull;
 
@@ -52,15 +52,15 @@ public class PathServiceImpl implements PathService {
     public List<Integer> getLocationIds(Integer courseId) {
         requireNonNull(courseId, "Course ID must be provided");
 
-        List<PathForCourseBuilder> paths = pathForCourseStore.getPathsForCourse(courseId);
+        List<PathForCourseEntity> paths = pathForCourseStore.getPathsForCourse(courseId);
         if (paths.size() == 0) {
             LOGGER.warn("No paths found for course ID {}", courseId );
             return Collections.emptyList();
         }
 
         List<Integer> locationIds = new ArrayList<>();
-        PathForCourseBuilder lastBuilder = null;
-        for (PathForCourseBuilder builder : paths) {
+        PathForCourseEntity lastBuilder = null;
+        for (PathForCourseEntity builder : paths) {
             locationIds.add(builder.getStartLocationId());
             lastBuilder = builder;
         }

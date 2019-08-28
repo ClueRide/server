@@ -67,8 +67,8 @@ public interface GameStateService {
     /**
      * Posts the given answer against the current session, updates the
      * overall Outing's summary for this puzzle, and returns that summary.
-     * @param answerPost Puzzle ID and Answer choice for that puzzle.
-     * @return Summary of responses for the puzzle references in the Answer Post.
+     * @param answerPost Puzzle ID and AnswerEntity choice for that puzzle.
+     * @return Summary of responses for the puzzle references in the AnswerEntity Post.
      */
     AnswerSummary postAnswer(AnswerPost answerPost);
 

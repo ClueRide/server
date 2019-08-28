@@ -31,7 +31,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.clueride.auth.Secured;
-import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
@@ -73,15 +73,15 @@ public class LocationWebService {
 
     /**
      * Accepts updates for a given Location -- the Location ID is part of the Builder that is provided.
-     * @param locationBuilder Builder instance containing complete set of changes.
+     * @param locationEntity Builder instance containing complete set of changes.
      * @return The updated {@link Location}instance.
      */
     @POST
     @Secured
     @Path("update")
     @Produces(MediaType.APPLICATION_JSON)
-    public Location updateLocation(LocationBuilder locationBuilder) {
-        return locationService.updateLocation(locationBuilder);
+    public Location updateLocation(LocationEntity locationEntity) {
+        return locationService.updateLocation(locationEntity);
     }
 
     @GET
@@ -106,8 +106,8 @@ public class LocationWebService {
             @QueryParam("lat") Double lat,
             @QueryParam("lon") Double lon
     ) {
-        LatLon latLon = new LatLon(lat, lon);
-        return locationService.proposeLocation(latLon);
+        LatLonEntity latLonEntity = new LatLonEntity(lat, lon);
+        return locationService.proposeLocation(latLonEntity);
     }
 
     /**

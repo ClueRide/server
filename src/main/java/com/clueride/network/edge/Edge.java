@@ -41,7 +41,7 @@ public class Edge {
      * Default constructor accepts Builder instance.
      * @param builder fully-populated mutable instance.
      */
-    Edge(EdgeBuilder builder) {
+    Edge(EdgeEntity builder) {
         this.id = builder.getId();
         this.name = builder.getName();
         this.trackReference = builder.getTrackReference();

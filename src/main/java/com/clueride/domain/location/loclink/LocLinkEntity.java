@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Represents persistable instance of a Location Link.
  */
-@Entity(name="LocLink")
+@Entity
 @Table(name="loc_link")
 public class LocLinkEntity {
     @Id

@@ -26,18 +26,18 @@ import javax.mail.internet.InternetAddress;
  */
 public interface MemberStore {
     /**
-     * Accepts fully-populated {@link MemberBuilder} to the store and returns the Member record with DB-assigned ID.
-     * @param memberBuilder - instance to be persisted.
+     * Accepts fully-populated {@link MemberEntity} to the store and returns the Member record with DB-assigned ID.
+     * @param memberEntity - instance to be persisted.
      * @return Same record as passed in with DB-assigned ID.
      */
-    MemberBuilder addNew(MemberBuilder memberBuilder);
+    MemberEntity addNew(MemberEntity memberEntity);
 
     /**
      * Retrieves the {@link Member} instance matching the ID.
      * @param id - Unique ID for the Member.
      * @return Unique matching instance.
      */
-    MemberBuilder getMemberById(Integer id);
+    MemberEntity getMemberById(Integer id);
 
     /**
      * Retrieves the list of {@link Member} whose name matches.
@@ -46,14 +46,14 @@ public interface MemberStore {
      * @param name - String account name for the Member.
      * @return All matching instances.
      */
-    List<MemberBuilder> getMemberByName(String name);
+    List<MemberEntity> getMemberByName(String name);
 
     /**
      * Retrieves the {@link Member} instance matching the emailAddress.
      * @param emailAddress - InternetAddress for the member.
      * @return Unique matching instance.
      */
-    MemberBuilder getMemberByEmail(InternetAddress emailAddress);
+    MemberEntity getMemberByEmail(InternetAddress emailAddress);
 
     /**
      * Updates an existing record with the contents of this Member instance.
@@ -66,13 +66,13 @@ public interface MemberStore {
      * TODO: This won't be sustainable once we have a significant number of members, but it's sufficient for testing.
      * @return List of the Members currently defined.
      */
-    List<MemberBuilder> getAllMembers();
+    List<MemberEntity> getAllMembers();
 
     /**
      * Given a string pattern, find member records that contain the pattern.
      * @param pattern String pattern to be matched.
-     * @return List of {@link MemberBuilder} records.
+     * @return List of {@link MemberEntity} records.
      */
-    List<MemberBuilder> getMatchingMembers(String pattern);
+    List<MemberEntity> getMatchingMembers(String pattern);
 
 }

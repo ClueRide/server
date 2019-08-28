@@ -29,8 +29,8 @@ public class EdgeStoreJpa implements EdgeStore {
     private EntityManager entityManager;
 
     @Override
-    public EdgeBuilder getEdgeById(Integer id) {
-        return entityManager.find(EdgeBuilder.class, id);
+    public EdgeEntity getEdgeById(Integer id) {
+        return entityManager.find(EdgeEntity.class, id);
     }
 
     @Override

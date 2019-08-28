@@ -26,24 +26,24 @@ public interface OutingStore {
     /**
      * Accepts fully-populated Outing instance and returns the ID of a newly persisted record.
      *
-     * @param builder - {@link OutingViewBuilder} instance which is fully-populated.
+     * @param builder - {@link OutingViewEntity} instance which is fully-populated.
      * @return Integer DB-generated ID.
      * @throws IOException when there is trouble writing to the store.
      */
-    Integer addNew(OutingViewBuilder builder) throws IOException;
+    Integer addNew(OutingViewEntity builder) throws IOException;
 
     /**
      * Given a specific Outing Identifier, return the matching {@link Outing} instance.
      * @param outingId - Integer ID for the Outing.
      * @return Matching Outing.
      */
-    OutingViewBuilder getOutingById(Integer outingId);
+    OutingViewEntity getOutingById(Integer outingId);
 
     /**
      * Given a specific Outing Identifier, return the matching {@link OutingView} instance.
      * @param outingId - Integer ID for the OutingView.
      * @return Matching OutingView.
      */
-    OutingViewBuilder getOutingViewById(Integer outingId);
+    OutingViewEntity getOutingViewById(Integer outingId);
 
 }

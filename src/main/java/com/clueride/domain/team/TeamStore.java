@@ -29,26 +29,26 @@ public interface TeamStore {
      * @param builder Builder instance representing the Team including the Members of the Team.
      * @return ID of the new Team.
      */
-    TeamBuilder addNew(TeamBuilder builder);
+    TeamEntity addNew(TeamEntity builder);
 
     /**
      * Retrieve a list of the current Teams.
      * @return All Teams.
      */
-    List<TeamBuilder> getTeams();
+    List<TeamEntity> getTeams();
 
     /**
      * REtrieve the Team matching the given ID.
      * @param teamId Unique identifier for the team.
      * @return Team.Builder instance matching the given ID.
      */
-    TeamBuilder getTeamById(Integer teamId);
+    TeamEntity getTeamById(Integer teamId);
 
     /**
      * Merge changes to the list of members (or name) for an existing Team.
-     * @param teamBuilder Team Builder instance with updated information (members or name).
+     * @param teamEntity Team Builder instance with updated information (members or name).
      * @return updated instance.
      */
-    TeamBuilder updateTeam(TeamBuilder teamBuilder);
+    TeamEntity updateTeam(TeamEntity teamEntity);
 
 }

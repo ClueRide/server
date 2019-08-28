@@ -42,7 +42,7 @@ public class BadgeEvent {
     private Object returnValue;
     private String returnValueAsJson;
 
-    BadgeEvent(BadgeEventBuilder builder) {
+    BadgeEvent(BadgeEventEntity builder) {
         this.id = builder.getId();
         this.timestamp = builder.getTimestamp();
         this.principal = builder.getPrincipal();

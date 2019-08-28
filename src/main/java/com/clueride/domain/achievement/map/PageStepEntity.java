@@ -25,7 +25,7 @@ import javax.persistence.Table;
 /**
  * Instances of Page to Step Map entries.
  */
-@Entity(name = "PageStep")
+@Entity
 @Table(name = "page_to_step_map")
 public class PageStepEntity {
     @Id

@@ -27,9 +27,9 @@ import org.slf4j.Logger;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.LocationStore;
-import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
 import com.clueride.domain.puzzle.answer.AnswerKey;
 
 /**
@@ -64,10 +64,10 @@ public class PuzzleServiceImpl implements PuzzleService {
     @Override
     public List<Puzzle> getByLocation(Integer locationId) {
         List<Puzzle> puzzles = new ArrayList<>();
-        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
-        for (PuzzleBuilder puzzleBuilder : puzzleStore.getPuzzlesForLocation(locationBuilder)) {
+        LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
+        for (PuzzleEntity puzzleEntity : puzzleStore.getPuzzlesForLocation(locationEntity)) {
             try {
-                puzzles.add(puzzleBuilder.build());
+                puzzles.add(puzzleEntity.build());
             } catch (IllegalStateException ise) {
                 LOGGER.warn("Problem building puzzle from DB record: ", ise);
                 // Continue retrieving remaining records
@@ -77,35 +77,35 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle addNew(PuzzleBuilder puzzleBuilder) {
-        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(puzzleBuilder.getLocationId());
-        puzzleBuilder.withLocationBuilder(locationBuilder);
-        linkPuzzleToAnswers(puzzleBuilder);
-        if (puzzleBuilder.getId() == null) {
-            puzzleStore.addNew(puzzleBuilder);
+    public Puzzle addNew(PuzzleEntity puzzleEntity) {
+        LocationEntity locationEntity = locationStore.getLocationBuilderById(puzzleEntity.getLocationId());
+        puzzleEntity.withLocationBuilder(locationEntity);
+        linkPuzzleToAnswers(puzzleEntity);
+        if (puzzleEntity.getId() == null) {
+            puzzleStore.addNew(puzzleEntity);
         } else {
-            puzzleStore.update(puzzleBuilder);
+            puzzleStore.update(puzzleEntity);
         }
-        return puzzleBuilder.build();
+        return puzzleEntity.build();
     }
 
-    private void linkPuzzleToAnswers(PuzzleBuilder puzzleBuilder) {
-        for (Answer answer : puzzleBuilder.getAnswers()) {
-            answer.withPuzzleBuilder(puzzleBuilder);
+    private void linkPuzzleToAnswers(PuzzleEntity puzzleEntity) {
+        for (AnswerEntity answerEntity : puzzleEntity.getAnswerEntities()) {
+            answerEntity.withPuzzleBuilder(puzzleEntity);
         }
     }
 
     @Override
-    public Puzzle getBlankPuzzleForLocation(LocationBuilder locationBuilder) {
-        List<Answer> answers = new ArrayList<>();
-        answers.add(new Answer( AnswerKey.A, "" ));
-        answers.add(new Answer( AnswerKey.B, "" ));
-        answers.add(new Answer( AnswerKey.C, "" ));
-        answers.add(new Answer( AnswerKey.D, "" ));
-        PuzzleBuilder puzzleBuilder = PuzzleBuilder.builder()
-                .withLocationBuilder(locationBuilder)
-                .withAnswers(answers);
-        return puzzleBuilder.build();
+    public Puzzle getBlankPuzzleForLocation(LocationEntity locationEntity) {
+        List<AnswerEntity> answerEntities = new ArrayList<>();
+        answerEntities.add(new AnswerEntity( AnswerKey.A, "" ));
+        answerEntities.add(new AnswerEntity( AnswerKey.B, "" ));
+        answerEntities.add(new AnswerEntity( AnswerKey.C, "" ));
+        answerEntities.add(new AnswerEntity( AnswerKey.D, "" ));
+        PuzzleEntity puzzleEntity = PuzzleEntity.builder()
+                .withLocationBuilder(locationEntity)
+                .withAnswers(answerEntities);
+        return puzzleEntity.build();
     }
 
 }

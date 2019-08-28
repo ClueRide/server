@@ -17,7 +17,6 @@
  */
 package com.clueride.domain.location;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,37 +48,35 @@ public class LocationStoreJpa implements LocationStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Integer addNew(LocationBuilder locationBuilder) throws IOException {
+    public Integer addNew(LocationEntity locationEntity) {
         try {
             userTransaction.begin();
-            entityManager.persist(locationBuilder);
+            entityManager.persist(locationEntity);
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
             e.printStackTrace();
         }
-        return locationBuilder.getId();
+        return locationEntity.getId();
     }
 
     @Override
-    public LocationBuilder getLocationBuilderById(Integer id) {
-        return entityManager.find(LocationBuilder.class, id);
+    public LocationEntity getLocationBuilderById(Integer id) {
+        return entityManager.find(LocationEntity.class, id);
     }
 
     @Override
-    public Collection<LocationBuilder> getLocationBuilders() {
-        Collection<LocationBuilder> builderCollection = new ArrayList<>();
-        List<LocationBuilder> locationList = entityManager.createQuery(
-                "SELECT l FROM location l"
+    public Collection<LocationEntity> getLocationBuilders() {
+        List<LocationEntity> locationList = entityManager.createQuery(
+                "SELECT l FROM LocationEntity l"
         ).getResultList();
-        builderCollection.addAll(locationList);
-        return builderCollection;
+        return new ArrayList<>(locationList);
     }
 
     @Override
-    public void update(LocationBuilder locationBuilder) {
+    public void update(LocationEntity locationEntity) {
         try {
             userTransaction.begin();
-            entityManager.merge(locationBuilder);
+            entityManager.merge(locationEntity);
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
             LOGGER.error(String.valueOf(e));
@@ -88,13 +85,13 @@ public class LocationStoreJpa implements LocationStore {
     }
 
     @Override
-    public void delete(LocationBuilder locationBuilder) {
+    public void delete(LocationEntity locationEntity) {
         try {
             userTransaction.begin();
             entityManager.remove(
-                    entityManager.contains(locationBuilder)
-                            ? locationBuilder
-                            : entityManager.merge(locationBuilder)
+                    entityManager.contains(locationEntity)
+                            ? locationEntity
+                            : entityManager.merge(locationEntity)
             );
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
@@ -104,16 +101,14 @@ public class LocationStoreJpa implements LocationStore {
     }
 
     @Override
-    public Iterable<? extends LocationBuilder> getThemedLocationBuilders() {
-        Collection<LocationBuilder> builderCollection = new ArrayList<>();
-        List<LocationBuilder> locationList = entityManager.createQuery(
-                "SELECT l FROM location l" +
+    public Iterable<? extends LocationEntity> getThemedLocationBuilders() {
+        List<LocationEntity> locationList = entityManager.createQuery(
+                "SELECT l FROM LocationEntity l" +
                         " WHERE l.locationTypeId IN (" +
-                        "SELECT lt.id from location_type lt WHERE lt.themeId IN (" +
+                        "SELECT lt.id from LocationTypeEntity lt WHERE lt.themeId IN (" +
                         "SELECT t.id from ThemeEntity t) )"
         ).getResultList();
-        builderCollection.addAll(locationList);
-        return builderCollection;
+        return new ArrayList<>(locationList);
     }
 
 }

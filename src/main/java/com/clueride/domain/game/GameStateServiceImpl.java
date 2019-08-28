@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.domain.badge.event.BadgeEventBuilder;
+import com.clueride.domain.badge.event.BadgeEventEntity;
 import com.clueride.domain.badge.event.BadgeEventService;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseService;
@@ -203,12 +203,12 @@ public class GameStateServiceImpl implements GameStateService {
                 gameStateMap.get(outingView.getId()).build(),
                 outingView
         );
-        BadgeEventBuilder badgeEventBuilder = BadgeEventBuilder.builder()
+        BadgeEventEntity badgeEventEntity = BadgeEventEntity.builder()
                 .withTimestamp(new Date())
                 .withMethodName(badgeEventName)
                 .withMethodClass(this.getClass())
                 .withReturnValue(outingPlusGameState);
-        badgeEventService.sendToTeam(badgeEventBuilder, clueRideSessionDto.getOutingView().getTeamId());
+        badgeEventService.sendToTeam(badgeEventEntity, clueRideSessionDto.getOutingView().getTeamId());
     }
 
     /**

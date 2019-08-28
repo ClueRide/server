@@ -35,18 +35,18 @@ public class LatLonServiceImpl implements LatLonService {
     }
 
     @Override
-    public LatLon addNew(LatLon latLon) {
+    public LatLonEntity addNew(LatLonEntity latLonEntity) {
         try {
-            latLonStore.addNew(latLon);
+            latLonStore.addNew(latLonEntity);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Storage problem");
         }
-        return latLon;
+        return latLonEntity;
     }
 
     @Override
-    public LatLon getLatLonById(Integer id) {
+    public LatLonEntity getLatLonById(Integer id) {
         return latLonStore.getLatLonById(id);
     }
 

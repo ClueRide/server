@@ -30,10 +30,10 @@ public class PathForCourseStoreJpa implements PathForCourseStore {
     private EntityManager entityManager;
 
     @Override
-    public List<PathForCourseBuilder> getPathsForCourse(Integer courseId) {
-        List<PathForCourseBuilder> builders;
+    public List<PathForCourseEntity> getPathsForCourse(Integer courseId) {
+        List<PathForCourseEntity> builders;
         builders = entityManager.createQuery(
-               "SELECT p FROM PathForCourse p " +
+               "SELECT p FROM PathForCourseEntity p " +
                        " WHERE p.courseId = :courseId" +
                        " ORDER BY p.pathOrder"
         ).setParameter(

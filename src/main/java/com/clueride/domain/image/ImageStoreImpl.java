@@ -39,6 +39,7 @@ import javax.transaction.UserTransaction;
 import org.apache.commons.io.IOUtils;
 
 import com.clueride.config.ConfigService;
+import static java.util.Objects.requireNonNull;
 
 /**
  * JPA implementation of linking Image record to Location record
@@ -66,7 +67,7 @@ public class ImageStoreImpl implements ImageStore {
     public List<ImageLinkEntity> getImagesForLocation(Integer locationId) {
         return entityManager
                 .createQuery(
-                        "select i from Image i, image_by_location l" +
+                        "select i from ImageLinkEntity i, ImageByLocationEntity l" +
                                 " where i.id = l.imageId" +
                                 "   and l.locationId = :locationId",
                         ImageLinkEntity.class
@@ -78,14 +79,14 @@ public class ImageStoreImpl implements ImageStore {
     @Override
     public Integer addNew(Integer locationId, InputStream imageData) {
         Integer newSequenceId = 1;
-        File newImageFile = null;
+        File newImageFile;
 
         // Make sure only one thread at a time is updating the list of image files
         synchronized (locationDirectories) {
             File locDir = findOrCreateLocationDirectory(locationId);
 
             /* Find max ID from the files in that directory. */
-            for (File imageFile : locDir.listFiles()) {
+            for (File imageFile : requireNonNull(locDir.listFiles())) {
                 Integer existingSeqId = getIdFromFileName(imageFile);
                 if (newSequenceId <= existingSeqId) {
                     newSequenceId = existingSeqId+1;
@@ -137,10 +138,10 @@ public class ImageStoreImpl implements ImageStore {
         try {
             userTransaction.begin();
             entityManager.persist(imageLinkEntity);
-            ImageByLocation imageByLocation = new ImageByLocation();
-            imageByLocation.setImageId(imageLinkEntity.getId());
-            imageByLocation.setLocationId(locationId);
-            entityManager.persist(imageByLocation);
+            ImageByLocationEntity imageByLocationEntity = new ImageByLocationEntity();
+            imageByLocationEntity.setImageId(imageLinkEntity.getId());
+            imageByLocationEntity.setLocationId(locationId);
+            entityManager.persist(imageByLocationEntity);
             userTransaction.commit();
         } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
             e.printStackTrace();

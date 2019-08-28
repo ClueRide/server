@@ -32,7 +32,7 @@ public class Team {
     private final String name;
     private final List<Member> members;
 
-    public Team(TeamBuilder builder) {
+    public Team(TeamEntity builder) {
         this.id = requireNonNull(builder.getId());
         this.name = requireNonNull(builder.getName());
         this.members = requireNonNull(builder.getMembers());

@@ -24,18 +24,18 @@ import java.io.IOException;
  */
 public interface LatLonStore {
     /**
-     * Adds LatLon Proposal which may not (yet) be part of the Network.
-     * @param latLon Location-supporting LatLon.
+     * Adds LatLonEntity Proposal which may not (yet) be part of the Network.
+     * @param latLonEntity Location-supporting LatLonEntity.
      * @return unique ID across all Nodes.
      * @throws IOException from underlying implementation.
      */
-    Integer addNew(LatLon latLon) throws IOException;
+    Integer addNew(LatLonEntity latLonEntity) throws IOException;
 
     /**
-     * Given an ID, return the corresponding LatLon.
-     * @param id unique ID for the LatLon.
-     * @return matching LatLon.
+     * Given an ID, return the corresponding LatLonEntity.
+     * @param id unique ID for the LatLonEntity.
+     * @return matching LatLonEntity.
      */
-    LatLon getLatLonById(Integer id);
+    LatLonEntity getLatLonById(Integer id);
 
 }

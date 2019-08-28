@@ -21,7 +21,7 @@ import javax.enterprise.inject.Produces;
 
 import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
-import com.clueride.domain.account.principal.BadgeOsPrincipalBuilder;
+import com.clueride.domain.account.principal.BadgeOsPrincipalEntity;
 
 /**
  * Provides Test-oriented CDI bindings.
@@ -45,8 +45,8 @@ public class TestResources {
 
     @Produces
     BadgeOsPrincipal produceBadgeOsPrincipal() {
-        BadgeOsPrincipalBuilder builder =
-                BadgeOsPrincipalBuilder.builder()
+        BadgeOsPrincipalEntity builder =
+                BadgeOsPrincipalEntity.builder()
                         .withName("skank")
                         .withId(-2)
                         .withEmailAddressString("test.email@clueride.com");

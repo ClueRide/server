@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.domain.badge.event.BadgeEventBuilder;
+import com.clueride.domain.badge.event.BadgeEventEntity;
 import com.clueride.domain.badge.event.BadgeEventService;
 
 /**
@@ -53,15 +53,15 @@ public class BadgeCaptureInterceptor {
     public Object invoke(InvocationContext invocation) throws Exception {
         LOGGER.debug("invoke()");
 
-        BadgeEventBuilder badgeEventBuilder =  BadgeEventBuilder.builder()
+        BadgeEventEntity badgeEventEntity =  BadgeEventEntity.builder()
                 .withTimestamp(new Date())
                 .withMethodName(invocation.getMethod().getName())
                 .withMethodClass(invocation.getMethod().getDeclaringClass())
                 .withPrincipal(clueRideSessionDto.getBadgeOsPrincipal());
 
         Object returnValue = invocation.proceed();
-        badgeEventBuilder.withReturnValue(returnValue);
-        badgeEventService.send(badgeEventBuilder);
+        badgeEventEntity.withReturnValue(returnValue);
+        badgeEventService.send(badgeEventEntity);
         return returnValue;
     }
 

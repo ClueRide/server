@@ -31,13 +31,13 @@ import javax.ws.rs.core.MediaType;
 import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.Secured;
 import com.clueride.domain.game.GameStateService;
-import com.clueride.domain.location.LocationBuilder;
-import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.location.LocationEntity;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
 import com.clueride.domain.puzzle.answer.AnswerPost;
 import com.clueride.domain.puzzle.answer.AnswerSummary;
 
 /**
- * REST API for {@link Puzzle} instances and their {@link Answer} instances.
+ * REST API for {@link Puzzle} instances and their {@link AnswerEntity} instances.
  */
 @Path("puzzle")
 public class PuzzleWebService {
@@ -61,16 +61,16 @@ public class PuzzleWebService {
     @Path("blank")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Puzzle getBlankPuzzle(LocationBuilder locationBuilder) {
-        return puzzleService.getBlankPuzzleForLocation(locationBuilder);
+    public Puzzle getBlankPuzzle(LocationEntity locationEntity) {
+        return puzzleService.getBlankPuzzleForLocation(locationEntity);
     }
 
     @POST
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Puzzle savePuzzle(PuzzleBuilder puzzleBuilder) {
-        return puzzleService.addNew(puzzleBuilder);
+    public Puzzle savePuzzle(PuzzleEntity puzzleEntity) {
+        return puzzleService.addNew(puzzleEntity);
     }
 
     @POST

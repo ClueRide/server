@@ -24,19 +24,21 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.latlon.LatLonEntity;
 
 /**
- * Persistable Builder for {@link OutingView} instances.
+ * Persistable Entity for {@link OutingView} instances.
  */
-@Entity(name = "outing_view")
-public class OutingViewBuilder {
+@Entity
+@Table(name = "outing_view")
+public class OutingViewEntity {
     @Id
     private Integer id;
 
@@ -57,19 +59,19 @@ public class OutingViewBuilder {
     @Transient
     private URL courseUrl;
     @Transient
-    private LatLon startPin = new LatLon();
+    private LatLonEntity startPin = new LatLonEntity();
 
-    public OutingViewBuilder() {}
+    public OutingViewEntity() {}
 
-    public static OutingViewBuilder builder() {
-        return new OutingViewBuilder();
+    public static OutingViewEntity builder() {
+        return new OutingViewEntity();
     }
 
     public OutingView build() {
         return new OutingView(this);
     }
 
-    public static OutingViewBuilder from(OutingView instance) {
+    public static OutingViewEntity from(OutingView instance) {
         return builder()
                 .withId(instance.getId())
                 .withScheduledTime(instance.getScheduledTime())
@@ -87,7 +89,7 @@ public class OutingViewBuilder {
         return id;
     }
 
-    public OutingViewBuilder withId(Integer id) {
+    public OutingViewEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -96,19 +98,19 @@ public class OutingViewBuilder {
         return scheduledTime;
     }
 
-    public OutingViewBuilder withScheduledTime(Date scheduledTime) {
+    public OutingViewEntity withScheduledTime(Date scheduledTime) {
         this.scheduledTime = scheduledTime;
         return this;
     }
 
-    public LatLon getStartPin() {
+    public LatLonEntity getStartPin() {
         startPin.setId(nodeId);
         startPin.setLat(lat);
         startPin.setLon(lon);
         return startPin;
     }
 
-    public OutingViewBuilder withStartPin(LatLon startPin) {
+    public OutingViewEntity withStartPin(LatLonEntity startPin) {
         this.startPin = startPin;
         return this;
     }
@@ -117,7 +119,7 @@ public class OutingViewBuilder {
         return courseName;
     }
 
-    public OutingViewBuilder withCourseName(String courseName) {
+    public OutingViewEntity withCourseName(String courseName) {
         this.courseName = courseName;
         return this;
     }
@@ -130,7 +132,7 @@ public class OutingViewBuilder {
         return courseDescription;
     }
 
-    public OutingViewBuilder withCourseDescription(String courseDescription) {
+    public OutingViewEntity withCourseDescription(String courseDescription) {
         this.courseDescription = courseDescription;
         return this;
     }
@@ -140,7 +142,7 @@ public class OutingViewBuilder {
         return courseUrl;
     }
 
-    public OutingViewBuilder withCourseUrl(URL courseUrl) {
+    public OutingViewEntity withCourseUrl(URL courseUrl) {
         this.courseUrl = courseUrl;
         return this;
     }
@@ -149,7 +151,7 @@ public class OutingViewBuilder {
         return courseUrlAsString;
     }
 
-    public OutingViewBuilder withCourseUrlAsString(String courseUrlAsString) {
+    public OutingViewEntity withCourseUrlAsString(String courseUrlAsString) {
         this.courseUrlAsString = courseUrlAsString;
         urlFromString(courseUrlAsString);
         return this;
@@ -167,7 +169,7 @@ public class OutingViewBuilder {
         return guideName;
     }
 
-    public OutingViewBuilder withGuideName(String guideName) {
+    public OutingViewEntity withGuideName(String guideName) {
         this.guideName = guideName;
         return this;
     }
@@ -176,7 +178,7 @@ public class OutingViewBuilder {
         return guideMemberId;
     }
 
-    public OutingViewBuilder withGuideMemberId(Integer guideMemberId) {
+    public OutingViewEntity withGuideMemberId(Integer guideMemberId) {
         this.guideMemberId = guideMemberId;
         return this;
     }
@@ -185,7 +187,7 @@ public class OutingViewBuilder {
         return teamName;
     }
 
-    public OutingViewBuilder withTeamName(String teamName) {
+    public OutingViewEntity withTeamName(String teamName) {
         this.teamName = teamName;
         return this;
     }
@@ -198,7 +200,7 @@ public class OutingViewBuilder {
         return startingLocationId;
     }
 
-    public OutingViewBuilder withStartingLocationId(Integer startingLocationId) {
+    public OutingViewEntity withStartingLocationId(Integer startingLocationId) {
         this.startingLocationId = startingLocationId;
         return this;
     }
@@ -207,7 +209,7 @@ public class OutingViewBuilder {
         return nodeId;
     }
 
-    public OutingViewBuilder withNodeId(Integer nodeId) {
+    public OutingViewEntity withNodeId(Integer nodeId) {
         this.nodeId = nodeId;
         startPin.setId(nodeId);
         return this;
@@ -217,7 +219,7 @@ public class OutingViewBuilder {
         return lat;
     }
 
-    public OutingViewBuilder withLat(Double lat) {
+    public OutingViewEntity withLat(Double lat) {
         this.lat = lat;
         startPin.setLat(lat);
         return this;
@@ -227,7 +229,7 @@ public class OutingViewBuilder {
         return lon;
     }
 
-    public OutingViewBuilder withLon(Double lon) {
+    public OutingViewEntity withLon(Double lon) {
         this.lon = lon;
         startPin.setLon(lon);
         return this;

@@ -28,6 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -37,8 +38,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Persistable Builder for {@link Invite} instances.
  */
-@Entity(name = "invite")
-public final class InviteBuilder {
+@Entity
+@Table(name = "invite")
+public final class InviteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invite_pk_sequence")
     @SequenceGenerator(name = "invite_pk_sequence", sequenceName = "invite_id_seq", allocationSize = 1)
@@ -58,11 +60,11 @@ public final class InviteBuilder {
     @Transient private URL courseUrl;
     @Transient private Date scheduledTime;
 
-    public static InviteBuilder builder() {
-        return new InviteBuilder();
+    public static InviteEntity builder() {
+        return new InviteEntity();
     }
 
-    public static InviteBuilder from(Invite instance) {
+    public static InviteEntity from(Invite instance) {
         return builder()
                 .withId(instance.getId())
                 .withOutingId(instance.getOutingId())
@@ -88,13 +90,13 @@ public final class InviteBuilder {
         return memberId;
     }
 
-    public InviteBuilder withMemberId(Integer memberId) {
+    public InviteEntity withMemberId(Integer memberId) {
         this.memberId = memberId;
         return this;
     }
 
     /* Assists Jackson in creating instances. */
-    public InviteBuilder withOutingId(Integer outingId) {
+    public InviteEntity withOutingId(Integer outingId) {
         this.outingId = outingId;
         return this;
     }
@@ -103,7 +105,7 @@ public final class InviteBuilder {
         return id;
     }
 
-    public InviteBuilder withId(Integer id) {
+    public InviteEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -112,7 +114,7 @@ public final class InviteBuilder {
         return teamId;
     }
 
-    public InviteBuilder withTeamId(Integer teamId) {
+    public InviteEntity withTeamId(Integer teamId) {
         this.teamId = teamId;
         return this;
     }
@@ -121,7 +123,7 @@ public final class InviteBuilder {
         return inviteState;
     }
 
-    public InviteBuilder withState(InviteState inviteState) {
+    public InviteEntity withState(InviteState inviteState) {
         this.inviteState = inviteState;
         return this;
     }
@@ -130,7 +132,7 @@ public final class InviteBuilder {
         return guideName;
     }
 
-    public InviteBuilder withGuideName(String guideName) {
+    public InviteEntity withGuideName(String guideName) {
         this.guideName = guideName;
         return this;
     }
@@ -139,7 +141,7 @@ public final class InviteBuilder {
         return teamName;
     }
 
-    public InviteBuilder withTeamName(String teamName) {
+    public InviteEntity withTeamName(String teamName) {
         this.teamName = teamName;
         return this;
     }
@@ -148,7 +150,7 @@ public final class InviteBuilder {
         return courseName;
     }
 
-    public InviteBuilder withCourseName(String courseName) {
+    public InviteEntity withCourseName(String courseName) {
         this.courseName = courseName;
         return this;
     }
@@ -157,7 +159,7 @@ public final class InviteBuilder {
         return courseUrl;
     }
 
-    public InviteBuilder withCourseUrl(URL courseUrl) {
+    public InviteEntity withCourseUrl(URL courseUrl) {
         this.courseUrl = courseUrl;
         return this;
     }
@@ -166,7 +168,7 @@ public final class InviteBuilder {
         return scheduledTime;
     }
 
-    public InviteBuilder withScheduledTime(Date scheduledTime) {
+    public InviteEntity withScheduledTime(Date scheduledTime) {
         this.scheduledTime = scheduledTime;
         return this;
     }

@@ -34,6 +34,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -41,12 +42,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import com.clueride.domain.image.ImageLinkEntity;
-import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loctype.LocationType;
-import com.clueride.domain.location.loctype.LocationTypeBuilder;
-import com.clueride.domain.puzzle.PuzzleBuilder;
+import com.clueride.domain.location.loctype.LocationTypeEntity;
+import com.clueride.domain.puzzle.PuzzleEntity;
 
 /**
  * Knows how to assemble the parts of a Location.
@@ -60,9 +61,10 @@ import com.clueride.domain.puzzle.PuzzleBuilder;
  * determine the ReadinessLevel of the Location. I think we can consult
  * the Puzzle Service to find what we need.
  */
-@Entity(name="location")
+@Entity
+@Table(name="location")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LocationBuilder {
+public class LocationEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="location_pk_sequence")
     @SequenceGenerator(name="location_pk_sequence",sequenceName="location_id_seq", allocationSize=1)
@@ -83,7 +85,7 @@ public class LocationBuilder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_type_id")
-    private LocationTypeBuilder locationTypeBuilder;
+    private LocationTypeEntity locationTypeEntity;
 
     @Column(name="location_type_id", updatable = false, insertable = false)
     private Integer locationTypeId;
@@ -95,13 +97,13 @@ public class LocationBuilder {
     @Transient
     private String locationTypeName;
     @Transient
-    private LatLon latLon;
+    private LatLonEntity latLonEntity;
     @Transient
     private URL featuredImageUrl;
     @Transient
     private Integer featuredImageId;
     @Transient
-    private List<PuzzleBuilder> puzzleBuilders;
+    private List<PuzzleEntity> puzzleEntities;
     @Transient
     private Integer googlePlaceId;
 
@@ -117,20 +119,20 @@ public class LocationBuilder {
     @Transient
     private ReadinessLevel readinessLevel;
 
-    public LocationBuilder() {}
+    public LocationEntity() {}
 
-    public static LocationBuilder builder() {
-        return new LocationBuilder();
+    public static LocationEntity builder() {
+        return new LocationEntity();
     }
 
-    public static LocationBuilder from(Location location) {
+    public static LocationEntity from(Location location) {
         return builder()
                 .withId(location.getId())
                 .withName(location.getName())
                 .withDescription(location.getDescription())
                 .withLocationType(location.getLocationType())
                 .withNodeId(location.getNodeId())
-                .withLatLon(location.getLatLon())
+                .withLatLon(location.getLatLonEntity())
                 .withFeaturedImage(ImageLinkEntity.from(location.getFeaturedImage()))
                 .withEstablishmentId(location.getEstablishment())
                 .withTagScores(location.getTagScores())
@@ -151,15 +153,15 @@ public class LocationBuilder {
             }
         }
 
-        if (locationTypeBuilder == null) {
+        if (locationTypeEntity == null) {
             throw new IllegalStateException("Location Type cannot be null");
         } else {
-            locationType = locationTypeBuilder.build();
+            locationType = locationTypeEntity.build();
         }
         return new Location(this);
     }
 
-    public LocationBuilder withId(Integer id) {
+    public LocationEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -178,7 +180,7 @@ public class LocationBuilder {
         return name;
     }
 
-    public LocationBuilder withName(String name) {
+    public LocationEntity withName(String name) {
         this.name = name;
         return this;
     }
@@ -187,7 +189,7 @@ public class LocationBuilder {
         return description;
     }
 
-    public LocationBuilder withDescription(String description) {
+    public LocationEntity withDescription(String description) {
         this.description = description;
         return this;
     }
@@ -200,12 +202,12 @@ public class LocationBuilder {
     /**
      * This is generally inbound from clients. Service is responsible for
      * taking this value, looking up the LocationType via its service, and
-     * then populating this LocationBuilder instance with that LocationType
+     * then populating this LocationEntity instance with that LocationType
      * instance.
      * @param locationTypeId chosen from a list of possible Location Types.
      * @return this.
      */
-    public LocationBuilder withLocationTypeId(Integer locationTypeId) {
+    public LocationEntity withLocationTypeId(Integer locationTypeId) {
         this.locationTypeId = locationTypeId;
         return this;
     }
@@ -214,7 +216,7 @@ public class LocationBuilder {
         return locationTypeId;
     }
 
-    public LocationBuilder withLocationTypeName(String locationTypeName) {
+    public LocationEntity withLocationTypeName(String locationTypeName) {
         this.locationTypeName = locationTypeName;
         return this;
     }
@@ -227,23 +229,23 @@ public class LocationBuilder {
         this.withLocationType(locationType);
     }
 
-    public LocationBuilder withLocationType(LocationType locationType) {
+    public LocationEntity withLocationType(LocationType locationType) {
         this.locationType = locationType;
-        this.locationTypeBuilder = LocationTypeBuilder.from(locationType);
+        this.locationTypeEntity = LocationTypeEntity.from(locationType);
         return this;
     }
 
-    public LocationTypeBuilder getLocationTypeBuilder() {
-        return locationTypeBuilder;
+    public LocationTypeEntity getLocationTypeEntity() {
+        return locationTypeEntity;
     }
 
     @JsonSetter("locationType")
-    public void setLocationTypeBuilder(LocationTypeBuilder locationTypeBuilder) {
-        this.locationTypeBuilder = locationTypeBuilder;
-        this.locationType = locationTypeBuilder.build();
+    public void setLocationTypeEntity(LocationTypeEntity locationTypeEntity) {
+        this.locationTypeEntity = locationTypeEntity;
+        this.locationType = locationTypeEntity.build();
     }
 
-    public LocationBuilder withReadinessLevel(ReadinessLevel readinessLevel) {
+    public LocationEntity withReadinessLevel(ReadinessLevel readinessLevel) {
         this.readinessLevel = readinessLevel;
         return this;
     }
@@ -252,7 +254,7 @@ public class LocationBuilder {
         return nodeId;
     }
 
-    public LocationBuilder withNodeId(Integer nodeId) {
+    public LocationEntity withNodeId(Integer nodeId) {
         this.nodeId = nodeId;
         return this;
     }
@@ -261,7 +263,7 @@ public class LocationBuilder {
         return tagScores;
     }
 
-    public LocationBuilder withTagScores(Map<String, Optional<Double>> tagScores) {
+    public LocationEntity withTagScores(Map<String, Optional<Double>> tagScores) {
         this.tagScores = tagScores;
         return this;
     }
@@ -270,7 +272,7 @@ public class LocationBuilder {
         return locationGroupId;
     }
 
-    public LocationBuilder withLocationGroupId(Integer locationGroupId) {
+    public LocationEntity withLocationGroupId(Integer locationGroupId) {
         this.locationGroupId = locationGroupId;
         return this;
     }
@@ -279,7 +281,7 @@ public class LocationBuilder {
         return establishmentId;
     }
 
-    public LocationBuilder withEstablishmentId(Integer establishmentId) {
+    public LocationEntity withEstablishmentId(Integer establishmentId) {
         this.establishmentId = establishmentId;
         return this;
     }
@@ -288,19 +290,19 @@ public class LocationBuilder {
         return establishment;
     }
 
-    public LocationBuilder withEstablishment(String establishment) {
+    public LocationEntity withEstablishment(String establishment) {
         this.establishment = establishment;
         return this;
     }
 
-    public LatLon getLatLon() {
-        return latLon;
+    public LatLonEntity getLatLonEntity() {
+        return latLonEntity;
     }
 
-    public LocationBuilder withLatLon(LatLon latLon) {
-        this.latLon = latLon;
-        if (latLon != null) {
-            this.nodeId = latLon.getId();
+    public LocationEntity withLatLon(LatLonEntity latLonEntity) {
+        this.latLonEntity = latLonEntity;
+        if (latLonEntity != null) {
+            this.nodeId = latLonEntity.getId();
         }
         return this;
     }
@@ -310,7 +312,7 @@ public class LocationBuilder {
         return featuredImage;
     }
 
-    public LocationBuilder withFeaturedImage(ImageLinkEntity featuredImage) {
+    public LocationEntity withFeaturedImage(ImageLinkEntity featuredImage) {
         this.featuredImage = featuredImage;
         this.featuredImageId = featuredImage.getId();
         try {
@@ -321,7 +323,7 @@ public class LocationBuilder {
         return this;
     }
 
-    public LocationBuilder clearFeaturedImage() {
+    public LocationEntity clearFeaturedImage() {
         this.featuredImageId = null;
         this.featuredImage = null;
         return this;
@@ -335,12 +337,12 @@ public class LocationBuilder {
         return featuredImageId;
     }
 
-    public LocationBuilder withFeaturedImageId(int imageId) {
+    public LocationEntity withFeaturedImageId(int imageId) {
         this.featuredImageId = imageId;
         return this;
     }
 
-    public LocationBuilder withFeaturedImageUrl(URL featuredImageUrl) {
+    public LocationEntity withFeaturedImageUrl(URL featuredImageUrl) {
         this.featuredImageUrl = featuredImageUrl;
         return this;
     }
@@ -352,13 +354,13 @@ public class LocationBuilder {
         return Optional.ofNullable(this.mainLink);
     }
 
-    public LocationBuilder withMainLink(LocLinkEntity locLink) {
+    public LocationEntity withMainLink(LocLinkEntity locLink) {
         // TODO: This is SVR-36 too
         this.mainLink = locLink;
         return this;
     }
 
-    public LocationBuilder withLocLink(LocLink locLink) {
+    public LocationEntity withLocLink(LocLink locLink) {
         // TODO: This is SVR-36 too
         this.mainLink = LocLinkEntity.builder()
                 .withId(locLink.getId())
@@ -366,12 +368,12 @@ public class LocationBuilder {
         return this;
     }
 
-    public List<PuzzleBuilder> getPuzzleBuilders() {
-        return puzzleBuilders;
+    public List<PuzzleEntity> getPuzzleEntities() {
+        return puzzleEntities;
     }
 
-    public LocationBuilder withPuzzleBuilders(List<PuzzleBuilder> puzzleBuilders) {
-        this.puzzleBuilders = puzzleBuilders;
+    public LocationEntity withPuzzleBuilders(List<PuzzleEntity> puzzleEntities) {
+        this.puzzleEntities = puzzleEntities;
         return this;
     }
 
@@ -379,7 +381,7 @@ public class LocationBuilder {
         return googlePlaceId;
     }
 
-    public LocationBuilder withGooglePlaceId(Integer googlePlaceId) {
+    public LocationEntity withGooglePlaceId(Integer googlePlaceId) {
         this.googlePlaceId = googlePlaceId;
         return this;
     }
@@ -391,17 +393,17 @@ public class LocationBuilder {
     /**
      * Accepts a partial set of information -- generally posted from REST API -- and updates this copy with the
      * new fields.
-     * @param locationBuilder instance with the new info.
+     * @param locationEntity instance with the new info.
      */
-    public void updateFrom(LocationBuilder locationBuilder) {
+    public void updateFrom(LocationEntity locationEntity) {
         this
-                .withName(locationBuilder.name)
-                .withId(locationBuilder.id)
-                .withDescription(locationBuilder.description)
-                .withNodeId(locationBuilder.nodeId)
+                .withName(locationEntity.name)
+                .withId(locationEntity.id)
+                .withDescription(locationEntity.description)
+                .withNodeId(locationEntity.nodeId)
                 // TODO: SVR-36
-//                .withLocationTypeId(locationBuilder.locationTypeId)
-                .withLocationGroupId(locationBuilder.locationGroupId)
+//                .withLocationTypeId(locationEntity.locationTypeId)
+                .withLocationGroupId(locationEntity.locationGroupId)
         ;
     }
 

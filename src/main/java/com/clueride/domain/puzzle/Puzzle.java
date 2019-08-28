@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
 import com.clueride.domain.puzzle.answer.AnswerKey;
 
 @Immutable
@@ -35,17 +35,17 @@ public class Puzzle {
     private final Integer locationId;
     private final String locationName;
     private final String question;
-    private List<Answer> answers = new ArrayList<>();
+    private List<AnswerEntity> answerEntities = new ArrayList<>();
     private final AnswerKey correctAnswer;
     private final Integer points;
 
-    Puzzle(PuzzleBuilder builder) {
+    Puzzle(PuzzleEntity builder) {
         this.id = builder.getId();
         this.name = builder.getName();
-        this.locationId = builder.getLocationBuilder().getId();
-        this.locationName = builder.getLocationBuilder().getName();
+        this.locationId = builder.getLocationEntity().getId();
+        this.locationName = builder.getLocationEntity().getName();
         this.question = builder.getQuestion();
-        this.answers = builder.getAnswers();
+        this.answerEntities = builder.getAnswerEntities();
         this.correctAnswer = builder.getCorrectAnswer();
         this.points = builder.getPoints();
     }
@@ -78,8 +78,8 @@ public class Puzzle {
         return points;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
+    public List<AnswerEntity> getAnswerEntities() {
+        return answerEntities;
     }
 
     @Override

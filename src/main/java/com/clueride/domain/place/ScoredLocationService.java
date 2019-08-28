@@ -17,7 +17,7 @@
  */
 package com.clueride.domain.place;
 
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.ReadinessLevel;
 
 /**
@@ -29,6 +29,6 @@ public interface ScoredLocationService {
      * @param location to be evaluated.
      * @return Readiness Level
      */
-    ReadinessLevel calculateReadinessLevel(LocationBuilder location);
+    ReadinessLevel calculateReadinessLevel(LocationEntity location);
 
 }
