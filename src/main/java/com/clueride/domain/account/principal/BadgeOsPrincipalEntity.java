@@ -32,9 +32,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Builder for BadgeOsPrincipal.
  */
-@Entity(name = "badgeos_principal")
+@Entity
 @Table(name = "wp_users")
-public class BadgeOsPrincipalBuilder {
+public class BadgeOsPrincipalEntity {
     @Id
     private Integer id;
 
@@ -51,15 +51,15 @@ public class BadgeOsPrincipalBuilder {
         return new BadgeOsPrincipal(this);
     }
 
-    public static BadgeOsPrincipalBuilder builder() {
-        return new BadgeOsPrincipalBuilder();
+    public static BadgeOsPrincipalEntity builder() {
+        return new BadgeOsPrincipalEntity();
     }
 
     public String getName() {
         return name;
     }
 
-    public BadgeOsPrincipalBuilder withName(String name) {
+    public BadgeOsPrincipalEntity withName(String name) {
         this.name = name;
         return this;
     }
@@ -69,13 +69,13 @@ public class BadgeOsPrincipalBuilder {
         return this.emailAddress;
     }
 
-    public BadgeOsPrincipalBuilder withEmailAddress(InternetAddress emailAddress) {
+    public BadgeOsPrincipalEntity withEmailAddress(InternetAddress emailAddress) {
         this.emailAddressString = emailAddress.toString();
         this.emailAddress = emailAddress;
         return this;
     }
 
-    public BadgeOsPrincipalBuilder withEmailAddressString(String emailAddressString) {
+    public BadgeOsPrincipalEntity withEmailAddressString(String emailAddressString) {
         this.emailAddressString = emailAddressString;
         emailStringToInternetAddress(emailAddressString);
         return this;
@@ -94,11 +94,11 @@ public class BadgeOsPrincipalBuilder {
         return id;
     }
 
-    public BadgeOsPrincipalBuilder withId(Integer badgeOsUserId) {
+    public BadgeOsPrincipalEntity withId(Integer badgeOsUserId) {
         return withBadgeOsUserId(badgeOsUserId);
     }
 
-    public BadgeOsPrincipalBuilder withBadgeOsUserId(Integer badgeOsUserId) {
+    public BadgeOsPrincipalEntity withBadgeOsUserId(Integer badgeOsUserId) {
         this.id = badgeOsUserId;
         return this;
     }

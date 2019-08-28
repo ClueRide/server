@@ -28,15 +28,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.clueride.domain.image.ImageLink;
-import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loctype.LocationType;
-import com.clueride.domain.puzzle.PuzzleBuilder;
+import com.clueride.domain.puzzle.PuzzleEntity;
 
 /**
  * Holds the data for a Location presented both to the Game Player as well as Editors.
  *
- * {@link LocationBuilder} holds mutable instances.
+ * {@link LocationEntity} holds mutable instances.
  *
  * @author jett
  */
@@ -50,9 +50,9 @@ public class Location {
     private final ImageLink featuredImage;
     private final LocLink mainLink;
     private final Integer googlePlaceId;
-    private final LatLon latLon;
+    private final LatLonEntity latLonEntity;
     private final ReadinessLevel readinessLevel;
-    private List<PuzzleBuilder> puzzleBuilders;
+    private List<PuzzleEntity> puzzleEntities;
     private final Integer locationGroupId;
     private final String establishment;
     private final Integer establishmentId;
@@ -62,10 +62,10 @@ public class Location {
      * Constructor accepting Builder instance.
      * @param builder instance carrying mutable Location.
      */
-    public Location(LocationBuilder builder) {
+    public Location(LocationEntity builder) {
         id = builder.getId();
         nodeId = builder.getNodeId();
-        latLon = builder.getLatLon();
+        latLonEntity = builder.getLatLonEntity();
         readinessLevel = builder.getReadinessLevel();
 
         // If any of these are missing, we're at the Draft level
@@ -140,14 +140,14 @@ public class Location {
 
     /**
      * Link over to the geographical representation of this Location.
-     * @return ID of the LatLon associated with this location for placement on a map.
+     * @return ID of the LatLonEntity associated with this location for placement on a map.
      */
     public Integer getNodeId() {
         return nodeId;
     }
 
-    public LatLon getLatLon() {
-        return latLon;
+    public LatLonEntity getLatLonEntity() {
+        return latLonEntity;
     }
 
     public Map<String, Optional<Double>> getTagScores() {

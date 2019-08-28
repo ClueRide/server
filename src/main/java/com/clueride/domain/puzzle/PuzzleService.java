@@ -19,7 +19,7 @@ package com.clueride.domain.puzzle;
 
 import java.util.List;
 
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 
 /**
  * Defines the operations on a Puzzle.
@@ -41,15 +41,15 @@ public interface PuzzleService {
 
     /**
      * Create a New puzzle instance for the given Location.
-     * @param puzzleBuilder data for the new Puzzle.
+     * @param puzzleEntity data for the new Puzzle.
      * @return fully-populated instance of the new Puzzle.
      */
-    Puzzle addNew(PuzzleBuilder puzzleBuilder);
+    Puzzle addNew(PuzzleEntity puzzleEntity);
 
     /**
      * Creates a New puzzle instance for the front-end to populate.
      * @return Empty Puzzle ready to be filled by the client.
      */
-    Puzzle getBlankPuzzleForLocation(LocationBuilder locationBuilder);
+    Puzzle getBlankPuzzleForLocation(LocationEntity locationEntity);
 
 }

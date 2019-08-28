@@ -47,7 +47,7 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     @Inject
     private Logger LOGGER;
 
-    private static BlockingQueue<BadgeEventBuilder> eventQueue = new LinkedTransferQueue<>();
+    private static BlockingQueue<BadgeEventEntity> eventQueue = new LinkedTransferQueue<>();
     private static Thread workerThread = null;
     private boolean runnable = true;
 
@@ -73,10 +73,10 @@ public class BadgeEventServiceImpl implements BadgeEventService {
     }
 
     @Override
-    public void send(BadgeEventBuilder badgeEventBuilder) {
+    public void send(BadgeEventEntity badgeEventEntity) {
         try {
             synchronized(eventQueue) {
-                eventQueue.put(badgeEventBuilder);
+                eventQueue.put(badgeEventEntity);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -85,40 +85,40 @@ public class BadgeEventServiceImpl implements BadgeEventService {
 
     @Override
     public BadgeEvent getBadgeEventById(Integer badgeEventId) {
-        BadgeEventBuilder badgeEventBuilder = badgeEventStore.getById(badgeEventId);
-        fillDbBuilder(badgeEventBuilder);
-        return badgeEventBuilder.build();
+        BadgeEventEntity badgeEventEntity = badgeEventStore.getById(badgeEventId);
+        fillDbBuilder(badgeEventEntity);
+        return badgeEventEntity.build();
     }
 
     @Override
-    public void sendToTeam(BadgeEventBuilder badgeEventBuilderCommon, int teamId) {
-        BadgeEvent badgeEventSharedValues = badgeEventBuilderCommon.build();
+    public void sendToTeam(BadgeEventEntity badgeEventEntityCommon, int teamId) {
+        BadgeEvent badgeEventSharedValues = badgeEventEntityCommon.build();
         Team team = teamService.getTeam(teamId);
         for (Member member : team.getMembers()) {
-            BadgeEventBuilder builder = BadgeEventBuilder.from(badgeEventSharedValues);
+            BadgeEventEntity builder = BadgeEventEntity.from(badgeEventSharedValues);
             Principal principal = principalService.getPrincipalForEmailAddress(member.getEmailAddress());
             builder.withPrincipal(principal);
             send(builder);
         }
     }
 
-    private void fillDbBuilder(BadgeEventBuilder badgeEventBuilder) {
-        Member member = memberService.getMember(badgeEventBuilder.getMemberId());
-        badgeEventBuilder.withPrincipal(
+    private void fillDbBuilder(BadgeEventEntity badgeEventEntity) {
+        Member member = memberService.getMember(badgeEventEntity.getMemberId());
+        badgeEventEntity.withPrincipal(
                 principalService.getPrincipalForEmailAddress(
                         member.getEmailAddress()
                 )
         );
     }
 
-    private void fillClientBuilder(BadgeEventBuilder badgeEventBuilder) throws AddressException {
-        BadgeOsPrincipal principal = (BadgeOsPrincipal) badgeEventBuilder.getPrincipal();
+    private void fillClientBuilder(BadgeEventEntity badgeEventEntity) throws AddressException {
+        BadgeOsPrincipal principal = (BadgeOsPrincipal) badgeEventEntity.getPrincipal();
         Member member = memberService.getMemberByEmail(
                 principal.getEmailAddress().toString()
         );
 
-        badgeEventBuilder.withMemberId(member.getId());
-        badgeEventBuilder.withBadgeOSId(member.getBadgeOSId());
+        badgeEventEntity.withMemberId(member.getId());
+        badgeEventEntity.withBadgeOSId(member.getBadgeOSId());
     }
 
     public class Worker implements Runnable {
@@ -126,26 +126,26 @@ public class BadgeEventServiceImpl implements BadgeEventService {
         @Override
         public void run() {
             while (runnable) {
-                BadgeEventBuilder badgeEventBuilder = null;
+                BadgeEventEntity badgeEventEntity = null;
                 try {
-                    badgeEventBuilder = eventQueue.take();
-                    fillClientBuilder(badgeEventBuilder);
-                    LOGGER.info("Captured Event: " + badgeEventBuilder.toString());
-                    badgeEventStore.add(badgeEventBuilder);
-                    awardAchievementService.awardPotentialAchievement(badgeEventBuilder.build());
+                    badgeEventEntity = eventQueue.take();
+                    fillClientBuilder(badgeEventEntity);
+                    LOGGER.info("Captured Event: " + badgeEventEntity.toString());
+                    badgeEventStore.add(badgeEventEntity);
+                    awardAchievementService.awardPotentialAchievement(badgeEventEntity.build());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     runnable = false;
                 } catch (NoResultException nre) {
                     LOGGER.error("Unable to find {} as a Member",
-                            ((BadgeOsPrincipal)badgeEventBuilder.getPrincipal()).getEmailAddress()
+                            ((BadgeOsPrincipal) badgeEventEntity.getPrincipal()).getEmailAddress()
                     );
                     throw nre;
                 } catch (RuntimeException rte) {
-                    LOGGER.error("Problem Storing Badge Event: " + badgeEventBuilder.getTimestamp(), rte);
+                    LOGGER.error("Problem Storing Badge Event: " + badgeEventEntity.getTimestamp(), rte);
                     throw(rte);
                 } catch (AddressException e) {
-                    LOGGER.error("Address Problem Storing Badge Event: " + badgeEventBuilder.getTimestamp(), e);
+                    LOGGER.error("Address Problem Storing Badge Event: " + badgeEventEntity.getTimestamp(), e);
                     e.printStackTrace();
                 }
 

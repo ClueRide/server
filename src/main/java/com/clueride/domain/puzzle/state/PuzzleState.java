@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.clueride.domain.puzzle.Puzzle;
-import com.clueride.domain.puzzle.answer.Answer;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
 import com.clueride.domain.puzzle.answer.AnswerKey;
 import static java.util.Objects.requireNonNull;
 
@@ -34,11 +34,11 @@ public class PuzzleState {
 
     public PuzzleState (Puzzle puzzle) {
         requireNonNull(puzzle, "Can't create Puzzle State for null puzzle");
-        requireNonNull(puzzle.getAnswers(), "Can't create Puzzle State for puzzle without answers");
+        requireNonNull(puzzle.getAnswerEntities(), "Can't create Puzzle State for puzzle without answers");
 
         this.puzzle = puzzle;
-        for (Answer answer : puzzle.getAnswers()) {
-            answerMap.put(answer.getKey(), 0);
+        for (AnswerEntity answerEntity : puzzle.getAnswerEntities()) {
+            answerMap.put(answerEntity.getKey(), 0);
         }
     }
 

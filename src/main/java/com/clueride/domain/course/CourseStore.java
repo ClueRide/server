@@ -27,30 +27,30 @@ public interface CourseStore {
     /**
      * Accepts fully constructed {@link Course} to the store and returns the ID.
      *
-     * @param courseBuilder - instance to be added to the memory-based copy (which may be persisted).
+     * @param courseEntity - instance to be added to the memory-based copy (which may be persisted).
      * @return Unique Integer ID of the new Course.
      * @throws IOException if there is a problem writing to disk.
      */
-    Integer addNew(CourseBuilder courseBuilder) throws IOException;
+    Integer addNew(CourseEntity courseEntity) throws IOException;
 
     /**
      * Retrieve the {@link Course} matching the ID from the store.
      * @param id - Unique identifier for the Course.
      * @return the matching Course.
      */
-    CourseBuilder getCourseById(Integer id);
+    CourseEntity getCourseById(Integer id);
 
     /**
      * Accept the {@link Course} instance as a replacement for the existing Course with
      * the same ID as this Course instance.
-     * @param courseBuilder - Instance of Course to replace the one already in the store.
+     * @param courseEntity - Instance of Course to replace the one already in the store.
      */
-    void update(CourseBuilder courseBuilder);
+    void update(CourseEntity courseEntity);
 
     /**
      * Returns Metadata for all Courses.
      * @return List of all Courses.
      */
-    List<CourseBuilder> getCourses();
+    List<CourseEntity> getCourses();
 
 }

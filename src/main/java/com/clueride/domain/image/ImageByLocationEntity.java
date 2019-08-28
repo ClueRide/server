@@ -23,6 +23,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.clueride.domain.location.Location;
 
@@ -30,8 +31,9 @@ import com.clueride.domain.location.Location;
  * Entity representing the relationship between a {@link Location} instance and
  * its set of {@link ImageLinkEntity}.
  */
-@Entity(name="image_by_location")
-public class ImageByLocation {
+@Entity
+@Table(name="image_by_location")
+public class ImageByLocationEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="image_by_location_pk_sequence")
     @SequenceGenerator(name="image_by_location_pk_sequence",

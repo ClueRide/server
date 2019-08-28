@@ -28,6 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,8 +41,9 @@ import org.slf4j.Logger;
 /**
  * Mutable instance of BadgeEvent.
  */
-@Entity(name="badge_event")
-public class BadgeEventBuilder {
+@Entity
+@Table(name="badge_event")
+public class BadgeEventEntity {
     @Inject
     @Transient
     private Logger LOGGER;
@@ -83,17 +85,17 @@ public class BadgeEventBuilder {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public BadgeEventBuilder () {}
+    public BadgeEventEntity() {}
 
     public BadgeEvent build() {
         return new BadgeEvent(this);
     }
 
-    public static BadgeEventBuilder builder() {
-        return new BadgeEventBuilder();
+    public static BadgeEventEntity builder() {
+        return new BadgeEventEntity();
     }
 
-    public static BadgeEventBuilder from(BadgeEvent badgeEvent) {
+    public static BadgeEventEntity from(BadgeEvent badgeEvent) {
         return builder()
                 .withId(badgeEvent.getId())
                 .withPrincipal(badgeEvent.getPrincipal())
@@ -112,7 +114,7 @@ public class BadgeEventBuilder {
         return id;
     }
 
-    public BadgeEventBuilder withId(Integer id) {
+    public BadgeEventEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -121,7 +123,7 @@ public class BadgeEventBuilder {
         return timestamp;
     }
 
-    public BadgeEventBuilder withTimestamp(Date timestamp) {
+    public BadgeEventEntity withTimestamp(Date timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -130,7 +132,7 @@ public class BadgeEventBuilder {
         return memberId;
     }
 
-    public BadgeEventBuilder withMemberId(Integer memberId) {
+    public BadgeEventEntity withMemberId(Integer memberId) {
         this.memberId = memberId;
         return this;
     }
@@ -139,7 +141,7 @@ public class BadgeEventBuilder {
         return badgeOSId;
     }
 
-    public BadgeEventBuilder withBadgeOSId(Integer badgeOSId) {
+    public BadgeEventEntity withBadgeOSId(Integer badgeOSId) {
         this.badgeOSId = badgeOSId;
         return this;
     }
@@ -148,7 +150,7 @@ public class BadgeEventBuilder {
         return principal;
     }
 
-    public BadgeEventBuilder withPrincipal(Principal principal) {
+    public BadgeEventEntity withPrincipal(Principal principal) {
         this.principal = principal;
         return this;
     }
@@ -157,12 +159,12 @@ public class BadgeEventBuilder {
         return methodName;
     }
 
-    public BadgeEventBuilder withMethodName(String methodName) {
+    public BadgeEventEntity withMethodName(String methodName) {
         this.methodName = methodName;
         return this;
     }
 
-    public BadgeEventBuilder withClassName(String className) {
+    public BadgeEventEntity withClassName(String className) {
         this.className = className;
         return this;
     }
@@ -175,7 +177,7 @@ public class BadgeEventBuilder {
         return methodClass;
     }
 
-    public BadgeEventBuilder withMethodClass(Class methodClass) {
+    public BadgeEventEntity withMethodClass(Class methodClass) {
         this.methodClass = methodClass;
         this.className = methodClass.getCanonicalName();
         return this;
@@ -185,7 +187,7 @@ public class BadgeEventBuilder {
         return returnValue;
     }
 
-    public BadgeEventBuilder withReturnValue(Object returnValue) {
+    public BadgeEventEntity withReturnValue(Object returnValue) {
         this.returnValue = returnValue;
         this.returnValueAsString = Objects.toString(returnValue);
         try {
@@ -196,7 +198,7 @@ public class BadgeEventBuilder {
         return this;
     }
 
-    private BadgeEventBuilder withReturnValueAsString(String returnValueAsString) {
+    private BadgeEventEntity withReturnValueAsString(String returnValueAsString) {
         this.returnValueAsString = returnValueAsString;
         return this;
     }

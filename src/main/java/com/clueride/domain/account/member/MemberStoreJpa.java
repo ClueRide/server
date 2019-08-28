@@ -43,40 +43,40 @@ public class MemberStoreJpa implements MemberStore {
     private UserTransaction userTransaction;
 
     @Override
-    public MemberBuilder addNew(MemberBuilder memberBuilder) {
+    public MemberEntity addNew(MemberEntity memberEntity) {
         // TODO: CA-405/CA-409
         try {
             userTransaction.begin();
-            entityManager.persist(memberBuilder);
+            entityManager.persist(memberEntity);
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | RollbackException | HeuristicRollbackException e) {
             e.printStackTrace();
         }
-        return memberBuilder;
+        return memberEntity;
     }
 
     @Override
-    public MemberBuilder getMemberById(Integer id) {
-        return entityManager.find(MemberBuilder.class, id);
+    public MemberEntity getMemberById(Integer id) {
+        return entityManager.find(MemberEntity.class, id);
     }
 
     @Override
-    public List<MemberBuilder> getMemberByName(String name) {
+    public List<MemberEntity> getMemberByName(String name) {
         return null;
     }
 
     @Override
-    public MemberBuilder getMemberByEmail(InternetAddress emailAddress) {
-        MemberBuilder memberBuilder;
-            memberBuilder = entityManager
+    public MemberEntity getMemberByEmail(InternetAddress emailAddress) {
+        MemberEntity memberEntity;
+            memberEntity = entityManager
                     .createQuery(
-                            "select m from member m where m.emailAddress = :emailAddress",
-                            MemberBuilder.class
+                            "select m from MemberEntity m where m.emailAddress = :emailAddress",
+                            MemberEntity.class
                     )
                     .setParameter("emailAddress", emailAddress.toString())
                     .getSingleResult();
 
-        return memberBuilder;
+        return memberEntity;
     }
 
     @Override
@@ -85,14 +85,14 @@ public class MemberStoreJpa implements MemberStore {
     }
 
     @Override
-    public List<MemberBuilder> getAllMembers() {
-        return entityManager.createQuery("SELECT m FROM member m").getResultList();
+    public List<MemberEntity> getAllMembers() {
+        return entityManager.createQuery("SELECT m FROM MemberEntity m").getResultList();
     }
 
     @Override
-    public List<MemberBuilder> getMatchingMembers(String pattern) {
+    public List<MemberEntity> getMatchingMembers(String pattern) {
         return entityManager.createQuery(
-                "SELECT m FROM member m " +
+                "SELECT m FROM MemberEntity m " +
                         " WHERE lower(m.displayName) like :pattern"
         ).setParameter(
                 "pattern",

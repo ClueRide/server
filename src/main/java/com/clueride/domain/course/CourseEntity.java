@@ -32,9 +32,9 @@ import javax.persistence.Transient;
 /**
  * Builder for Course instances (which are probably CourseView Instances).
  */
-@Entity(name="Course")
+@Entity
 @Table(name="course")
-public class CourseBuilder {
+public class CourseEntity {
     @Id
     private Integer id;
     private String name;
@@ -47,7 +47,7 @@ public class CourseBuilder {
             cascade = CascadeType.ALL,
             mappedBy = "course"
     )
-    private List<CourseToPathBuilder> courseToPathBuilders = new ArrayList<>();
+    private List<CourseToPathEntity> courseToPathEntities = new ArrayList<>();
 
     @Transient  /* From the CourseToPathBuilders. */
     private List<Integer> pathIds;
@@ -58,11 +58,11 @@ public class CourseBuilder {
 //    private Location departure;
 //    private Location destination;
 
-    public static CourseBuilder builder() {
-        return new CourseBuilder();
+    public static CourseEntity builder() {
+        return new CourseEntity();
     }
 
-    public static CourseBuilder from(Course course) {
+    public static CourseEntity from(Course course) {
         return builder()
                 .withId(course.getId())
                 .withName(course.getName())
@@ -73,7 +73,7 @@ public class CourseBuilder {
 
     public Course build() {
         this.pathIds = new ArrayList<>();
-        for (CourseToPathBuilder builder : courseToPathBuilders) {
+        for (CourseToPathEntity builder : courseToPathEntities) {
             pathIds.add(builder.getPathId());
         }
 
@@ -84,7 +84,7 @@ public class CourseBuilder {
         return id;
     }
 
-    public CourseBuilder withId(Integer id) {
+    public CourseEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -93,7 +93,7 @@ public class CourseBuilder {
         return name;
     }
 
-    public CourseBuilder withName(String name) {
+    public CourseEntity withName(String name) {
         this.name = name;
         return this;
     }
@@ -102,7 +102,7 @@ public class CourseBuilder {
         return description;
     }
 
-    public CourseBuilder withDescription(String description) {
+    public CourseEntity withDescription(String description) {
         this.description = description;
         return this;
     }
@@ -111,7 +111,7 @@ public class CourseBuilder {
         return courseTypeId;
     }
 
-    public CourseBuilder withCourseTypeId(Integer courseTypeId) {
+    public CourseEntity withCourseTypeId(Integer courseTypeId) {
         this.courseTypeId = courseTypeId;
         return this;
     }
@@ -120,29 +120,29 @@ public class CourseBuilder {
         return url;
     }
 
-    public CourseBuilder withUrl(String url) {
+    public CourseEntity withUrl(String url) {
         this.url = url;
         return this;
     }
 
-    public List<CourseToPathBuilder> getCourseToPathBuilders() {
-        return courseToPathBuilders;
+    public List<CourseToPathEntity> getCourseToPathEntities() {
+        return courseToPathEntities;
     }
 
-    public CourseBuilder withCourseToPathBuilders(List<CourseToPathBuilder> courseToPathBuilders) {
-        this.courseToPathBuilders = courseToPathBuilders;
+    public CourseEntity withCourseToPathBuilders(List<CourseToPathEntity> courseToPathEntities) {
+        this.courseToPathEntities = courseToPathEntities;
         return this;
     }
 
-    public void setCourseToPathBuilders(List<CourseToPathBuilder> courseToPathBuilders) {
-        this.courseToPathBuilders = courseToPathBuilders;
+    public void setCourseToPathEntities(List<CourseToPathEntity> courseToPathEntities) {
+        this.courseToPathEntities = courseToPathEntities;
     }
 
     public List<Integer> getPathIds() {
         return pathIds;
     }
 
-    public CourseBuilder withPathIds(List<Integer> pathIds) {
+    public CourseEntity withPathIds(List<Integer> pathIds) {
         this.pathIds = pathIds;
         return this;
     }
@@ -151,7 +151,7 @@ public class CourseBuilder {
         return locationIds;
     }
 
-    public CourseBuilder withLocationIds(List<Integer> locationIds) {
+    public CourseEntity withLocationIds(List<Integer> locationIds) {
         this.locationIds = locationIds;
         return this;
     }

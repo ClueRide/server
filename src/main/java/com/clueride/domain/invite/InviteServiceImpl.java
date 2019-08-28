@@ -94,8 +94,8 @@ public class InviteServiceImpl implements InviteService {
 
         List<Invite> invites = new ArrayList<>();
 
-        List<InviteBuilder> inviteBuilders = inviteStore.getUpcomingInvitationsByMemberId(memberId);
-        for (InviteBuilder builder : inviteBuilders) {
+        List<InviteEntity> inviteEntities = inviteStore.getUpcomingInvitationsByMemberId(memberId);
+        for (InviteEntity builder : inviteEntities) {
 
             Outing outing = outingService.getById(builder.getOutingId());
             builder.withScheduledTime(outing.getScheduledTime());
@@ -148,14 +148,14 @@ public class InviteServiceImpl implements InviteService {
     public SessionInviteState getInviteState(Integer memberId) {
         LOGGER.debug("Retrieving Invite State for member ID {}", memberId);
 
-        List<InviteBuilder> sessionInvites = inviteStore.getUpcomingInvitationsByMemberId(memberId);
+        List<InviteEntity> sessionInvites = inviteStore.getUpcomingInvitationsByMemberId(memberId);
         if (sessionInvites.size() == 0) {
             return SessionInviteState.NO_INVITES;
         }
         if (sessionInvites.size() > 1) {
             return SessionInviteState.MULTIPLE_INVITES;
         }
-        InviteBuilder soleInvite = sessionInvites.get(0);
+        InviteEntity soleInvite = sessionInvites.get(0);
         switch (soleInvite.getState()) {
             case ACCEPTED:
                 return SessionInviteState.ACCEPTED_INVITE;

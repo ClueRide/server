@@ -61,10 +61,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getById(final Integer courseId) {
-        CourseBuilder courseBuilder = courseStore.getCourseById(courseId)
+        CourseEntity courseEntity = courseStore.getCourseById(courseId)
                 .withLocationIds(pathService.getLocationIds(courseId));
 
-        return courseBuilder.build();
+        return courseEntity.build();
     }
 
 }

@@ -28,7 +28,7 @@ import com.google.common.io.BaseEncoding;
 import org.slf4j.Logger;
 
 import com.clueride.config.ConfigService;
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.LocationStore;
 import static java.util.Objects.requireNonNull;
 
@@ -66,11 +66,11 @@ public class ImageServiceImpl implements ImageService {
 
         Integer newSeqId = persistImageContent(locationId, imageUploadRequest.getFileData());
         ImageLinkEntity image = persistImageMetadata(locationId, newSeqId);
-        LocationBuilder locationBuilder = locationStore.getLocationBuilderById(locationId);
+        LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
         /* Save this image as the (default) featured image because there is no other featured image. */
-        if (locationBuilder.hasNoFeaturedImage()) {
-            locationBuilder.withFeaturedImage(image);
-            locationStore.update(locationBuilder);
+        if (locationEntity.hasNoFeaturedImage()) {
+            locationEntity.withFeaturedImage(image);
+            locationStore.update(locationEntity);
         }
         return image;
     }

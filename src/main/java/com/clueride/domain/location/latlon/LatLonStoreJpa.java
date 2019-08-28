@@ -30,7 +30,7 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 /**
- * JPA implementation of the Loc LatLon Store.
+ * JPA implementation of the Loc LatLonEntity Store.
  */
 public class LatLonStoreJpa implements LatLonStore {
     @PersistenceContext(unitName = "clueride")
@@ -40,21 +40,21 @@ public class LatLonStoreJpa implements LatLonStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Integer addNew(LatLon latLon) throws IOException {
+    public Integer addNew(LatLonEntity latLonEntity) throws IOException {
         try {
             userTransaction.begin();
-            entityManager.persist(latLon);
+            entityManager.persist(latLonEntity);
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
             e.printStackTrace();
         }
-        return latLon.getId();
+        return latLonEntity.getId();
     }
 
     @Override
-    public LatLon getLatLonById(Integer id) {
-        LatLon latLon = entityManager.find(LatLon.class, id);
-        return latLon;
+    public LatLonEntity getLatLonById(Integer id) {
+        LatLonEntity latLonEntity = entityManager.find(LatLonEntity.class, id);
+        return latLonEntity;
     }
 
 }

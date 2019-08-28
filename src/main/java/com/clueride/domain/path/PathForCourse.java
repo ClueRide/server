@@ -38,13 +38,13 @@ public class PathForCourse implements Path {
     private final Integer endNodeId;
     private final Integer endLocationId;
 
-    public PathForCourse(PathForCourseBuilder pathForCourseBuilder) {
-        this.id = pathForCourseBuilder.getId();
-        this.courseId = pathForCourseBuilder.getCourseId();
-        this.startNodeId = pathForCourseBuilder.getStartNodeId();
-        this.startLocationId = pathForCourseBuilder.getStartLocationId();
-        this.endNodeId = pathForCourseBuilder.getEndNodeId();
-        this.endLocationId = pathForCourseBuilder.getEndLocationId();
+    public PathForCourse(PathForCourseEntity pathForCourseEntity) {
+        this.id = pathForCourseEntity.getId();
+        this.courseId = pathForCourseEntity.getCourseId();
+        this.startNodeId = pathForCourseEntity.getStartNodeId();
+        this.startLocationId = pathForCourseEntity.getStartLocationId();
+        this.endNodeId = pathForCourseEntity.getEndNodeId();
+        this.endLocationId = pathForCourseEntity.getEndLocationId();
     }
 
     @Override

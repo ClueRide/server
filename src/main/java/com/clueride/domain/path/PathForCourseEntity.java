@@ -34,9 +34,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * the actual entities behind those IDs. It's the responsibility of
  * the Location and Course services to fill out those objects.
  */
-@Entity(name="PathForCourse")
+@Entity
 @Table(name="course_path_location")
-public class PathForCourseBuilder {
+public class PathForCourseEntity {
     @Id
     private Integer id;
     @Column(name="course_id")

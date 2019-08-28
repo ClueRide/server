@@ -29,7 +29,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 
 /**
  * Implementation of the Puzzle Store.
@@ -43,39 +43,39 @@ public class PuzzleStoreJpa implements PuzzleStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Integer addNew(PuzzleBuilder puzzleBuilder) {
+    public Integer addNew(PuzzleEntity puzzleEntity) {
         try {
             userTransaction.begin();
-            entityManager.persist(puzzleBuilder);
+            entityManager.persist(puzzleEntity);
             userTransaction.commit();
         } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
             e.printStackTrace();
         }
-        return puzzleBuilder.getId();
+        return puzzleEntity.getId();
     }
 
     @Override
-    public PuzzleBuilder getPuzzleById(Integer id) {
-        PuzzleBuilder puzzleBuilder;
-        puzzleBuilder = entityManager.find(PuzzleBuilder.class, id);
-        return puzzleBuilder;
+    public PuzzleEntity getPuzzleById(Integer id) {
+        PuzzleEntity puzzleEntity;
+        puzzleEntity = entityManager.find(PuzzleEntity.class, id);
+        return puzzleEntity;
     }
 
     @Override
-    public List<PuzzleBuilder> getPuzzlesForLocation(LocationBuilder locationBuilder) {
-        List<PuzzleBuilder> puzzleBuilders;
-        puzzleBuilders = entityManager.createQuery(
-                        "SELECT p FROM PuzzleBuilder p where p.locationBuilder = :locationBuilder"
-                ).setParameter("locationBuilder", locationBuilder)
+    public List<PuzzleEntity> getPuzzlesForLocation(LocationEntity locationEntity) {
+        List<PuzzleEntity> puzzleEntities;
+        puzzleEntities = entityManager.createQuery(
+                        "SELECT p FROM PuzzleEntity p where p.locationEntity = :locationEntity"
+                ).setParameter("locationEntity", locationEntity)
                 .getResultList();
-        return puzzleBuilders;
+        return puzzleEntities;
     }
 
     @Override
-    public void update(PuzzleBuilder puzzleBuilder) {
+    public void update(PuzzleEntity puzzleEntity) {
         try {
             userTransaction.begin();
-            entityManager.merge(puzzleBuilder);
+            entityManager.merge(puzzleEntity);
             userTransaction.commit();
         } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
             e.printStackTrace();

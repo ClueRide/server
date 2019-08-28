@@ -19,7 +19,7 @@ package com.clueride.domain.puzzle;
 
 import java.util.List;
 
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 
 /**
  * Definition of operations on Puzzle records.
@@ -29,24 +29,24 @@ public interface PuzzleStore {
      * Accepts a Puzzle.Builder (including the Answers) and persists
      * as a new Puzzle record. The Puzzle Builder needs to have its
      * Location set so it can be attached to that Location.
-     * @param puzzleBuilder fully-populated instance of Puzzle as a Builder.
+     * @param puzzleEntity fully-populated instance of Puzzle as a Builder.
      * @return unique ID for this new Puzzle instance.
      */
-    Integer addNew(PuzzleBuilder puzzleBuilder);
+    Integer addNew(PuzzleEntity puzzleEntity);
 
-    PuzzleBuilder getPuzzleById(Integer id);
+    PuzzleEntity getPuzzleById(Integer id);
 
     /**
      * Given a Location ID, retrieve all Puzzles for that location.
      *
-     * @param locationBuilder@return (possibly empty) list of Puzzles for the Location.
+     * @param locationEntity@return (possibly empty) list of Puzzles for the Location.
      */
-    List<PuzzleBuilder> getPuzzlesForLocation(LocationBuilder locationBuilder);
+    List<PuzzleEntity> getPuzzlesForLocation(LocationEntity locationEntity);
 
     /**
      * Update existing puzzle with new properties.
-     * @param puzzleBuilder instance containing new information to be persisted.
+     * @param puzzleEntity instance containing new information to be persisted.
      */
-    void update(PuzzleBuilder puzzleBuilder);
+    void update(PuzzleEntity puzzleEntity);
 
 }

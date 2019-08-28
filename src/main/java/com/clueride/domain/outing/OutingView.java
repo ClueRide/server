@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.location.latlon.LatLon;
+import com.clueride.domain.location.latlon.LatLonEntity;
 
 /**
  * Presentation of an Outing with details joined in from other entities.
@@ -44,7 +44,7 @@ public class OutingView {
     private final Integer id;
     private final Date scheduledTime;
     private final Integer startingLocationId;
-    private final LatLon startPin;
+    private final LatLonEntity startPin;
     private final String courseName;
     private final String courseDescription;
     private final URL courseUrl;
@@ -54,7 +54,7 @@ public class OutingView {
     private final String teamName;
     private final Integer courseId;
 
-    public OutingView(OutingViewBuilder builder) {
+    public OutingView(OutingViewEntity builder) {
         this.id = builder.getId();
         this.startingLocationId = builder.getStartingLocationId();
         this.scheduledTime = builder.getScheduledTime();
@@ -81,7 +81,7 @@ public class OutingView {
         return startingLocationId;
     }
 
-    public LatLon getStartPin() {
+    public LatLonEntity getStartPin() {
         return startPin;
     }
 

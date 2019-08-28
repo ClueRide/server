@@ -40,7 +40,7 @@ public class LocationType {
     // TODO: Temporary constructor in service of JSON
     public LocationType() {}
 
-    LocationType(LocationTypeBuilder builder) {
+    LocationType(LocationTypeEntity builder) {
         this.id = builder.getId();
         this.name = builder.getName();
         this.description = builder.getDescription();

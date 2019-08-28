@@ -28,17 +28,17 @@ import com.clueride.domain.account.principal.EmailPrincipal;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Exercises the BadgeEventBuilderTest class.
+ * Exercises the BadgeEventEntityTest class.
  */
 @AdditionalClasses({TestResources.class})
-public class BadgeEventBuilderTest extends NgCdiRunner {
-    private BadgeEventBuilder toTest;
+public class BadgeEventEntityTest extends NgCdiRunner {
+    private BadgeEventEntity toTest;
 
     private static final Date NOW_TIMESTAMP = new Date();
 
     @BeforeMethod
     public void setUp() {
-        toTest = BadgeEventBuilder.builder()
+        toTest = BadgeEventEntity.builder()
                 .withPrincipal(new EmailPrincipal("dummy@clueride.com"))
                 .withMemberId(-1)
                 .withMethodClass(BadgeEvent.class)
@@ -55,7 +55,7 @@ public class BadgeEventBuilderTest extends NgCdiRunner {
         BadgeEvent expected = toTest.build();
 
         /* make call */
-        BadgeEvent actual = BadgeEventBuilder.from(expected).build();
+        BadgeEvent actual = BadgeEventEntity.from(expected).build();
 
         /* verify results */
         assertEquals(actual, expected);

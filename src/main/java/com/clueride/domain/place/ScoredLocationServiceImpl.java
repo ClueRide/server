@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.clueride.domain.location.LocationBuilder;
+import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.ReadinessLevel;
 import com.clueride.domain.puzzle.Puzzle;
 import com.clueride.domain.puzzle.PuzzleService;
@@ -42,12 +42,12 @@ public class ScoredLocationServiceImpl implements ScoredLocationService {
     }
 
     @Override
-    public ReadinessLevel calculateReadinessLevel(LocationBuilder location) {
+    public ReadinessLevel calculateReadinessLevel(LocationEntity location) {
                 /* Emptiness across all of these makes it a NODE. */
         if (isNullOrEmpty(location.getName())
                 && isNullOrEmpty(location.getDescription())
                 && location.getFeaturedImage() == null
-                && location.getLocationTypeBuilder().getId() == 0
+                && location.getLocationTypeEntity().getId() == 0
                 ) {
             return ReadinessLevel.NODE;
         }
@@ -56,7 +56,7 @@ public class ScoredLocationServiceImpl implements ScoredLocationService {
         if (isNullOrEmpty(location.getName())
                 || isNullOrEmpty(location.getDescription())
                 || location.getFeaturedImage() == null
-                || location.getLocationTypeBuilder().getId() == 0
+                || location.getLocationTypeEntity().getId() == 0
                 ) {
             return ReadinessLevel.DRAFT;
         }

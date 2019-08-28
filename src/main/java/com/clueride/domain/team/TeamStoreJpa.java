@@ -46,11 +46,11 @@ public class TeamStoreJpa implements TeamStore {
     private EntityManager entityManager;
 
     @Override
-    public TeamBuilder addNew(TeamBuilder teamBuilder) {
-        LOGGER.info("Creating a new Team: " + teamBuilder.getName());
+    public TeamEntity addNew(TeamEntity teamEntity) {
+        LOGGER.info("Creating a new Team: " + teamEntity.getName());
         try {
             userTransaction.begin();
-            entityManager.persist(teamBuilder);
+            entityManager.persist(teamEntity);
             userTransaction.commit();
         } catch (NotSupportedException
                 | RollbackException
@@ -60,34 +60,32 @@ public class TeamStoreJpa implements TeamStore {
         ) {
             e.printStackTrace();
         }
-        return teamBuilder;
+        return teamEntity;
     }
 
     @Override
-    public List<TeamBuilder> getTeams() {
+    public List<TeamEntity> getTeams() {
         LOGGER.info("Retrieving full list of Teams");
-        List<TeamBuilder> builders = entityManager.createQuery(
-                "SELECT t FROM teamBuilder t " +
-                "left outer join outing_view o " +
+        return (List<TeamEntity>) entityManager.createQuery(
+                "SELECT t FROM TeamEntity t " +
+                "left outer join OutingViewEntity o " +
                 "on o.teamId = t.id " +
                 "order by o.courseId, " +
                 "o.scheduledTime desc"
         ).getResultList();
-        return builders;
     }
 
     @Override
-    public TeamBuilder getTeamById(Integer teamId) {
+    public TeamEntity getTeamById(Integer teamId) {
         LOGGER.info("Retrieving Team by ID: " + teamId);
-        TeamBuilder builder = entityManager.find(TeamBuilder.class, teamId);
-        return builder;
+        return entityManager.find(TeamEntity.class, teamId);
     }
 
     @Override
-    public TeamBuilder updateTeam(TeamBuilder teamBuilder) {
-        LOGGER.info("Updating an existing Team: " + teamBuilder.getId());
-        entityManager.merge(teamBuilder);
-        return teamBuilder;
+    public TeamEntity updateTeam(TeamEntity teamEntity) {
+        LOGGER.info("Updating an existing Team: " + teamEntity.getId());
+        entityManager.merge(teamEntity);
+        return teamEntity;
     }
 
 }

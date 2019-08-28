@@ -48,7 +48,7 @@ public class Invite {
      *
      * @param builder - Builder with all the data needed to construct Invite instance.
      */
-    public Invite(InviteBuilder builder) {
+    public Invite(InviteEntity builder) {
         this.id = builder.getId();
         this.outingId = builder.getOutingId();
         this.memberId = builder.getMemberId();

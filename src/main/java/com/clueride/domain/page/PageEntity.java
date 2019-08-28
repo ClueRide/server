@@ -26,7 +26,7 @@ import javax.persistence.Table;
  * Entity class for any type of Page Link, but carries
  * specific attributes appropriate for Word Press pages.
  */
-@Entity(name = "Page")
+@Entity
 @Table(name = "page")
 public class PageEntity {
     @Id

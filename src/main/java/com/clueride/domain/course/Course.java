@@ -45,7 +45,7 @@ public class Course {
 //    private final Location departure;
 //    private final Location destination;
 
-    public Course(CourseBuilder builder) {
+    public Course(CourseEntity builder) {
         this.id = builder.getId();
         this.name = builder.getName();
         this.description = builder.getDescription();

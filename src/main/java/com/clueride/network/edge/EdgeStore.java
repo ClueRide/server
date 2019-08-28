@@ -21,7 +21,7 @@ package com.clueride.network.edge;
  * Defines persistence operations on an {@link Edge} instance.
  */
 public interface EdgeStore {
-    EdgeBuilder getEdgeById(Integer id);
+    EdgeEntity getEdgeById(Integer id);
 
     /**
      * Since the database has the functionality to assemble the GeoJson String, let's try it out.

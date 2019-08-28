@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,14 +30,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Details of a proposed LatLon in support of Locations which may not yet be on the network.
+ * Details of a proposed LatLonEntity in support of Locations which may not yet be on the network.
  *
  * DTO at this time.
  */
 
 @XmlRootElement
-@Entity(name="latlon")
-public class LatLon {
+@Entity
+@Table(name="latlon")
+public class LatLonEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="latlon_pk_sequence")
     @SequenceGenerator(name="latlon_pk_sequence",sequenceName="node_id_seq", allocationSize=1)
@@ -51,18 +53,18 @@ public class LatLon {
      * @param lat latitude.
      * @param lon longitude.
      */
-    public LatLon(double lat, double lon) {
+    public LatLonEntity(double lat, double lon) {
         this.lat = lat;
         this.lon = lon;
     }
-    public LatLon() {
+    public LatLonEntity() {
     }
 
     public int getId() {
         return id;
     }
 
-    public LatLon setId(Integer id) {
+    public LatLonEntity setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -71,7 +73,7 @@ public class LatLon {
         return lat;
     }
 
-    public LatLon setLat(double lat) {
+    public LatLonEntity setLat(double lat) {
         this.lat = lat;
         return this;
     }
@@ -80,7 +82,7 @@ public class LatLon {
         return lon;
     }
 
-    public LatLon setLon(double lon) {
+    public LatLonEntity setLon(double lon) {
         this.lon = lon;
         return this;
     }
@@ -89,7 +91,7 @@ public class LatLon {
         return elev;
     }
 
-    public LatLon setElev(double elev) {
+    public LatLonEntity setElev(double elev) {
         this.elev = elev;
         return this;
     }

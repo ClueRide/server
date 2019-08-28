@@ -23,16 +23,16 @@ package com.clueride.domain.badge.event;
 public interface BadgeEventStore {
     /**
      * Create a new instance of Badge Event from the Builder.
-     * @param badgeEventBuilder instance of Builder for the BadgeEvent.
+     * @param badgeEventEntity instance of Builder for the BadgeEvent.
      * @return Unique ID of the newly created record.
      */
-    Integer add(BadgeEventBuilder badgeEventBuilder);
+    Integer add(BadgeEventEntity badgeEventEntity);
 
     /**
      * Return the matching BadgeEvent (as a Builder) given the ID.
      * @param badgeEventId unique identifier for the Badge Event.
      * @return partially populated BadgeEvent; needs other services to fill remaining fields.
      */
-    BadgeEventBuilder getById(Integer badgeEventId);
+    BadgeEventEntity getById(Integer badgeEventId);
 
 }

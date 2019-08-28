@@ -23,6 +23,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -34,8 +35,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * Builder for {@link Member} that is persistable.
  */
-@Entity(name = "member")
-public class MemberBuilder {
+@Entity
+@Table(name = "member")
+public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_pk_sequence")
     @SequenceGenerator(name = "member_pk_sequence", sequenceName = "member_id_seq", allocationSize = 1)
@@ -60,18 +62,18 @@ public class MemberBuilder {
     @Column(name="image_url")
     private String imageUrl;
 
-    public MemberBuilder() {
+    public MemberEntity() {
     }
 
     public Member build() {
         return new Member(this);
     }
 
-    public static MemberBuilder builder() {
-        return new MemberBuilder();
+    public static MemberEntity builder() {
+        return new MemberEntity();
     }
 
-    public static MemberBuilder from(Member member) {
+    public static MemberEntity from(Member member) {
         requireNonNull(member);
         return builder()
                 .withId(member.getId())
@@ -83,7 +85,7 @@ public class MemberBuilder {
                 .withEmailAddress(member.getEmailAddress());
     }
 
-    public static MemberBuilder from(ClueRideIdentity clueRideIdentity) {
+    public static MemberEntity from(ClueRideIdentity clueRideIdentity) {
         requireNonNull(clueRideIdentity);
         return builder()
                 .withFirstName(clueRideIdentity.getGivenName().get())
@@ -98,12 +100,12 @@ public class MemberBuilder {
         return id;
     }
 
-    public MemberBuilder setId(Integer id) {
+    public MemberEntity setId(Integer id) {
         this.id = id;
         return this;
     }
 
-    public MemberBuilder withId(Integer id) {
+    public MemberEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -112,7 +114,7 @@ public class MemberBuilder {
         return badgeOSId;
     }
 
-    public MemberBuilder withBadgeOSId(Integer badgeOSId) {
+    public MemberEntity withBadgeOSId(Integer badgeOSId) {
         this.badgeOSId = badgeOSId;
         return this;
     }
@@ -125,7 +127,7 @@ public class MemberBuilder {
         this.displayName = displayName;
     }
 
-    public MemberBuilder withDisplayName(String displayName) {
+    public MemberEntity withDisplayName(String displayName) {
         this.displayName = displayName;
         return this;
     }
@@ -138,7 +140,7 @@ public class MemberBuilder {
         this.firstName = firstName;
     }
 
-    public MemberBuilder withFirstName(String firstName) {
+    public MemberEntity withFirstName(String firstName) {
         this.firstName = firstName;
         return this;
     }
@@ -151,7 +153,7 @@ public class MemberBuilder {
         this.lastName = lastName;
     }
 
-    public MemberBuilder withLastName(String lastName) {
+    public MemberEntity withLastName(String lastName) {
         this.lastName = lastName;
         return this;
     }
@@ -164,7 +166,7 @@ public class MemberBuilder {
         this.emailAddress = emailAddress;
     }
 
-    public MemberBuilder withEmailAddress(String emailAddress) {
+    public MemberEntity withEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
         return this;
     }
@@ -177,7 +179,7 @@ public class MemberBuilder {
         this.phone = phone;
     }
 
-    public MemberBuilder withPhone(String phone) {
+    public MemberEntity withPhone(String phone) {
         this.phone = phone;
         return this;
     }
@@ -190,7 +192,7 @@ public class MemberBuilder {
         this.imageUrl = imageUrl;
     }
 
-    public MemberBuilder withImageUrl(String imageUrl) {
+    public MemberEntity withImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }

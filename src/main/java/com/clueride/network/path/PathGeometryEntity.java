@@ -28,9 +28,9 @@ import org.geolatte.geom.Position;
 /**
  * Represents the Geometry of a Path.
  */
-@Entity(name = "PathGeometry")
+@Entity
 @Table(name = "path_view")
-public class PathGeometry {
+public class PathGeometryEntity {
     @Id
     @Column(name = "path_id") private int pathId;
 

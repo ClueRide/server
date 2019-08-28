@@ -67,9 +67,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<Member> getAllMembers() {
         LOGGER.debug("Requesting All Members");
-        List<MemberBuilder> builders = memberStore.getAllMembers();
+        List<MemberEntity> builders = memberStore.getAllMembers();
         List<Member> members = new ArrayList<>();
-        for (MemberBuilder builder : builders) {
+        for (MemberEntity builder : builders) {
             members.add(builder.build());
         }
         return members;
@@ -85,14 +85,14 @@ public class MemberServiceImpl implements MemberService {
     public Member getMemberByEmail(String emailAddress) throws AddressException {
         LOGGER.debug("Requesting Member by email " + emailAddress);
         InternetAddress email = new InternetAddress(emailAddress);
-        MemberBuilder builder = memberStore.getMemberByEmail(email);
+        MemberEntity builder = memberStore.getMemberByEmail(email);
         return builder.build();
     }
 
     @Override
     public Member getMemberByEmail(InternetAddress emailAddress) {
         try {
-            MemberBuilder builder = memberStore.getMemberByEmail(emailAddress);
+            MemberEntity builder = memberStore.getMemberByEmail(emailAddress);
             return builder.build();
         } catch (NoResultException nre) {
             throw new RecordNotFoundException("criteria: " + emailAddress.getAddress());
@@ -102,17 +102,17 @@ public class MemberServiceImpl implements MemberService {
     @Override
     // TODO: CA-405 connects the Image URL more tightly (SVR-37 addresses this in part).
     public Member createNewMember(ClueRideIdentity clueRideIdentity) {
-        MemberBuilder memberBuilder = memberStore.addNew(
-                MemberBuilder.from(clueRideIdentity)
+        MemberEntity memberEntity = memberStore.addNew(
+                MemberEntity.from(clueRideIdentity)
         );
-        return memberBuilder.build();
+        return memberEntity.build();
     }
 
     @Override
     public List<Member> getMatchingMembers(String pattern) {
         List<Member> members = new ArrayList<>();
-        List<MemberBuilder> memberBuilders = memberStore.getMatchingMembers(pattern);
-        for (MemberBuilder builder : memberBuilders) {
+        List<MemberEntity> memberEntities = memberStore.getMatchingMembers(pattern);
+        for (MemberEntity builder : memberEntities) {
             members.add(builder.build());
         }
         return members;

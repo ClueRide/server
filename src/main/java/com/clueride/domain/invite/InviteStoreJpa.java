@@ -48,23 +48,23 @@ public class InviteStoreJpa implements InviteStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Integer addNew(InviteBuilder builder) throws IOException {
+    public Integer addNew(InviteEntity builder) throws IOException {
         entityManager.persist(builder);
         return builder.getId();
     }
 
     @Override
-    public List<InviteBuilder> getInvitationsByOuting(Integer outingId) {
+    public List<InviteEntity> getInvitationsByOuting(Integer outingId) {
         return null;
     }
 
     @Override
-    public List<InviteBuilder> getUpcomingInvitationsByMemberId(Integer memberId) {
+    public List<InviteEntity> getUpcomingInvitationsByMemberId(Integer memberId) {
         LOGGER.debug("Retrieving invitations for member ID " + memberId);
-        List<InviteBuilder> builders;
+        List<InviteEntity> inviteEntities;
         // TODO: Ordering should be part of the query
-        builders = entityManager.createQuery(
-                "SELECT i FROM invite i where i.memberId = :memberId AND i.inviteState " +
+        inviteEntities = entityManager.createQuery(
+                "SELECT i FROM InviteEntity i where i.memberId = :memberId AND i.inviteState " +
                         "IN (" +
                           "com.clueride.domain.invite.InviteState.SENT," +
                           "com.clueride.domain.invite.InviteState.ACCEPTED," +
@@ -72,32 +72,32 @@ public class InviteStoreJpa implements InviteStore {
                         ")"
         ).setParameter("memberId", memberId)
                 .getResultList();
-        return builders;
+        return inviteEntities;
     }
 
     @Override
-    public InviteBuilder getInvitationById(Integer inviteId) {
-        return entityManager.find(InviteBuilder.class, inviteId);
+    public InviteEntity getInvitationById(Integer inviteId) {
+        return entityManager.find(InviteEntity.class, inviteId);
     }
 
     @Override
-    public InviteBuilder save(InviteBuilder builder) {
+    public InviteEntity save(InviteEntity builder) {
         entityManager.persist(builder);
         return builder;
     }
 
     @Override
-    public InviteBuilder accept(Integer inviteId) {
+    public InviteEntity accept(Integer inviteId) {
         return updateState(inviteId, InviteState.ACCEPTED);
     }
 
     @Override
-    public InviteBuilder decline(Integer inviteId) {
+    public InviteEntity decline(Integer inviteId) {
         return updateState(inviteId, InviteState.DECLINED);
     }
 
-    private InviteBuilder updateState(Integer inviteId, InviteState state) {
-        InviteBuilder builder = null;
+    private InviteEntity updateState(Integer inviteId, InviteState state) {
+        InviteEntity builder = null;
         try {
             userTransaction.begin();
             builder = getInvitationById(inviteId);

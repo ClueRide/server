@@ -28,9 +28,9 @@ import javax.persistence.Table;
 /**
  * Entity representing records in the Course To Path relationship table.
  */
-@Entity(name="courseToPath")
+@Entity
 @Table(name="course_to_path")
-public class CourseToPathBuilder {
+public class CourseToPathEntity {
     @Id
     private Integer id;
     @Column(name="path_order")
@@ -38,7 +38,7 @@ public class CourseToPathBuilder {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="course_id")
-    private CourseBuilder course;
+    private CourseEntity course;
 
     @Column(name="path_id")
     private Integer pathId;
@@ -47,7 +47,7 @@ public class CourseToPathBuilder {
         return id;
     }
 
-    public CourseToPathBuilder withId(Integer id) {
+    public CourseToPathEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -56,16 +56,16 @@ public class CourseToPathBuilder {
         return pathOrder;
     }
 
-    public CourseToPathBuilder withPathOrder(Integer pathOrder) {
+    public CourseToPathEntity withPathOrder(Integer pathOrder) {
         this.pathOrder = pathOrder;
         return this;
     }
 
-    public CourseBuilder getCourse() {
+    public CourseEntity getCourse() {
         return course;
     }
 
-    public CourseToPathBuilder withCourse(CourseBuilder course) {
+    public CourseToPathEntity withCourse(CourseEntity course) {
         this.course = course;
         return this;
     }
@@ -74,7 +74,7 @@ public class CourseToPathBuilder {
         return pathId;
     }
 
-    public CourseToPathBuilder withPathId(Integer pathId) {
+    public CourseToPathEntity withPathId(Integer pathId) {
         this.pathId = pathId;
         return this;
     }

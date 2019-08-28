@@ -26,7 +26,7 @@ import org.geolatte.geom.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.clueride.network.edge.EdgeBuilder;
+import com.clueride.network.edge.EdgeEntity;
 import com.clueride.util.network.edge.EdgeStoreJson;
 import com.clueride.util.network.edge.JsonBasedEdge;
 import static org.geolatte.geom.codec.Wkt.fromWkt;
@@ -46,12 +46,12 @@ public class EdgeMain {
         for (JsonBasedEdge jsonBasedEdge : jsonBasedEdges) {
             /* Turn the JTS LineString into a GeoLatte LineString */
             String wkt = wktWriter.writeFormatted(jsonBasedEdge.getLineString());
-            EdgeBuilder edgeBuilder = EdgeBuilder.builder()
+            EdgeEntity edgeEntity = EdgeEntity.builder()
                     .withOriginalEdgeId(jsonBasedEdge.getEdgeId())
                     .withName(jsonBasedEdge.getName())
                     .withTrackReference(jsonBasedEdge.getReferenceString())
                     .withPoints((LineString<Position>)fromWkt(wkt));
-            LOGGER.debug(edgeBuilder.toString());
+            LOGGER.debug(edgeEntity.toString());
 
         }
     }

@@ -38,23 +38,23 @@ public class BadgeEventStoreJpa implements BadgeEventStore {
     private UserTransaction userTransaction;
 
     @Override
-    public Integer add(BadgeEventBuilder badgeEventBuilder) {
+    public Integer add(BadgeEventEntity badgeEventEntity) {
         //noinspection Duplicates
         try {
             userTransaction.begin();
-            entityManager.persist(badgeEventBuilder);
+            entityManager.persist(badgeEventEntity);
             userTransaction.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
             e.printStackTrace();
         }
-        return badgeEventBuilder.getId();
+        return badgeEventEntity.getId();
     }
 
     @Override
-    public BadgeEventBuilder getById(Integer badgeEventId) {
-        BadgeEventBuilder badgeEventBuilder;
-        badgeEventBuilder = entityManager.find(BadgeEventBuilder.class, badgeEventId);
-        return badgeEventBuilder;
+    public BadgeEventEntity getById(Integer badgeEventId) {
+        BadgeEventEntity badgeEventEntity;
+        badgeEventEntity = entityManager.find(BadgeEventEntity.class, badgeEventId);
+        return badgeEventEntity;
     }
 
 }

@@ -28,9 +28,9 @@ public interface PathForCourseStore {
     /**
      * Retrieves the list of ordered Paths associated with the given Course ID.
      * @param courseId unique identifier for the {@link Course}.
-     * @return Ordered list of the {@link PathForCourseBuilder} instances defined
+     * @return Ordered list of the {@link PathForCourseEntity} instances defined
      * for the given course.
      */
-    List<PathForCourseBuilder> getPathsForCourse(Integer courseId);
+    List<PathForCourseEntity> getPathsForCourse(Integer courseId);
 
 }

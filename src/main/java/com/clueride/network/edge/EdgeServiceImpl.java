@@ -43,9 +43,9 @@ public class EdgeServiceImpl implements EdgeService {
     @Override
     public Edge getEdgeById(Integer edgeId) {
         requireNonNull(edgeId, "Edge ID must be provided");
-        EdgeBuilder edgeBuilder = edgeStore.getEdgeById(edgeId);
-        LOGGER.debug(edgeBuilder.toString());
-        return edgeBuilder.build();
+        EdgeEntity edgeEntity = edgeStore.getEdgeById(edgeId);
+        LOGGER.debug(edgeEntity.toString());
+        return edgeEntity.build();
     }
 
     @Override

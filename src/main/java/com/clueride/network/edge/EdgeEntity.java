@@ -23,6 +23,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -33,8 +34,9 @@ import org.geolatte.geom.Position;
 /**
  * Persistable Builder for {@link Edge} instances.
  */
-@Entity(name = "edge")
-public class EdgeBuilder {
+@Entity
+@Table(name = "edge")
+public class EdgeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "edge_pk_sequence")
     @SequenceGenerator(name = "edge_pk_sequence", sequenceName = "edge_id_seq", allocationSize = 1)
@@ -48,11 +50,11 @@ public class EdgeBuilder {
     @Column(name = "points")
     private LineString<Position> points;
 
-    public EdgeBuilder() {
+    public EdgeEntity() {
     }
 
-    public static EdgeBuilder builder() {
-        return new EdgeBuilder();
+    public static EdgeEntity builder() {
+        return new EdgeEntity();
     }
 
     public Edge build() {
@@ -63,7 +65,7 @@ public class EdgeBuilder {
         return id;
     }
 
-    public EdgeBuilder withId(int id) {
+    public EdgeEntity withId(int id) {
         this.id = id;
         return this;
     }
@@ -72,7 +74,7 @@ public class EdgeBuilder {
         return originalEdgeId;
     }
 
-    public EdgeBuilder withOriginalEdgeId(int originalEdgeId) {
+    public EdgeEntity withOriginalEdgeId(int originalEdgeId) {
         this.originalEdgeId = originalEdgeId;
         return this;
     }
@@ -81,7 +83,7 @@ public class EdgeBuilder {
         return name;
     }
 
-    public EdgeBuilder withName(String name) {
+    public EdgeEntity withName(String name) {
         this.name = name;
         return this;
     }
@@ -90,7 +92,7 @@ public class EdgeBuilder {
         return trackReference;
     }
 
-    public EdgeBuilder withTrackReference(String trackReference) {
+    public EdgeEntity withTrackReference(String trackReference) {
         this.trackReference = trackReference;
         return this;
     }
@@ -99,7 +101,7 @@ public class EdgeBuilder {
         return points;
     }
 
-    public EdgeBuilder withPoints(LineString<Position> points) {
+    public EdgeEntity withPoints(LineString<Position> points) {
         this.points = points;
         return this;
     }

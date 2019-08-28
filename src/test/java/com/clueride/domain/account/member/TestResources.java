@@ -33,7 +33,7 @@ public class TestResources {
     @Produces
     @TestOnly
     Member produceMember() {
-        return MemberBuilder.builder()
+        return MemberEntity.builder()
                 .withEmailAddress("invitedUser@clueride.com")
                 .build();
     }

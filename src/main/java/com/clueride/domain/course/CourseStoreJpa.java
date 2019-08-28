@@ -31,22 +31,22 @@ public class CourseStoreJpa implements CourseStore {
     private EntityManager entityManager;
 
     @Override
-    public Integer addNew(CourseBuilder courseBuilder) throws IOException {
+    public Integer addNew(CourseEntity courseEntity) throws IOException {
         return null;
     }
 
     @Override
-    public CourseBuilder getCourseById(Integer id) {
-        return entityManager.find(CourseBuilder.class, id);
+    public CourseEntity getCourseById(Integer id) {
+        return entityManager.find(CourseEntity.class, id);
     }
 
     @Override
-    public void update(CourseBuilder courseBuilder) {
+    public void update(CourseEntity courseEntity) {
 
     }
 
     @Override
-    public List<CourseBuilder> getCourses() {
+    public List<CourseEntity> getCourses() {
         return null;
     }
 
