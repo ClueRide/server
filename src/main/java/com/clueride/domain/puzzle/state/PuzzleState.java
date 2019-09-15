@@ -34,10 +34,10 @@ public class PuzzleState {
 
     public PuzzleState (Puzzle puzzle) {
         requireNonNull(puzzle, "Can't create Puzzle State for null puzzle");
-        requireNonNull(puzzle.getAnswerEntities(), "Can't create Puzzle State for puzzle without answers");
+        requireNonNull(puzzle.getAnswers(), "Can't create Puzzle State for puzzle without answers");
 
         this.puzzle = puzzle;
-        for (AnswerEntity answerEntity : puzzle.getAnswerEntities()) {
+        for (AnswerEntity answerEntity : puzzle.getAnswers()) {
             answerMap.put(answerEntity.getKey(), 0);
         }
     }

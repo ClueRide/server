@@ -87,7 +87,7 @@ public final class PuzzleEntity {
                 .withName(instance.getName())
                 .withQuestion(instance.getQuestion())
                 .withCorrectAnswer(instance.getCorrectAnswer())
-                .withAnswers(instance.getAnswerEntities())
+                .withAnswers(instance.getAnswers())
                 .withPoints(instance.getPoints())
                 ;
     }

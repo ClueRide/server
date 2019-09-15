@@ -35,7 +35,7 @@ public class Puzzle {
     private final Integer locationId;
     private final String locationName;
     private final String question;
-    private List<AnswerEntity> answerEntities = new ArrayList<>();
+    private List<AnswerEntity> answers = new ArrayList<>();
     private final AnswerKey correctAnswer;
     private final Integer points;
 
@@ -45,7 +45,7 @@ public class Puzzle {
         this.locationId = builder.getLocationEntity().getId();
         this.locationName = builder.getLocationEntity().getName();
         this.question = builder.getQuestion();
-        this.answerEntities = builder.getAnswerEntities();
+        this.answers = builder.getAnswerEntities();
         this.correctAnswer = builder.getCorrectAnswer();
         this.points = builder.getPoints();
     }
@@ -78,8 +78,8 @@ public class Puzzle {
         return points;
     }
 
-    public List<AnswerEntity> getAnswerEntities() {
-        return answerEntities;
+    public List<AnswerEntity> getAnswers() {
+        return answers;
     }
 
     @Override

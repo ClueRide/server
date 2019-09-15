@@ -32,7 +32,7 @@ public class PageStepsStoreJpa implements PageStepsStore {
     @Override
     public List<PageStepEntity> getAllRecords() {
         return entityManager.createQuery(
-                "SELECT p2s from PageStep p2s"
+                "SELECT p2s from PageStepEntity p2s"
         ).getResultList();
     }
 

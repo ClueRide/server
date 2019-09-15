@@ -132,7 +132,7 @@ public class LocationEntity {
                 .withDescription(location.getDescription())
                 .withLocationType(location.getLocationType())
                 .withNodeId(location.getNodeId())
-                .withLatLon(location.getLatLonEntity())
+                .withLatLon(location.getLatLon())
                 .withFeaturedImage(ImageLinkEntity.from(location.getFeaturedImage()))
                 .withEstablishmentId(location.getEstablishment())
                 .withTagScores(location.getTagScores())

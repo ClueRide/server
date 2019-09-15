@@ -50,7 +50,7 @@ public class Location {
     private final ImageLink featuredImage;
     private final LocLink mainLink;
     private final Integer googlePlaceId;
-    private final LatLonEntity latLonEntity;
+    private final LatLonEntity latLon;
     private final ReadinessLevel readinessLevel;
     private List<PuzzleEntity> puzzleEntities;
     private final Integer locationGroupId;
@@ -65,7 +65,7 @@ public class Location {
     public Location(LocationEntity builder) {
         id = builder.getId();
         nodeId = builder.getNodeId();
-        latLonEntity = builder.getLatLonEntity();
+        latLon = builder.getLatLonEntity();
         readinessLevel = builder.getReadinessLevel();
 
         // If any of these are missing, we're at the Draft level
@@ -146,8 +146,8 @@ public class Location {
         return nodeId;
     }
 
-    public LatLonEntity getLatLonEntity() {
-        return latLonEntity;
+    public LatLonEntity getLatLon() {
+        return latLon;
     }
 
     public Map<String, Optional<Double>> getTagScores() {
