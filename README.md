@@ -1,33 +1,41 @@
-server: Example Application Using Multiple HTML5, Mobile & JAX-RS Technologies 
+Clue Ride Server
 =========================================================================================================
-Author: Jay Balunas
-Level: Beginner 
-Technologies: CDI, HTML5, REST, JPA
-Summary: Based on server, but uses HTML5, making it suitable for mobile and tablet computers
+Author: Jett Marks
+Technologies: CDI, REST, JPA
+Summary: Provides REST support for the Clue Ride Mobile Applications: Player, Location Editor and Invitation Editor
 Target Product: WildFly
-Source: https://github.com/wildfly/wildfly-quickstart
 
 What is it?
 -----------
 
-This is your project! It's a deployable Maven 3 project to help you get your foot in the door developing HTML5 based desktop/mobile web applications with Java EE 7 on JBoss. This project is setup to allow you to create a basic Java EE 7 application using HTML5, jQuery Mobile, JAX-RS, CDI 1.1, EJB 3.2, JPA 2.1 and Bean Validation 1.1. It includes a persistence unit and some sample persistence and transaction code to help you get your feet wet with database access in enterprise Java.
+This REST API server provides back-end services for the Clue Ride suite of Mobile Applications. All requests for
+game domain objects are handled by this server. Those game domain objects are:
 
-This application is built using a HTML5 + REST approach.  This uses a pure HTML client that interacts with with the application server via restful end-points (JAX-RS).  This application also uses some of the latest HTML5 features and advanced JAX-RS. And since testing is just as important with client side as it is server side, this application uses QUnit to show you how to unit test your JavaScript.
+- Game Players (called Seekers), Course Editors, and Guides
+- Courses over which the game is played
+- Outings which are scheduled games
+- Attractions which are destinations along the Courses
+- Puzzles to be solved along the way
+- Badges which are awarded
+- Game State events which are propagated using a separate Server-Sent Event (SSE) server
 
-What is a modern web application without mobile web support? This application also integrates jQuery mobile and basic client side device detection to give you both a desktop and mobile  version of the interface. Both support the same features, including form validation, member registration, etc. However the mobile version adds in mobile layout, touch, and performance  improvements needed to get you started with mobile web development on JBoss.  
+This server is also responsible for authentication and authorization.
 
 System requirements
 -------------------
 
 All you need to build this project is Java 7.0 (Java SDK 1.7) or better, Maven 3.1 or better.
 
+The JPA implementation is dependent on PostGreSQL and its Geo-Spatial extensions.
+
 The application this project produces is designed to be run on JBoss WildFly.
 
-An HTML5 compatible browser such as Chrome, Safari 5+, Firefox 5+, or IE 9+ are required. and note that some behaviors will vary slightly (ex. validations) based on browser support, especially IE 9.
+Since the mobile apps access maps, images and an event stream which are provided by other back-end servers, an Apache 
+front-end maps URLs against the host domain to the separate servers which respond to requests.
 
-Mobile web support is limited to Android and iOS devices.  It should run on HP, and Black Berry devices as well.  Windows Phone, and others will be supported as  jQuery Mobile announces support.
- 
-With the prerequisites out of the way, you're ready to build and deploy.
+The Apache front-end is responsible for handling the images used within the application.
+
+The <a href="https://github.com/jettmarks/clueRide-sse-server">Server-Sent Event (SSE) server</a> provides propagation of events to Mobile apps.
 
 Deploying the application
 -------------------------
