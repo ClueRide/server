@@ -21,4 +21,6 @@ public enum SSEventType {
     GAME_STATE,
     ANSWER_SUMMARY,
     TETHER
+    // TODO: SVR-73 add Badge Event to match the one introduced by SSE-13.
+
 }
