@@ -33,6 +33,7 @@ public class GameState {
     private final boolean teamAssembled;
     private final boolean rolling;
     private final boolean outingComplete;
+    private final OutingState outingState;
     private final String nextLocationName;
     private final Integer pathIndex;
     private final Integer locationId;
@@ -42,6 +43,7 @@ public class GameState {
         this.teamAssembled = builder.getTeamAssembled();
         this.rolling = builder.getRolling();
         this.outingComplete = builder.isOutingComplete();
+        this.outingState = builder.getOutingState();
         this.nextLocationName = builder.getNextLocation();
         this.pathIndex = builder.getPathIndex();
         this.locationId = builder.getLocationId();
@@ -58,6 +60,10 @@ public class GameState {
 
     public boolean isOutingComplete() {
         return outingComplete;
+    }
+
+    public OutingState getOutingState() {
+        return outingState;
     }
 
     public String getNextLocationName() {
@@ -96,6 +102,7 @@ public class GameState {
         private boolean teamAssembled = false;
         private boolean rolling = false;
         private boolean outingComplete = false;
+        private OutingState outingState = OutingState.PENDING_ARRIVAL;
         private String nextLocationName = "Meeting Location";
         private int pathIndex = -1;
         private Integer locationId = null;
@@ -143,6 +150,25 @@ public class GameState {
 
         public Builder withOutingComplete(boolean outingComplete) {
             this.outingComplete = outingComplete;
+            return this;
+        }
+
+        public OutingState getOutingState() {
+            /* Value depends on whether we've assembled the team and if we've completed the outing. */
+            if (!teamAssembled) {
+                this.outingState = OutingState.PENDING_ARRIVAL;
+            } else {
+                if (this.outingComplete) {
+                    this.outingState = OutingState.COMPLETE;
+                } else {
+                    this.outingState = OutingState.IN_PROGRESS;
+                }
+            }
+            return outingState;
+        }
+
+        public Builder withOutingState(OutingState outingState) {
+            this.outingState = outingState;
             return this;
         }
 
