@@ -55,7 +55,7 @@ public class LocLinkStoreJpa implements LocLinkStore {
     @Override
     public LocLinkEntity findByUrl(String locLinkText) {
         List<LocLinkEntity> locLinkEntities =  entityManager.createQuery(
-                "SELECT l from LocLink l " +
+                "SELECT l from LocLinkEntity l " +
                         " WHERE l.link = :linkText"
         )
                 .setParameter("linkText", locLinkText)
@@ -65,7 +65,7 @@ public class LocLinkStoreJpa implements LocLinkStore {
         if (locLinkEntities.size() == 0) {
             return null;
         } else {
-            return locLinkEntities.get(1);
+            return locLinkEntities.get(0);
         }
 
     }
