@@ -113,6 +113,7 @@ public class LocationServiceImpl implements LocationService {
         // TODO: SVR-36 Tidy LocType
         locationEntity.withLocationType(locationTypeService.getById(locationEntity.getLocationTypeId()));
         locationEntity.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationEntity));
+        locationEntity.withLatLon(latLonService.getLatLonById(locationEntity.getNodeId()));
 
         // TODO: SVR-36 and this too -- unit testing will help flatten this
         if (locationEntity.getMainLink().isPresent()) {
