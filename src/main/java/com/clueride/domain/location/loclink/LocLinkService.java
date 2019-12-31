@@ -19,6 +19,8 @@ package com.clueride.domain.location.loclink;
 
 import java.net.MalformedURLException;
 
+import com.clueride.domain.location.LocationEntity;
+
 /**
  * Defines operations on Location Links.
  */
@@ -28,16 +30,25 @@ public interface LocLinkService {
      * Given a URL passed within a LocLinkEntity instance, create a record in the database for this URL.
      * @param locLinkEntity instance containing the URL.
      * @return Fully-populated LocLink instance with the newly created record ID.
-     * @throws java.net.MalformedURLException if the string URL isn't properly formed.
+     * @throws MalformedURLException if the string URL isn't properly formed.
      */
-    LocLink createNewLocationLink(LocLinkEntity locLinkEntity) throws MalformedURLException;
+    LocLinkEntity createNewLocationLink(LocLinkEntity locLinkEntity) throws MalformedURLException;
 
     /**
      * Retrieves an existing LocLink if found, or creates a new one if not found.
      *
      * @param locLinkText text of the URL to be obtained.
      * @return Matching LocLink or a new instance if not found.
+     * @throws MalformedURLException if the string URL isn't properly formed.
      */
-    LocLink getLocLinkByUrl(String locLinkText) throws MalformedURLException;
+    LocLinkEntity getLocLinkByUrl(String locLinkText) throws MalformedURLException;
 
+    /**
+     * Performs checks and validates the link text before creating an appropriate
+     * instance of {@link LocLinkEntity} for adding to a {@link LocationEntity}.
+     * @param locLinkEntity instance to be checked; supplies the link text.
+     * @return Either null, or a persisted instance of a Link.
+     * @throws MalformedURLException if the string URL isn't properly formed.
+     */
+    LocLinkEntity validateAndPrepareFromUserInput(LocLinkEntity locLinkEntity) throws MalformedURLException;
 }

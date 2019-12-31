@@ -107,34 +107,20 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @BadgeCapture
-    public Location updateLocation(LocationEntity locationEntity) {
+    public Location updateLocation(LocationEntity locationEntity) throws MalformedURLException {
         requireNonNull(locationEntity.getId(), "Location ID not found; cannot update non-existent record");
         requireNonNull(locationEntity.getLocationTypeId(), "Location Type not specified; cannot update");
         // TODO: SVR-36 Tidy LocType
-        locationEntity.withLocationType(locationTypeService.getById(locationEntity.getLocationTypeId()));
+        locationEntity.withLocationType(locationTypeService.getById(locationEntity.getLocationType().getId()));
         locationEntity.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationEntity));
         locationEntity.withLatLon(latLonService.getLatLonById(locationEntity.getNodeId()));
+        locationStore.update(locationEntity);
 
         // TODO: SVR-36 and this too -- unit testing will help flatten this
         if (locationEntity.getMainLink().isPresent()) {
             LocLinkEntity proposedLocLinkEntity = locationEntity.getMainLink().get();
-            if (proposedLocLinkEntity.getId() == null) {
-                try {
-                    LocLink locLink  = locLinkService.createNewLocationLink(proposedLocLinkEntity);
-                    locationEntity.withLocLink(locLink);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            } else if (proposedLocLinkEntity.getLink().length() > 0) {
-                try {
-                    LocLink locLink = locLinkService.getLocLinkByUrl(
-                            proposedLocLinkEntity.getLink()
-                    );
-                    locationEntity.withLocLink(locLink);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
+            LocLinkEntity persistedLocLinkEntity = locLinkService.validateAndPrepareFromUserInput(proposedLocLinkEntity);
+            locationEntity.withLocLink(persistedLocLinkEntity);
         }
 
         locationStore.update(locationEntity);
@@ -183,7 +169,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location linkFeaturedImage(Integer locationId, Integer imageId) {
+    public Location linkFeaturedImage(Integer locationId, Integer imageId) throws MalformedURLException {
         requireNonNull(locationId, "Location ID required");
         requireNonNull(imageId, "Image ID required");
         LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
@@ -200,7 +186,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location unlinkFeaturedImage(Integer locationId) {
+    public Location unlinkFeaturedImage(Integer locationId) throws MalformedURLException {
         requireNonNull(locationId, "Location ID required");
         LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
 

@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.location;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -80,7 +81,7 @@ public class LocationWebService {
     @Secured
     @Path("update")
     @Produces(MediaType.APPLICATION_JSON)
-    public Location updateLocation(LocationEntity locationEntity) {
+    public Location updateLocation(LocationEntity locationEntity) throws MalformedURLException {
         return locationService.updateLocation(locationEntity);
     }
 
@@ -150,7 +151,7 @@ public class LocationWebService {
     public Location linkFeaturedImage(
             @PathParam("locId") Integer locationId,
             @PathParam("imageId") Integer imageId
-    ) {
+    ) throws MalformedURLException {
         return locationService.linkFeaturedImage(locationId, imageId);
     }
 
@@ -158,7 +159,7 @@ public class LocationWebService {
     @Secured
     @Path("featured/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Location unlinkFeaturedImage(@QueryParam("id") Integer locationId) {
+    public Location unlinkFeaturedImage(@QueryParam("id") Integer locationId) throws MalformedURLException {
         return locationService.unlinkFeaturedImage(locationId);
     }
 

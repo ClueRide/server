@@ -42,7 +42,7 @@ public class LocLinkWebService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public LocLink createNewLocationLink(LocLinkEntity locLinkEntity) throws MalformedURLException {
-        return locLinkService.createNewLocationLink(locLinkEntity);
+        return locLinkService.createNewLocationLink(locLinkEntity).build();
     }
 
 }
