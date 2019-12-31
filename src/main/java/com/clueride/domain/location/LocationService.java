@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.location;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import com.clueride.domain.course.Course;
@@ -38,7 +39,7 @@ public interface LocationService {
      * @param locationEntity instance with updated properties.
      * @return the updated and built Location.
      */
-    Location updateLocation(LocationEntity locationEntity);
+    Location updateLocation(LocationEntity locationEntity) throws MalformedURLException;
 
     /**
      * Given coordinates for a new location, create an instance with
@@ -81,14 +82,14 @@ public interface LocationService {
      * @param imageId unique identifier for an existing Image.
      * @return the updated Location instance.
      */
-    Location linkFeaturedImage(Integer locationId, Integer imageId);
+    Location linkFeaturedImage(Integer locationId, Integer imageId) throws MalformedURLException;
 
     /**
      * Drops the link between this Location and the Featured Image.
      * @param locationId unique Identifier for the Location whose featured image we want to unlink.
      * @return The updated and re-evaluated Location.
      */
-    Location unlinkFeaturedImage(Integer locationId);
+    Location unlinkFeaturedImage(Integer locationId) throws MalformedURLException;
 
     /**
      * Connects an established Location with an established LocLink record.

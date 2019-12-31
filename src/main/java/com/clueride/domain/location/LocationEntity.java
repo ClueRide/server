@@ -43,7 +43,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.latlon.LatLonEntity;
-import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeEntity;
@@ -360,11 +359,9 @@ public class LocationEntity {
         return this;
     }
 
-    public LocationEntity withLocLink(LocLink locLink) {
+    public LocationEntity withLocLink(LocLinkEntity locLinkEntity) {
         // TODO: This is SVR-36 too
-        this.mainLink = LocLinkEntity.builder()
-                .withId(locLink.getId())
-                .withLink(locLink.getLink());
+        this.mainLink = locLinkEntity;
         return this;
     }
 

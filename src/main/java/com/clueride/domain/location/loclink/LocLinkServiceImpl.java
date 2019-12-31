@@ -22,6 +22,8 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Strings;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -33,20 +35,22 @@ public class LocLinkServiceImpl implements LocLinkService {
     private LocLinkStore locLinkStore;
 
     @Override
-    public LocLink createNewLocationLink(LocLinkEntity locLinkEntity) throws MalformedURLException {
+    public LocLinkEntity createNewLocationLink(LocLinkEntity locLinkEntity) throws MalformedURLException {
         String link = requireNonNull(locLinkEntity.getLink());
-        URL url = new URL(link);
+        /* Try creating a URL from the link to make sure it is valid. */
+        new URL(link);
         locLinkStore.addNew(locLinkEntity);
-        return locLinkEntity.build();
+        return locLinkEntity;
     }
 
     @Override
-    public LocLink getLocLinkByUrl(String locLinkText) throws MalformedURLException {
+    public LocLinkEntity getLocLinkByUrl(String locLinkText) throws MalformedURLException {
         requireNonNull(locLinkText);
-        URL url = new URL(locLinkText);
+        /* Try creating a URL from the link to make sure it is valid. */
+        new URL(locLinkText);
         LocLinkEntity locLinkEntity = locLinkStore.findByUrl(locLinkText);
         if (locLinkEntity != null) {
-            return locLinkEntity.build();
+            return locLinkEntity;
         } else {
             return createNewLocationLink(
                     new LocLinkEntity().withLink(locLinkText)
@@ -54,4 +58,19 @@ public class LocLinkServiceImpl implements LocLinkService {
         }
 
     }
+
+    @Override
+    public LocLinkEntity validateAndPrepareFromUserInput(LocLinkEntity locLinkEntity) throws MalformedURLException {
+        if (Strings.isNullOrEmpty(locLinkEntity.getLink())) {
+            /* No attempt to provide a valid link. */
+            return null;
+        }
+        String link = locLinkEntity.getLink();
+
+        /* Check the value. */
+        new URL(link);
+
+        return getLocLinkByUrl(link);
+    }
+
 }
