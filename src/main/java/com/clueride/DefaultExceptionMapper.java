@@ -30,6 +30,7 @@ import org.jboss.resteasy.spi.DefaultOptionsMethodException;
 public class DefaultExceptionMapper implements ExceptionMapper<Throwable> {
 
     public Response toResponse(Throwable e) {
+        /* TODO: SVR-84 improve response to this exception. */
         if (e instanceof DefaultOptionsMethodException) {
             return null;
         }
