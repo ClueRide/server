@@ -109,12 +109,12 @@ public class LocationServiceImpl implements LocationService {
     @BadgeCapture
     public Location updateLocation(LocationEntity locationEntity) throws MalformedURLException {
         requireNonNull(locationEntity.getId(), "Location ID not found; cannot update non-existent record");
-        requireNonNull(locationEntity.getLocationTypeId(), "Location Type not specified; cannot update");
+        requireNonNull(locationEntity.getLocationType(), "Location Type not specified; cannot update");
+        requireNonNull(locationEntity.getLocationTypeId(), "Location Type ID not specified; cannot update");
         // TODO: SVR-36 Tidy LocType
         locationEntity.withLocationType(locationTypeService.getById(locationEntity.getLocationType().getId()));
         locationEntity.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationEntity));
         locationEntity.withLatLon(latLonService.getLatLonById(locationEntity.getNodeId()));
-        locationStore.update(locationEntity);
 
         // TODO: SVR-36 and this too -- unit testing will help flatten this
         if (locationEntity.getMainLink().isPresent()) {
@@ -179,6 +179,7 @@ public class LocationServiceImpl implements LocationService {
         }
         // TODO: SVR-36 Tidy LocType
         locationEntity.withLocationTypeId(locationEntity.getLocationTypeEntity().getId());
+        locationEntity.withLocationType(locationEntity.getLocationTypeEntity().build());
 
         ImageLinkEntity imageLinkEntity = imageStore.getImageLink(imageId);
         locationEntity.withFeaturedImage(imageLinkEntity);
