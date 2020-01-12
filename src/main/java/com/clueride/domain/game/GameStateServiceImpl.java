@@ -133,7 +133,6 @@ public class GameStateServiceImpl implements GameStateService {
         int outingId = outingView.getId();
         Course course = courseService.getById(outingView.getCourseId());
         setupPuzzles(outingId, course);
-        clueRideSessionDto.setCourse(course);
         GameState.Builder gameStateBuilder = getBuilderForSession()
                 .withTeamAssembled(true);
 
@@ -179,7 +178,7 @@ public class GameStateServiceImpl implements GameStateService {
         LOGGER.info("Changing Game State for outing " + outingId + " to Arrival");
 
         gameStateBuilder.withRolling(false);
-        if (endOfCourse(gameStateBuilder)) {
+        if (isEndOfCourse(gameStateBuilder)) {
             gameStateBuilder.withOutingComplete(true);
             recordTeamBadgeEvent("courseCompleted");
         }
@@ -218,8 +217,13 @@ public class GameStateServiceImpl implements GameStateService {
      * @param gameStateBuilder the current state which we're evaluating.
      * @return true if we're at the last location in the Course.
      */
-    private boolean endOfCourse(GameState.Builder gameStateBuilder) {
-        Course course = clueRideSessionDto.getCourse();
+    private boolean isEndOfCourse(GameState.Builder gameStateBuilder) {
+        OutingView outingView = clueRideSessionDto.getOutingView();
+        Course course = requireNonNull(
+                courseService.getById(outingView.getCourseId()),
+                "Expected Outing to hold valid Course"
+        );
+
         /* Last Location ID is the size of the Location IDs - 1. */
         int lastLocationId = course.getLocationIds().size() - 1;
         return (
@@ -239,10 +243,14 @@ public class GameStateServiceImpl implements GameStateService {
     @Override
     public GameState updateOutingStateWithDeparture() {
         GameState.Builder gameStateBuilder = getBuilderForSession();
-        int outingId = clueRideSessionDto.getOutingView().getId();
+        OutingView outingView = clueRideSessionDto.getOutingView();
+        int outingId = outingView.getId();
         LOGGER.info("Changing Game State for outing " + outingId + " to Departure");
 
-        Course course = clueRideSessionDto.getCourse();
+        Course course = requireNonNull(
+                courseService.getById(outingView.getCourseId()),
+                "Expected Outing to hold valid Course"
+        );
         if (gameStateBuilder.getRolling()) {
             throw new IllegalStateException("Cannot depart if still rolling");
         }
