@@ -33,7 +33,7 @@ public class CategoryStoreJpa implements CategoryStore {
     @Override
     public List<CategoryEntity> fetchAll() {
         return entityManager.createQuery(
-                "SELECT c FROM category c order by c.name"
+                "SELECT c FROM CategoryEntity c order by c.name"
         ).getResultList();
     }
 
