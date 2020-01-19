@@ -112,4 +112,12 @@ public interface LocationService {
      */
     List<Location> getThemeLocations();
 
+    /**
+     * Retrieves List of Attractions associated with the given Course.
+     *
+     * @param courseId unique identifier for the desired Course.
+     * @return List of Attractions for the Course in the order defined by the Course.
+     */
+    List<Location> getAttractionsForCourse(Integer courseId);
+
 }

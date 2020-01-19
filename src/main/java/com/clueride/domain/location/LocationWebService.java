@@ -131,6 +131,16 @@ public class LocationWebService {
 
     @GET
     @Secured
+    @Path("{courseId}/course")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Location> getAttractionsForCourse(
+            @PathParam("courseId") Integer courseId
+    ) {
+        return locationService.getAttractionsForCourse(courseId);
+    }
+
+    @GET
+    @Secured
     @Path("types")
     @Produces(MediaType.APPLICATION_JSON)
     public List<LocationType> getLocationTypes() {
