@@ -20,7 +20,9 @@ package com.clueride.domain.location;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -224,6 +226,26 @@ public class LocationServiceImpl implements LocationService {
             locations.add(builder.build());
         }
         return locations;
+    }
+
+    @Override
+    public List<Location> getAttractionsForCourse(Integer courseId) {
+        LOGGER.debug("Retrieving Attractions for Course {}", courseId);
+        List<Location> attractions = new ArrayList<>();
+        Set<Integer> loadedAttractionIds = new HashSet<>();
+
+        /* Course Service knows which Attraction IDs are associated with the Course. */
+        List<Integer> attractionIds = courseService.getLocationIdsForCourse(courseId);
+        for (Integer attractionId : attractionIds) {
+            /* Prevent duplicate entries for courses that hit the same Attraction more than once. */
+            if (!loadedAttractionIds.contains(attractionId)) {
+                LocationEntity builder = locationStore.getLocationBuilderById(attractionId);
+                fillAndGradeLocation(builder);
+                attractions.add(builder.build());
+                loadedAttractionIds.add(attractionId);
+            }
+        }
+        return attractions;
     }
 
     // TODO: SVR-36 Tidy LocType (maybe)
