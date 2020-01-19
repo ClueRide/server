@@ -84,20 +84,19 @@ public class ClueRideSessionProducer implements Serializable {
         requireNonNull(accessToken, "Empty Token. Is this endpoint behind the @Secured annotation?");
         ClueRideSessionDto clueRideSessionDto = clueRideSessionService.getSessionFromToken(accessToken);
 
-        /* Check if we already have a session object for this token. */
+        /* Check if we already have a session object for this token ... */
         if (clueRideSessionDto != null) {
             return clueRideSessionDto;
         }
 
-        /* If not, create a new one. */
-        LOGGER.debug("Instantiating a Session DTO for auth token {}", accessToken);
-
+        /* ... if not, create a new one. */
         clueRideSessionDto = new ClueRideSessionDto();
 
         ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(accessToken);
         clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
 
         String emailAddressString = addBadgeOsPrincipal(clueRideSessionDto, clueRideIdentity);
+        LOGGER.debug("Instantiating a new Session DTO for {}", emailAddressString);
 
         Integer memberId = addMember(clueRideSessionDto, clueRideIdentity, emailAddressString);
 
