@@ -34,6 +34,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -61,6 +62,7 @@ public final class PuzzleEntity {
             cascade = CascadeType.ALL,
             mappedBy = "puzzleEntity"
     )
+    @JsonProperty("answers")
     private List<AnswerEntity> answerEntities = new ArrayList<>();
 
     @Column(name = "correct_answer")
