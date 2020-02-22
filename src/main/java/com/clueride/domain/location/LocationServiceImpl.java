@@ -40,7 +40,6 @@ import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loclink.LocLinkService;
-import com.clueride.domain.location.loctype.LocationTypeService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.place.ScoredLocationService;
 import static java.util.Objects.requireNonNull;
@@ -61,7 +60,6 @@ public class LocationServiceImpl implements LocationService {
     private final LocationStore locationStore;
     private final LatLonService latLonService;
     private final ScoredLocationService scoredLocationService;
-    private final LocationTypeService locationTypeService;
     private final ImageStore imageStore;
     private final LocLinkService locLinkService;
 
@@ -71,7 +69,6 @@ public class LocationServiceImpl implements LocationService {
             LocationStore locationStore,
             LatLonService latLonService,
             ScoredLocationService scoredLocationService,
-            LocationTypeService locationTypeService,
             ImageStore imageStore,
             LocLinkService locLinkService
     ) {
@@ -79,7 +76,6 @@ public class LocationServiceImpl implements LocationService {
         this.locationStore = locationStore;
         this.latLonService = latLonService;
         this.scoredLocationService = scoredLocationService;
-        this.locationTypeService = locationTypeService;
         this.imageStore = imageStore;
         this.locLinkService = locLinkService;
     }
@@ -95,7 +91,7 @@ public class LocationServiceImpl implements LocationService {
         latLonService.addNew(latLonEntity);
         LocationEntity locationEntity = LocationEntity.builder()
                 .withLatLon(latLonEntity)
-                .withLocationType(locationType);
+                .withLocationTypeId(0);
         try {
             locationStore.addNew(locationEntity);
         } catch (IOException e) {
@@ -107,11 +103,9 @@ public class LocationServiceImpl implements LocationService {
     @Override
     @BadgeCapture
     public Location updateLocation(LocationEntity locationEntity) throws MalformedURLException {
+        LOGGER.debug("Updating Location");
         requireNonNull(locationEntity.getId(), "Location ID not found; cannot update non-existent record");
-        requireNonNull(locationEntity.getLocationType(), "Location Type not specified; cannot update");
         requireNonNull(locationEntity.getLocationTypeId(), "Location Type ID not specified; cannot update");
-        // TODO: SVR-36 Tidy LocType
-        locationEntity.withLocationType(locationTypeService.getById(locationEntity.getLocationType().getId()));
         locationEntity.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationEntity));
         locationEntity.withLatLon(latLonService.getLatLonById(locationEntity.getNodeId()));
 
@@ -187,13 +181,6 @@ public class LocationServiceImpl implements LocationService {
     public Location unlinkFeaturedImage(Integer locationId) throws MalformedURLException {
         requireNonNull(locationId, "Location ID required");
         LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
-
-        // TODO: SVR-36 Tidy LocType
-        locationEntity.withLocationType(locationTypeService.getById(
-                locationEntity.getLocationTypeEntity().getId()
-        ));
-        locationEntity.withLocationTypeId(locationEntity.getLocationTypeEntity().getId());
-
         locationEntity.clearFeaturedImage();
         /* Update Location will set new readiness level and persist the updated Location. */
         return updateLocation(locationEntity);

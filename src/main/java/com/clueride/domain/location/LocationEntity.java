@@ -31,21 +31,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLinkEntity;
-import com.clueride.domain.location.loctype.LocationType;
-import com.clueride.domain.location.loctype.LocationTypeEntity;
 import com.clueride.domain.puzzle.PuzzleEntity;
 
 /**
@@ -88,10 +83,6 @@ public class LocationEntity {
 
     @Column(name="location_group_id") private Integer locationGroupId;
 
-    @Transient
-    private LocationType locationType;
-    @Transient
-    private String locationTypeName;
     @Transient
     private LatLonEntity latLonEntity;
     @Transient
@@ -184,9 +175,9 @@ public class LocationEntity {
         return this;
     }
 
-    @JsonGetter("locationType")
-    public LocationType getLocationType() {
-        return locationType;
+    /* Location Type ID. */
+    public Integer getLocationTypeId() {
+        return locationTypeId;
     }
 
     /**
@@ -203,42 +194,8 @@ public class LocationEntity {
 
     /* TODO CI-152: Flagging Attraction; expect to play with ReadinessLevel. */
 
-    public Integer getLocationTypeId() {
-        return locationTypeId;
-    }
-
-    public LocationEntity withLocationTypeName(String locationTypeName) {
-        this.locationTypeName = locationTypeName;
-        return this;
-    }
-
-    public String getLocationTypeName() {
-        return this.locationTypeName;
-    }
-
-    public void setLocationType(LocationType locationType) {
-        this.withLocationType(locationType);
-    }
-
-    public LocationEntity withLocationType(LocationType locationType) {
-        this.locationType = locationType;
-        this.locationTypeEntity = LocationTypeEntity.from(locationType);
-        return this;
-    }
-
-    public LocationTypeEntity getLocationTypeEntity() {
-        return locationTypeEntity;
-    }
-
-    @JsonSetter("locationType")
-    public void setLocationTypeEntity(LocationTypeEntity locationTypeEntity) {
-        this.locationTypeEntity = locationTypeEntity;
-        this.locationType = locationTypeEntity.build();
-    }
-
-    public LocationEntity withReadinessLevel(ReadinessLevel readinessLevel) {
-        this.readinessLevel = readinessLevel;
-        return this;
+    public ReadinessLevel getReadinessLevel() {
+        return readinessLevel;
     }
 
     public LocationEntity withReadinessLevel(ReadinessLevel readinessLevel) {
