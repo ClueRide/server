@@ -47,7 +47,7 @@ public class ScoredLocationServiceImpl implements ScoredLocationService {
         if (isNullOrEmpty(location.getName())
                 && isNullOrEmpty(location.getDescription())
                 && location.getFeaturedImage() == null
-                && location.getLocationTypeEntity().getId() == 0
+                && location.getLocationTypeId() == 0
                 ) {
             return ReadinessLevel.NODE;
         }
@@ -56,7 +56,7 @@ public class ScoredLocationServiceImpl implements ScoredLocationService {
         if (isNullOrEmpty(location.getName())
                 || isNullOrEmpty(location.getDescription())
                 || location.getFeaturedImage() == null
-                || location.getLocationTypeEntity().getId() == 0
+                || location.getLocationTypeId() == 0
                 ) {
             return ReadinessLevel.DRAFT;
         }

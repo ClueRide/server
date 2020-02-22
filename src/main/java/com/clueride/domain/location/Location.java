@@ -30,7 +30,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.clueride.domain.image.ImageLink;
 import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLink;
-import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.puzzle.PuzzleEntity;
 
 /**
@@ -46,7 +45,7 @@ public class Location {
     private final int nodeId;
     private final String name;
     private final String description;
-    private final LocationType locationType;
+    private final Integer locationTypeId;
     private final ImageLink featuredImage;
     private final LocLink mainLink;
     private final Integer googlePlaceId;
@@ -60,7 +59,7 @@ public class Location {
 
     /**
      * Constructor accepting Builder instance.
-     * @param builder instance carrying mutable Location.
+     * @param builder {@link LocationEntity} instance carrying mutable Location.
      */
     public Location(LocationEntity builder) {
         id = builder.getId();
@@ -71,7 +70,7 @@ public class Location {
         // If any of these are missing, we're at the Draft level
         name = builder.getName();
         description = builder.getDescription();
-        locationType = builder.getLocationType();
+        locationTypeId = builder.getLocationTypeId();
 
         /* OK for Location to be missing Featured Image. */
         if (builder.getFeaturedImage() != null) {
@@ -127,15 +126,7 @@ public class Location {
      * @return Enumeration of the type of Location.
      */
     public Integer getLocationTypeId() {
-        return (locationType == null ? 0 : locationType.getId());
-    }
-
-    public String getLocationTypeName() {
-        return (locationType == null ? "none" : locationType.getName());
-    }
-
-    public LocationType getLocationType() {
-        return locationType;
+        return (locationTypeId);
     }
 
     /**

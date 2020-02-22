@@ -40,7 +40,6 @@ import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loclink.LocLinkService;
-import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.place.ScoredLocationService;
@@ -94,8 +93,6 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location proposeLocation(LatLonEntity latLonEntity) {
         latLonService.addNew(latLonEntity);
-        // TODO: SVR-36 Tidy LocType
-        LocationType locationType = locationTypeService.getById(0);
         LocationEntity locationEntity = LocationEntity.builder()
                 .withLatLon(latLonEntity)
                 .withLocationType(locationType);
@@ -118,7 +115,7 @@ public class LocationServiceImpl implements LocationService {
         locationEntity.withReadinessLevel(scoredLocationService.calculateReadinessLevel(locationEntity));
         locationEntity.withLatLon(latLonService.getLatLonById(locationEntity.getNodeId()));
 
-        // TODO: SVR-36 and this too -- unit testing will help flatten this
+        // TODO: SVR-94
         if (locationEntity.getMainLink().isPresent()) {
             LocLinkEntity proposedLocLinkEntity = locationEntity.getMainLink().get();
             LocLinkEntity persistedLocLinkEntity = locLinkService.validateAndPrepareFromUserInput(proposedLocLinkEntity);
@@ -152,8 +149,8 @@ public class LocationServiceImpl implements LocationService {
         List<Location> locations = new ArrayList<>();
 
         for (LocationEntity builder : locationStore.getLocationBuilders()) {
-            // TODO: LE-76 Layer Thing going on right here:
-            if (!builder.getLocationTypeEntity().getId().equals(15)) {
+            // TODO: CI-73 Layer Thing going on right here:
+            if (!builder.getLocationTypeId().equals(15)) {
                 fillAndGradeLocation(builder);
                 locations.add(builder.build());
             }
@@ -175,13 +172,11 @@ public class LocationServiceImpl implements LocationService {
         requireNonNull(locationId, "Location ID required");
         requireNonNull(imageId, "Image ID required");
         LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
+
         /* First, break any existing link. */
         if (!locationEntity.hasNoFeaturedImage()) {
             locationEntity.clearFeaturedImage();
         }
-        // TODO: SVR-36 Tidy LocType
-        locationEntity.withLocationTypeId(locationEntity.getLocationTypeEntity().getId());
-        locationEntity.withLocationType(locationEntity.getLocationTypeEntity().build());
 
         ImageLinkEntity imageLinkEntity = imageStore.getImageLink(imageId);
         locationEntity.withFeaturedImage(imageLinkEntity);
@@ -248,7 +243,6 @@ public class LocationServiceImpl implements LocationService {
         return attractions;
     }
 
-    // TODO: SVR-36 Tidy LocType (maybe)
     private void fillAndGradeLocation(LocationEntity builder) {
         /* Assemble the derived transient fields. */
         builder.withLatLon(latLonService.getLatLonById(builder.getNodeId()));
