@@ -69,6 +69,7 @@ public class LocationEntity {
     @SequenceGenerator(name="location_pk_sequence",sequenceName="location_id_seq", allocationSize=1)
     private Integer id;
 
+    /* Human readable characteristics. */
     private String name;
     private String description;
 
@@ -81,10 +82,6 @@ public class LocationEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "main_link_id")
     private LocLinkEntity mainLink;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_type_id")
-    private LocationTypeEntity locationTypeEntity;
 
     @Column(name="location_type_id", updatable = false, insertable = false)
     private Integer locationTypeId;
@@ -129,7 +126,7 @@ public class LocationEntity {
                 .withId(location.getId())
                 .withName(location.getName())
                 .withDescription(location.getDescription())
-                .withLocationType(location.getLocationType())
+                .withLocationTypeId(location.getLocationTypeId())
                 .withNodeId(location.getNodeId())
                 .withLatLon(location.getLatLon())
                 .withFeaturedImage(ImageLinkEntity.from(location.getFeaturedImage()))
@@ -150,12 +147,6 @@ public class LocationEntity {
                                 + featuredImage.getUrl()
                 );
             }
-        }
-
-        if (locationTypeEntity == null) {
-            throw new IllegalStateException("Location Type cannot be null");
-        } else {
-            locationType = locationTypeEntity.build();
         }
         return new Location(this);
     }
@@ -199,10 +190,9 @@ public class LocationEntity {
     }
 
     /**
-     * This is generally inbound from clients. Service is responsible for
-     * taking this value, looking up the LocationType via its service, and
-     * then populating this LocationEntity instance with that LocationType
-     * instance.
+     * Service is responsible for taking this value and looking up the
+     * LocationType(Entity) via its service.
+     *
      * @param locationTypeId chosen from a list of possible Location Types.
      * @return this.
      */
@@ -210,6 +200,8 @@ public class LocationEntity {
         this.locationTypeId = locationTypeId;
         return this;
     }
+
+    /* TODO CI-152: Flagging Attraction; expect to play with ReadinessLevel. */
 
     public Integer getLocationTypeId() {
         return locationTypeId;
@@ -249,6 +241,11 @@ public class LocationEntity {
         return this;
     }
 
+    public LocationEntity withReadinessLevel(ReadinessLevel readinessLevel) {
+        this.readinessLevel = readinessLevel;
+        return this;
+    }
+
     public Integer getNodeId() {
         return nodeId;
     }
@@ -257,6 +254,7 @@ public class LocationEntity {
         this.nodeId = nodeId;
         return this;
     }
+    /* FUTURE */
 
     public Map<String, Optional<Double>> getTagScores() {
         return tagScores;
@@ -305,8 +303,8 @@ public class LocationEntity {
         }
         return this;
     }
-
     /* Image Methods */
+
     public ImageLinkEntity getFeaturedImage() {
         return featuredImage;
     }
@@ -354,22 +352,24 @@ public class LocationEntity {
     }
 
     public LocationEntity withMainLink(LocLinkEntity locLink) {
-        // TODO: This is SVR-36 too
+        // TODO: SVR-94
         this.mainLink = locLink;
         return this;
     }
 
     public LocationEntity withLocLink(LocLinkEntity locLinkEntity) {
-        // TODO: This is SVR-36 too
+        // TODO: SVR-94
         this.mainLink = locLinkEntity;
         return this;
     }
 
     public List<PuzzleEntity> getPuzzleEntities() {
+        // TODO SVR-94
         return puzzleEntities;
     }
 
     public LocationEntity withPuzzleBuilders(List<PuzzleEntity> puzzleEntities) {
+        // TODO SVR-94
         this.puzzleEntities = puzzleEntities;
         return this;
     }
@@ -377,31 +377,11 @@ public class LocationEntity {
     public Integer getGooglePlaceId() {
         return googlePlaceId;
     }
+    /* FUTURE */
 
     public LocationEntity withGooglePlaceId(Integer googlePlaceId) {
         this.googlePlaceId = googlePlaceId;
         return this;
-    }
-
-    public ReadinessLevel getReadinessLevel() {
-        return readinessLevel;
-    }
-
-    /**
-     * Accepts a partial set of information -- generally posted from REST API -- and updates this copy with the
-     * new fields.
-     * @param locationEntity instance with the new info.
-     */
-    public void updateFrom(LocationEntity locationEntity) {
-        this
-                .withName(locationEntity.name)
-                .withId(locationEntity.id)
-                .withDescription(locationEntity.description)
-                .withNodeId(locationEntity.nodeId)
-                // TODO: SVR-36
-//                .withLocationTypeId(locationEntity.locationTypeId)
-                .withLocationGroupId(locationEntity.locationGroupId)
-        ;
     }
 
 }
