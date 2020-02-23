@@ -18,6 +18,7 @@
 package com.clueride.domain.course;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -57,6 +58,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Integer> getLocationIdsForCourse(Integer courseId) {
         return pathService.getLocationIds(courseId);
+    }
+
+    @Override
+    public List<Course> getAllCourses() {
+        return courseStore.getCourses().stream().map(c -> c.build()).collect(Collectors.toList());
     }
 
     @Override

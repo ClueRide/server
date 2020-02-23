@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.course;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -32,6 +34,13 @@ import com.clueride.auth.Secured;
 public class CourseWebService {
     @Inject
     private CourseService courseService;
+
+    @GET
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Course> getAllCourses() {
+        return courseService.getAllCourses();
+    }
 
     @GET
     @Secured
