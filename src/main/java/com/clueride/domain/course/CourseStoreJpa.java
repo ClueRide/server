@@ -47,7 +47,8 @@ public class CourseStoreJpa implements CourseStore {
 
     @Override
     public List<CourseEntity> getCourses() {
-        return null;
+        return entityManager.createQuery("SELECT c from CourseEntity c ORDER BY c.name")
+                .getResultList();
     }
 
 }

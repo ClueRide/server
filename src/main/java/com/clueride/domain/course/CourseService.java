@@ -43,4 +43,11 @@ public interface CourseService {
      */
     List<Integer> getLocationIdsForCourse(Integer courseId);
 
+    /**
+     * Retrieves list of all courses sorted alphabetically by name.
+     *
+     * @return Ordered list of Courses.
+     */
+    List<Course> getAllCourses();
+
 }
