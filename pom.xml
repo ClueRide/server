@@ -68,6 +68,24 @@
         </license>
     </licenses>
 
+    <repositories>
+        <repository>
+            <id>geotools</id>
+            <name>Repo supporting org.geotools dependencies</name>
+            <url>https://repo.boundlessgeo.com/main/</url>
+        </repository>
+        <repository>
+            <id>geomajas</id>
+            <name>Repo supporting jgridshift</name>
+            <url>https://mvnrepository.com/repos/geomajas</url>
+        </repository>
+        <repository>
+            <id>osgeo</id>
+            <name>Repo supporting vecmath</name>
+            <url>https://download.osgeo.org/webdav/geotools/</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <!-- JBoss distributes a complete set of Java EE 7 APIs including
