@@ -17,16 +17,15 @@
  */
 package com.clueride.domain.badge.progress;
 
-import java.util.List;
-
-import jdk.nashorn.internal.ir.annotations.Immutable;
+import com.clueride.domain.achievement.Achievement;
+import com.clueride.domain.badge.features.BadgeFeatures;
+import com.clueride.domain.step.Step;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.achievement.Achievement;
-import com.clueride.domain.badge.features.BadgeFeatures;
-import com.clueride.domain.step.Step;
+import javax.annotation.concurrent.Immutable;
+import java.util.List;
 
 /**
  * Carries both what has been achieved and what remains to
