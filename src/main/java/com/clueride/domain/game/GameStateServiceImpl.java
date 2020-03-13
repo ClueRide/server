@@ -17,16 +17,6 @@
  */
 package com.clueride.domain.game;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.badge.event.BadgeEventEntity;
@@ -44,6 +34,15 @@ import com.clueride.domain.puzzle.answer.AnswerPost;
 import com.clueride.domain.puzzle.answer.AnswerSummary;
 import com.clueride.domain.puzzle.state.PuzzleState;
 import com.clueride.domain.puzzle.state.PuzzleStateService;
+import org.slf4j.Logger;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -183,11 +182,14 @@ public class GameStateServiceImpl implements GameStateService {
             recordTeamBadgeEvent("courseCompleted");
         }
 
+        LOGGER.trace("Before Synch(gameStateMap)");
         synchronized (gameStateMap) {
             gameStateMap.put(outingId, gameStateBuilder);
             ssEventService.sendArrivalEvent(outingId, gameStateBuilder.build());
         }
+        LOGGER.trace("After Synch(gameStateMap)");
         recordTeamBadgeEvent("arrival");
+        LOGGER.trace("After recordTeamBadgeEvent");
         return gameStateBuilder.build();
     }
 

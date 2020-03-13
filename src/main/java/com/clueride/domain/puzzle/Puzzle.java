@@ -17,16 +17,15 @@
  */
 package com.clueride.domain.puzzle;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jdk.nashorn.internal.ir.annotations.Immutable;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
+import com.clueride.domain.puzzle.answer.AnswerKey;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.domain.puzzle.answer.AnswerEntity;
-import com.clueride.domain.puzzle.answer.AnswerKey;
+import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Immutable
 public class Puzzle {

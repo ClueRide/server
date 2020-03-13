@@ -18,8 +18,9 @@
 package com.clueride.network.edge;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 import org.geolatte.geom.LineString;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Represents a record in the Edge table holding a Geometry (LINESTRING)
