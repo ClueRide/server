@@ -157,8 +157,13 @@ public class LocationServiceImpl implements LocationService {
         LOGGER.info("Deleting Location with ID {}", locationId);
 
         LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
-        locationStore.delete(locationEntity);
-        return locationEntity.build();
+        if (locationEntity != null) {
+            locationStore.delete(locationEntity);
+            return locationEntity.build();
+        } else {
+            LOGGER.warn("Attempted Deletion of Location that doesn't exist ({})", locationId);
+            return null;
+        }
     }
 
     @Override
