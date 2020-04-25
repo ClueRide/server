@@ -6,7 +6,6 @@ import com.clueride.domain.flag.reason.FlagReason;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.jboss.weld.inject.WeldInstance;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -19,9 +18,6 @@ public class FlagEntity {
     @Transient
     private static Logger LOGGER;
 
-    @Transient
-    private static WeldInstance<FlagEntity> instanceSource;
-
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "flag_pk_sequence")
     @SequenceGenerator(name="flag_pk_sequence", sequenceName = "flag_id_seq", allocationSize = 1)
@@ -33,7 +29,7 @@ public class FlagEntity {
     @Column
     private FlagReason reason;
 
-    @Column
+    @Column(name="attribute")
     private FlaggedAttribute flaggedAttribute;
 
     @Column
