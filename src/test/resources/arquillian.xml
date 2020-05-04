@@ -36,6 +36,16 @@
         <!--</configuration> -->
    </container>
 
+    <!-- Configuration to be used when the WildFly remote profile is active -->
+    <container qualifier="wildfly-remote">
+        <configuration>
+            <property name="managementAddress">127.0.0.1</property>
+            <property name="managementPort">9990</property>
+            <property name="username">admin</property>
+            <property name="password">admin</property>
+        </configuration>
+    </container>
+
     <container qualifier="jbossci">
         <!-- If you want to use the JBOSS_HOME environment variable, just delete the jbossHome property -->
         <configuration>
