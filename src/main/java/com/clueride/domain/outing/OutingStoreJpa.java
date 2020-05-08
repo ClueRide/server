@@ -17,10 +17,9 @@
  */
 package com.clueride.domain.outing;
 
-import java.io.IOException;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,7 +31,7 @@ public class OutingStoreJpa implements OutingStore {
     private EntityManager entityManager;
 
     @Override
-    public Integer addNew(OutingViewEntity builder) throws IOException {
+    public Integer addNew(OutingViewEntity entity) throws IOException {
         return null;
     }
 
