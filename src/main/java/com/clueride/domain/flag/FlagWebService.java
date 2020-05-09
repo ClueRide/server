@@ -1,6 +1,7 @@
 package com.clueride.domain.flag;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 
 import javax.inject.Inject;
@@ -42,6 +43,14 @@ public class FlagWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<FlagReason> getFlagReasons() {
         return flagService.getReasons();
+    }
+
+    @GET
+    @Secured
+    @Path("attribute")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<FlaggedAttribute> getFlagAttributes() {
+        return flagService.getAttributes();
     }
 
 }

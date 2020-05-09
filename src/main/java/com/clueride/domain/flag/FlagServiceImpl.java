@@ -5,6 +5,7 @@ import com.clueride.domain.attraction.AttractionNotFoundException;
 import com.clueride.domain.attraction.AttractionService;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseService;
+import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 import org.slf4j.Logger;
 
@@ -72,6 +73,11 @@ public class FlagServiceImpl implements FlagService {
     @Override
     public List<FlagReason> getReasons() {
         return Arrays.asList(FlagReason.values());
+    }
+
+    @Override
+    public List<FlaggedAttribute> getAttributes() {
+        return Arrays.asList(FlaggedAttribute.values());
     }
 
     private void validate(FlagEntity flagEntity) {
