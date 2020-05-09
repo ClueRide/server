@@ -26,4 +26,13 @@ public interface FlagStore {
      */
     FlagEntity update(FlagEntity flagEntity);
 
+    /**
+     * Retrieves List of mutable Flag Entities for a list of Attraction IDs.
+     *
+     * Each attraction may have 0, 1, or more Flags.
+     *
+     * @param attractionIds List of the AttractionIDs to be checked for Flags.
+     * @return List of the Flag Entities across the full set of Attractions.
+     */
+    List<FlagEntity> getFlagsForAttractions(List<Integer> attractionIds);
 }

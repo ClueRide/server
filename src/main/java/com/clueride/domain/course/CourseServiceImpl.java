@@ -17,15 +17,14 @@
  */
 package com.clueride.domain.course;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.network.path.PathService;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of CourseService.
@@ -56,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Integer> getLocationIdsForCourse(Integer courseId) {
+    public List<Integer> getAttractionIdsForCourse(Integer courseId) {
         return pathService.getLocationIds(courseId);
     }
 
@@ -67,10 +66,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getById(final Integer courseId) {
-        CourseEntity courseEntity = courseStore.getCourseById(courseId)
-                .withLocationIds(pathService.getLocationIds(courseId));
+        CourseEntity courseEntity = courseStore.getCourseById(courseId);
+        if (courseEntity == null) {
+            throw new CourseNotFoundException("Course ID: " + courseId);
+        }
 
-        return courseEntity.build();
+        return courseEntity
+                .withLocationIds(pathService.getLocationIds(courseId))
+                .build();
     }
 
 }

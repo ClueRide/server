@@ -27,4 +27,12 @@ public class FlagWebService {
         return flagService.addNewFlag(flagEntity);
     }
 
+    @GET
+    @Secured
+    @Path("course/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Flag> getFlagsForCourse(@PathParam("id") Integer courseId) {
+        return flagService.getFlagsForCourse(courseId);
+    }
+
 }
