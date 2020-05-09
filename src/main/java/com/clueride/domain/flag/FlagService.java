@@ -2,6 +2,7 @@ package com.clueride.domain.flag;
 
 import com.clueride.domain.attraction.AttractionNotFoundException;
 import com.clueride.domain.course.Course;
+import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 
 import java.util.List;
@@ -43,4 +44,10 @@ public interface FlagService {
      */
     List<FlagReason> getReasons();
 
+    /**
+     * Supports front-end by providing a list of the valid Attributes that can be flagged.
+     *
+     * @return List of {@link FlaggedAttribute}.
+     */
+    List<FlaggedAttribute> getAttributes();
 }
