@@ -2,6 +2,7 @@ package com.clueride.domain.flag;
 
 import com.clueride.domain.attraction.AttractionNotFoundException;
 import com.clueride.domain.course.Course;
+import com.clueride.domain.flag.reason.FlagReason;
 
 import java.util.List;
 
@@ -34,5 +35,12 @@ public interface FlagService {
      * @return List of the active and inactive flags for the given Course; may be an empty list.
      */
     List<Flag> getFlagsForCourse(Integer courseId);
+
+    /**
+     * Supports front-end by providing a list of the valid Flag Reasons.
+     *
+     * @return List of {@link FlagReason}.
+     */
+    List<FlagReason> getReasons();
 
 }

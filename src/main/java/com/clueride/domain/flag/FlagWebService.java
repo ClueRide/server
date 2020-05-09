@@ -1,6 +1,7 @@
 package com.clueride.domain.flag;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.flag.reason.FlagReason;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -33,6 +34,14 @@ public class FlagWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Flag> getFlagsForCourse(@PathParam("id") Integer courseId) {
         return flagService.getFlagsForCourse(courseId);
+    }
+
+    @GET
+    @Secured
+    @Path("reason")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<FlagReason> getFlagReasons() {
+        return flagService.getReasons();
     }
 
 }
