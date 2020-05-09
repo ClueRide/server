@@ -17,18 +17,6 @@
  */
 package com.clueride.domain.location;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-
 import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
@@ -42,6 +30,17 @@ import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loclink.LocLinkService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.place.ScoredLocationService;
+import org.slf4j.Logger;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -124,7 +123,7 @@ public class LocationServiceImpl implements LocationService {
     public List<Location> getSessionLocationsWithGeoJson() {
         List<Location> locations = new ArrayList<>();
         OutingView outingView = clueRideSessionDto.getOutingView();
-        List<Integer> locationIds = courseService.getLocationIdsForCourse(outingView.getCourseId());
+        List<Integer> locationIds = courseService.getAttractionIdsForCourse(outingView.getCourseId());
         for (Integer locationId : locationIds) {
             LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
 
@@ -222,7 +221,7 @@ public class LocationServiceImpl implements LocationService {
         Set<Integer> loadedAttractionIds = new HashSet<>();
 
         /* Course Service knows which Attraction IDs are associated with the Course. */
-        List<Integer> attractionIds = courseService.getLocationIdsForCourse(courseId);
+        List<Integer> attractionIds = courseService.getAttractionIdsForCourse(courseId);
         for (Integer attractionId : attractionIds) {
             /* Prevent duplicate entries for courses that hit the same Attraction more than once. */
             if (!loadedAttractionIds.contains(attractionId)) {

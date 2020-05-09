@@ -24,7 +24,8 @@ import java.util.List;
  */
 public interface CourseService {
     /**
-     * Interim retrieval of a Course instance matching the given ID.
+     * Retrieval of a Course instance matching the given ID.
+     *
      * @param courseId unique identifier for the course.
      * @return matching Course.
      */
@@ -41,7 +42,7 @@ public interface CourseService {
      * @param courseId unique identifier for the Course.
      * @return Ordered list of Location IDs.
      */
-    List<Integer> getLocationIdsForCourse(Integer courseId);
+    List<Integer> getAttractionIdsForCourse(Integer courseId);
 
     /**
      * Retrieves list of all courses sorted alphabetically by name.

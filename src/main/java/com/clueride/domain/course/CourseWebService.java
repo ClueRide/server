@@ -17,15 +17,15 @@
  */
 package com.clueride.domain.course;
 
-import java.util.List;
+import com.clueride.auth.Secured;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import com.clueride.auth.Secured;
+import java.util.List;
 
 /**
  * REST API for {@link Course} operations.
@@ -48,6 +48,14 @@ public class CourseWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Course getSessionCourse() {
         return courseService.getSessionCourse();
+    }
+
+    @GET
+    @Secured
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Course getById(@PathParam("id") Integer courseId) {
+        return courseService.getById(courseId);
     }
 
 }

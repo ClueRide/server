@@ -35,4 +35,11 @@ public class FlagStoreJpa implements FlagStore {
     public FlagEntity update(FlagEntity flagEntity) {
         return null;
     }
+
+    @Override
+    public List<FlagEntity> getFlagsForAttractions(List<Integer> attractionIds) {
+        return entityManager.createQuery("SELECT f from FlagEntity f WHERE attractionId in :ids")
+                .setParameter("ids", attractionIds)
+                .getResultList();
+    }
 }
