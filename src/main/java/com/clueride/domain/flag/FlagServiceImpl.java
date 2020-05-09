@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -44,12 +45,6 @@ public class FlagServiceImpl implements FlagService {
 
     @Override
     public Flag addNewFlag(FlagEntity flagEntity) throws AttractionNotFoundException {
-        Integer attractionId = requireNonNull(flagEntity.getAttractionId(), "Attraction ID must be provided");
-        Attraction attraction = attractionService.getById(attractionId);
-        if (attraction == null) {
-            throw new AttractionNotFoundException("Attraction ID " + attractionId + " not found");
-        }
-
         validate(flagEntity);
 
         flagStore.addNew(flagEntity);
@@ -74,16 +69,23 @@ public class FlagServiceImpl implements FlagService {
         return flags;
     }
 
-    private void validate(FlagEntity flagEntity) {
-//        FlaggedAttribute flaggedAttribute = requireNonNull(
-//                flagEntity.getFlaggedAttribute(),
-//                "Flagged Attribute cannot be null"
-//        );
+    @Override
+    public List<FlagReason> getReasons() {
+        return Arrays.asList(FlagReason.values());
+    }
 
-        FlagReason reason = requireNonNull(
+    private void validate(FlagEntity flagEntity) {
+        requireNonNull(
                 flagEntity.getReason(),
                 "Flag Reason cannot be null"
         );
+
+        Integer attractionId = requireNonNull(flagEntity.getAttractionId(), "Attraction ID must be provided");
+        Attraction attraction = attractionService.getById(attractionId);
+        if (attraction == null) {
+            throw new AttractionNotFoundException("Attraction ID " + attractionId + " not found");
+        }
+
     }
 
 
