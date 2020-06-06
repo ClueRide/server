@@ -1,4 +1,4 @@
-package com.clueride.domain.flag.details;
+package com.clueride.domain.flag;
 
 public enum FlaggedAttribute {
     NAME,

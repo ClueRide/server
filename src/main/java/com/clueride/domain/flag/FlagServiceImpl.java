@@ -5,13 +5,13 @@ import com.clueride.domain.attraction.AttractionNotFoundException;
 import com.clueride.domain.attraction.AttractionService;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseService;
-import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -37,11 +37,9 @@ public class FlagServiceImpl implements FlagService {
 
     @Override
     public List<Flag> getAllFlags() {
-        List<Flag> flags = new ArrayList<>();
-        for (FlagEntity flagEntity : flagStore.getFlags()) {
-            flags.add(flagEntity.build());
-        }
-        return flags;
+        return buildFlagEntities(
+                flagStore.getFlags()
+        );
     }
 
     @Override
@@ -59,11 +57,29 @@ public class FlagServiceImpl implements FlagService {
         LOGGER.info("Retrieving Flags for " + course.getName());
         LOGGER.debug("Attraction IDs: {}", course.getLocationIds());
 
-        List<Flag> flags = new ArrayList<>();
         List<FlagEntity> flagEntities = flagStore.getFlagsForAttractions(
                 courseService.getAttractionIdsForCourse(courseId)
         );
 
+        return buildFlagEntities(flagEntities);
+    }
+
+    @Override
+    public List<Flag> getFlagsForAttraction(Integer attractionId) {
+        LOGGER.info("Retrieving Flags for Attraction ID {}", attractionId);
+
+        List<FlagEntity> flagEntities = flagStore.getFlagsForAttractions(Collections.singletonList(attractionId));
+        return buildFlagEntities(flagEntities);
+    }
+
+    /**
+     * Given a List of Flag Entities, runs `build` on each to return List of Flag.
+     *
+     * @param flagEntities List of mutable Flag Entities.
+     * @return List of immutable {@link Flag}.
+     */
+    private List<Flag> buildFlagEntities(List<FlagEntity> flagEntities) {
+        List<Flag> flags = new ArrayList<>();
         for (FlagEntity flagEntity : flagEntities) {
             flags.add(flagEntity.build());
         }
@@ -81,6 +97,8 @@ public class FlagServiceImpl implements FlagService {
     }
 
     private void validate(FlagEntity flagEntity) {
+        LOGGER.info("Validating Flag against Attraction ID {}", flagEntity.getAttractionId());
+
         requireNonNull(
                 flagEntity.getReason(),
                 "Flag Reason cannot be null"

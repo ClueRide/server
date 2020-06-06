@@ -1,5 +1,6 @@
 package com.clueride.domain.flag.details;
 
+import com.clueride.domain.flag.FlaggedAttribute;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

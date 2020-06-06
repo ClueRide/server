@@ -1,7 +1,5 @@
 package com.clueride.domain.flag;
 
-import com.clueride.domain.flag.details.FlagDetails;
-import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -41,9 +39,6 @@ public class FlagEntity {
     @Column(name="close_badge_event_id")
     private Integer closeBadgeEventId;
 
-    @Transient
-    private FlagDetails details;
-
     public Flag build() {
         return new Flag(this);
     }
@@ -57,8 +52,8 @@ public class FlagEntity {
                 .withId(flag.getId())
                 .withAttractionId(flag.getAttractionId())
                 .withReason(flag.getReason())
-                .withFlaggedAttribute(flag.getDetails().getAttribute())
-                .withDescription(flag.getDetails().getDescription())
+                .withFlaggedAttribute(flag.getAttribute())
+                .withDescription(flag.getDescription())
                 .withOpenBadgeEventId(flag.getOpenBadgeEventId())
                 .withCloseBadgeEventId(flag.getCloseBadgeEventId())
                 ;
@@ -124,20 +119,6 @@ public class FlagEntity {
 
     public FlagEntity withCloseBadgeEventId(Integer closeBadgeEventId) {
         this.closeBadgeEventId = closeBadgeEventId;
-        return this;
-    }
-
-    public FlagDetails getDetails() {
-        if (details == null) {
-            details = new FlagDetails();
-        }
-        return details
-                .withDescription(this.description)
-                .withAttribute(this.flaggedAttribute);
-    }
-
-    public FlagEntity withDetails(FlagDetails details) {
-        this.details = details;
         return this;
     }
 

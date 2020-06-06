@@ -1,6 +1,5 @@
 package com.clueride.domain.flag;
 
-import com.clueride.domain.flag.details.FlagDetails;
 import com.clueride.domain.flag.reason.FlagReason;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,7 +15,8 @@ public class Flag {
     private Integer id;
     private Integer attractionId;
     private FlagReason reason;
-    private FlagDetails details;
+    private String description;
+    private FlaggedAttribute attribute;
     private Integer openBadgeEventId;
     private Integer closeBadgeEventId;
 
@@ -24,7 +24,8 @@ public class Flag {
         this.id = builder.getId();
         this.attractionId = builder.getAttractionId();
         this.reason = builder.getReason();
-        this.details = builder.getDetails();
+        this.description = builder.getDescription();
+        this.attribute = builder.getFlaggedAttribute();
         this.openBadgeEventId = builder.getOpenBadgeEventId();
         this.closeBadgeEventId = builder.getCloseBadgeEventId();
     }
@@ -41,8 +42,12 @@ public class Flag {
         return reason;
     }
 
-    public FlagDetails getDetails() {
-        return details;
+    public String getDescription() {
+        return description;
+    }
+
+    public FlaggedAttribute getAttribute() {
+        return attribute;
     }
 
     public Integer getOpenBadgeEventId() {

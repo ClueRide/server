@@ -1,6 +1,5 @@
 package com.clueride.domain.flag;
 
-import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 import com.clueride.util.TestOnly;
 
