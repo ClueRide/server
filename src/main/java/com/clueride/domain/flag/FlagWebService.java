@@ -1,7 +1,6 @@
 package com.clueride.domain.flag;
 
 import com.clueride.auth.Secured;
-import com.clueride.domain.flag.details.FlaggedAttribute;
 import com.clueride.domain.flag.reason.FlagReason;
 
 import javax.inject.Inject;

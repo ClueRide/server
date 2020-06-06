@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.attraction;
 
+import com.clueride.domain.flag.Flag;
 import com.clueride.domain.image.ImageLink;
 import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.ReadinessLevel;
@@ -56,6 +57,7 @@ public class Attraction {
     private final String establishment;
     private final Integer establishmentId;
     private final Map<String, Optional<Double>> tagScores;
+    private final List<Flag> flags;
 
     /**
      * Constructor accepting Entity instance.
@@ -86,6 +88,9 @@ public class Attraction {
         } else {
             mainLink = null;
         }
+
+        // Possibly empty list
+        flags = entity.getFlags();
 
         // Featured Level requires the following
         googlePlaceId = entity.getGooglePlaceId();
@@ -170,6 +175,10 @@ public class Attraction {
 
     public LocLink getMainLink() {
         return mainLink;
+    }
+
+    public List<Flag> getFlags() {
+        return flags;
     }
 
     /**

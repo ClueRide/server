@@ -10,7 +10,11 @@ public class AttractionStoreJpa implements AttractionStore {
 
     @Override
     public AttractionEntity getById(Integer attractionId) {
-        return entityManager.find(AttractionEntity.class, attractionId);
+        AttractionEntity entity = entityManager.find(AttractionEntity.class, attractionId);
+        if (entity == null) {
+            throw new AttractionNotFoundException("Attraction ID " + attractionId + " not found");
+        }
+        return entity;
     }
 
 }

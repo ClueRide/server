@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.attraction;
 
+import com.clueride.domain.flag.Flag;
 import com.clueride.domain.image.ImageLinkEntity;
 import com.clueride.domain.location.ReadinessLevel;
 import com.clueride.domain.location.latlon.LatLonEntity;
@@ -94,6 +95,9 @@ public class AttractionEntity {
 
     @Transient
     private ReadinessLevel readinessLevel;
+
+    @Transient
+    private List<Flag> flags;
 
     public AttractionEntity() {}
 
@@ -330,4 +334,12 @@ public class AttractionEntity {
         return this;
     }
 
+    public List<Flag> getFlags() {
+        return flags;
+    }
+
+    public AttractionEntity withFlags(List<Flag> flags) {
+        this.flags = flags;
+        return this;
+    }
 }
