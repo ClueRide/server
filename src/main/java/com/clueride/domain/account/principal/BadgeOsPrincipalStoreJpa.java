@@ -17,11 +17,10 @@
  */
 package com.clueride.domain.account.principal;
 
-import java.util.List;
-
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -50,7 +49,10 @@ public class BadgeOsPrincipalStoreJpa implements BadgeOsPrincipalStore {
 
     @Override
     public List<BadgeOsPrincipalEntity> getAll() {
-        return entityManager.createQuery("SELECT p FROM BadgeOsPrincipalEntity p").getResultList();
+        return entityManager.createQuery(
+                "SELECT p FROM BadgeOsPrincipalEntity p",
+                BadgeOsPrincipalEntity.class
+        ).getResultList();
     }
 
 }

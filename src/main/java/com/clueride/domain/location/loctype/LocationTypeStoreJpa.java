@@ -17,11 +17,10 @@
  */
 package com.clueride.domain.location.loctype;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JPA implementation of the LocationTypeStore (DAO).
@@ -35,7 +34,8 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
         List<LocationType> locationTypes = new ArrayList<>();
         List<LocationTypeEntity> locTypeBuilders =
                 entityManager.createQuery(
-                        "SELECT lt from LocationTypeEntity lt"
+                        "SELECT lt from LocationTypeEntity lt",
+                        LocationTypeEntity.class
                 ).getResultList();
 
         for (LocationTypeEntity locTypeBuilder : locTypeBuilders) {
@@ -48,7 +48,8 @@ public class LocationTypeStoreJpa implements LocationTypeStore {
     public LocationType getLocationTypeByName(String locationTypeName) {
 
         List<LocationTypeEntity> locationTypeEntities = entityManager.createQuery(
-                "SELECT lt FROM LocationTypeEntity lt WHERE lt.name = :locTypeName"
+                "SELECT lt FROM LocationTypeEntity lt WHERE lt.name = :locTypeName",
+                LocationTypeEntity.class
         ).setParameter("locTypeName", locationTypeName)
                 .getResultList();
 

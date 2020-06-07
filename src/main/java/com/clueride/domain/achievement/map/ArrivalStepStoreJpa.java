@@ -17,13 +17,12 @@
  */
 package com.clueride.domain.achievement.map;
 
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
+import java.util.List;
 
 /**
  * JPA implementation of {@link ArrivalStepStore}.
@@ -41,7 +40,8 @@ public class ArrivalStepStoreJpa implements ArrivalStepStore {
         LOGGER.debug("Retrieving all Steps");
         List<ArrivalStepEntity> entities;
         entities = entityManager.createQuery(
-                "SELECT s FROM ArrivalStepEntity s"
+                "SELECT s FROM ArrivalStepEntity s",
+                ArrivalStepEntity.class
         ).getResultList();
         return entities;
     }

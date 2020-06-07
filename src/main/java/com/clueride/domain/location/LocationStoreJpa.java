@@ -17,22 +17,16 @@
  */
 package com.clueride.domain.location;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
-import org.slf4j.Logger;
+import javax.transaction.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * JPA Implementation of the LocationStore (DAO) interface.
@@ -67,7 +61,8 @@ public class LocationStoreJpa implements LocationStore {
     @Override
     public Collection<LocationEntity> getLocationBuilders() {
         List<LocationEntity> locationList = entityManager.createQuery(
-                "SELECT l FROM LocationEntity l"
+                "SELECT l FROM LocationEntity l",
+                LocationEntity.class
         ).getResultList();
         return new ArrayList<>(locationList);
     }
@@ -106,7 +101,8 @@ public class LocationStoreJpa implements LocationStore {
                 "SELECT l FROM LocationEntity l" +
                         " WHERE l.locationTypeId IN (" +
                         "SELECT lt.id from LocationTypeEntity lt WHERE lt.themeId IN (" +
-                        "SELECT t.id from ThemeEntity t) )"
+                        "SELECT t.id from ThemeEntity t) )",
+                LocationEntity.class
         ).getResultList();
         return new ArrayList<>(locationList);
     }

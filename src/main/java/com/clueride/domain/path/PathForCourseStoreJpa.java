@@ -17,10 +17,9 @@
  */
 package com.clueride.domain.path;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * JPA-implementation of {@link PathForCourseStore}.
@@ -35,7 +34,8 @@ public class PathForCourseStoreJpa implements PathForCourseStore {
         builders = entityManager.createQuery(
                "SELECT p FROM PathForCourseEntity p " +
                        " WHERE p.courseId = :courseId" +
-                       " ORDER BY p.pathOrder"
+                       " ORDER BY p.pathOrder",
+                PathForCourseEntity.class
         ).setParameter(
                 "courseId", courseId
         ).getResultList();

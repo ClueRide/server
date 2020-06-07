@@ -17,17 +17,11 @@
  */
 package com.clueride.domain.location.loclink;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import javax.transaction.*;
+import java.util.List;
 
 /**
  * JPA implementation of {@link LocLinkStore}.
@@ -56,7 +50,8 @@ public class LocLinkStoreJpa implements LocLinkStore {
     public LocLinkEntity findByUrl(String locLinkText) {
         List<LocLinkEntity> locLinkEntities =  entityManager.createQuery(
                 "SELECT l from LocLinkEntity l " +
-                        " WHERE l.link = :linkText"
+                        " WHERE l.link = :linkText",
+                LocLinkEntity.class
         )
                 .setParameter("linkText", locLinkText)
                 /* getSingleResult would throw an exception which is a bother. */

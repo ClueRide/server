@@ -17,20 +17,14 @@
  */
 package com.clueride.domain.team;
 
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
-import org.slf4j.Logger;
+import javax.transaction.*;
+import java.util.List;
 
 /**
  * JPA implementation of {@link TeamStore}.
@@ -68,10 +62,11 @@ public class TeamStoreJpa implements TeamStore {
         LOGGER.info("Retrieving full list of Teams");
         return (List<TeamEntity>) entityManager.createQuery(
                 "SELECT t FROM TeamEntity t " +
-                "left outer join OutingViewEntity o " +
-                "on o.teamId = t.id " +
-                "order by o.courseId, " +
-                "o.scheduledTime desc"
+                        "left outer join OutingViewEntity o " +
+                        "on o.teamId = t.id " +
+                        "order by o.courseId, " +
+                        "o.scheduledTime desc",
+                TeamEntity.class
         ).getResultList();
     }
 

@@ -17,11 +17,10 @@
  */
 package com.clueride.domain.course;
 
-import java.io.IOException;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * JPA-based implementation of CourseStore.
@@ -47,8 +46,10 @@ public class CourseStoreJpa implements CourseStore {
 
     @Override
     public List<CourseEntity> getCourses() {
-        return entityManager.createQuery("SELECT c from CourseEntity c ORDER BY c.name")
-                .getResultList();
+        return entityManager.createQuery(
+                "SELECT c from CourseEntity c ORDER BY c.name",
+                CourseEntity.class
+        ).getResultList();
     }
 
 }

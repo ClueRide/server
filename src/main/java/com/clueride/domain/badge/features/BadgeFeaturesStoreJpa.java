@@ -17,13 +17,12 @@
  */
 package com.clueride.domain.badge.features;
 
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
+import java.util.List;
 
 /**
  * JPA implementation of {@link BadgeFeaturesStore}.
@@ -41,7 +40,9 @@ public class BadgeFeaturesStoreJpa implements BadgeFeaturesStore {
         LOGGER.debug("Retrieving full list of Badges/Achievements that can be earned");
         List<BadgeFeaturesEntity> badgeFeaturesEntityList;
         badgeFeaturesEntityList = entityManager.createQuery(
-               "SELECT bfe FROM BadgeFeaturesEntity bfe"
+               "SELECT bfe FROM BadgeFeaturesEntity bfe",
+                BadgeFeaturesEntity.class
+
         ).getResultList();
         return badgeFeaturesEntityList;
     }
@@ -52,7 +53,8 @@ public class BadgeFeaturesStoreJpa implements BadgeFeaturesStore {
         List<BadgeFeaturesEntity> badgeFeaturesEntityList;
         badgeFeaturesEntityList = entityManager.createQuery(
                 "SELECT bfe FROM BadgeFeaturesEntity bfe " +
-                        "WHERE bfe.badgeName = 'theme-close-ended' OR bfe.badgeName = 'theme-open-ended'"
+                        "WHERE bfe.badgeName = 'theme-close-ended' OR bfe.badgeName = 'theme-open-ended'",
+                BadgeFeaturesEntity.class
         ).getResultList();
         return badgeFeaturesEntityList;
     }

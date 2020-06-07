@@ -28,7 +28,10 @@ public class FlagStoreJpa implements FlagStore {
 
     @Override
     public List<FlagEntity> getFlags() {
-        return entityManager.createQuery("SELECT f FROM FlagEntity f").getResultList();
+        return entityManager.createQuery(
+                "SELECT f FROM FlagEntity f",
+                FlagEntity.class
+        ).getResultList();
     }
 
     @Override
@@ -38,8 +41,11 @@ public class FlagStoreJpa implements FlagStore {
 
     @Override
     public List<FlagEntity> getFlagsForAttractions(List<Integer> attractionIds) {
-        return entityManager.createQuery("SELECT f from FlagEntity f WHERE attractionId in :ids")
-                .setParameter("ids", attractionIds)
+        return entityManager.createQuery(
+                "SELECT f from FlagEntity f WHERE attractionId in :ids",
+                FlagEntity.class
+        ).setParameter("ids", attractionIds)
                 .getResultList();
     }
+
 }

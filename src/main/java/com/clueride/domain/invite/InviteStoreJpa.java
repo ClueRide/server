@@ -17,21 +17,15 @@
  */
 package com.clueride.domain.invite;
 
-import java.io.IOException;
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
-import org.slf4j.Logger;
+import javax.transaction.*;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * JPA persistence for the Invite entity.
@@ -66,10 +60,11 @@ public class InviteStoreJpa implements InviteStore {
         inviteEntities = entityManager.createQuery(
                 "SELECT i FROM InviteEntity i where i.memberId = :memberId AND i.inviteState " +
                         "IN (" +
-                          "com.clueride.domain.invite.InviteState.SENT," +
-                          "com.clueride.domain.invite.InviteState.ACCEPTED," +
-                          "com.clueride.domain.invite.InviteState.DECLINED" +
-                        ")"
+                        "com.clueride.domain.invite.InviteState.SENT," +
+                        "com.clueride.domain.invite.InviteState.ACCEPTED," +
+                        "com.clueride.domain.invite.InviteState.DECLINED" +
+                        ")",
+                InviteEntity.class
         ).setParameter("memberId", memberId)
                 .getResultList();
         return inviteEntities;

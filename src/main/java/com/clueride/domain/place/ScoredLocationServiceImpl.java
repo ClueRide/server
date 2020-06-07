@@ -17,14 +17,15 @@
  */
 package com.clueride.domain.place;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
+import com.clueride.domain.attraction.AttractionEntity;
 import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.ReadinessLevel;
 import com.clueride.domain.puzzle.Puzzle;
 import com.clueride.domain.puzzle.PuzzleService;
+
+import javax.inject.Inject;
+import java.util.List;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
@@ -43,7 +44,7 @@ public class ScoredLocationServiceImpl implements ScoredLocationService {
 
     @Override
     public ReadinessLevel calculateReadinessLevel(LocationEntity location) {
-                /* Emptiness across all of these makes it a NODE. */
+        /* Emptiness across all of these makes it a NODE. */
         if (isNullOrEmpty(location.getName())
                 && isNullOrEmpty(location.getDescription())
                 && location.getFeaturedImage() == null
@@ -69,6 +70,40 @@ public class ScoredLocationServiceImpl implements ScoredLocationService {
 
         /* If everything else is defined except our Google Place ID, we're an Attraction. */
         if (location.getGooglePlaceId() == null) {
+            return ReadinessLevel.ATTRACTION;
+        } else {
+            return ReadinessLevel.FEATURED;
+        }
+    }
+
+    @Override
+    public ReadinessLevel calculateReadinessLevel(AttractionEntity attractionEntity) {
+        /* Emptiness across all of these makes it a NODE. */
+        if (isNullOrEmpty(attractionEntity.getName())
+                && isNullOrEmpty(attractionEntity.getDescription())
+                && attractionEntity.getFeaturedImage() == null
+                && attractionEntity.getLocationTypeId() == 0
+        ) {
+            return ReadinessLevel.NODE;
+        }
+
+        /* Handle anything that could make this a draft. */
+        if (isNullOrEmpty(attractionEntity.getName())
+                || isNullOrEmpty(attractionEntity.getDescription())
+                || attractionEntity.getFeaturedImage() == null
+                || attractionEntity.getLocationTypeId() == 0
+        ) {
+            return ReadinessLevel.DRAFT;
+        }
+
+        /* If we're missing the Puzzles, we're just a Place. */
+        List<Puzzle> puzzles = puzzleService.getByLocation(attractionEntity.getId());
+        if (puzzles.size() == 0) {
+            return ReadinessLevel.PLACE;
+        }
+
+        /* If everything else is defined except our Google Place ID, we're an Attraction. */
+        if (attractionEntity.getGooglePlaceId() == null) {
             return ReadinessLevel.ATTRACTION;
         } else {
             return ReadinessLevel.FEATURED;

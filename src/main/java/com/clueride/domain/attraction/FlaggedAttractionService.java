@@ -1,5 +1,7 @@
 package com.clueride.domain.attraction;
 
+import java.util.List;
+
 public interface FlaggedAttractionService {
 
     /**
@@ -11,5 +13,13 @@ public interface FlaggedAttractionService {
      * AttractionNotFoundException if no matching AttractionID.
      */
     Attraction getByIdWithFlags(Integer attractionId);
+
+    /**
+     * Retrieve all Attractions and populate with any issues those attractions
+     * may have.
+     *
+     * @return List of all Attractions with their Flags populated.
+     */
+    List<Attraction> getAllAttractions();
 
 }

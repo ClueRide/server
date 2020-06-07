@@ -17,19 +17,13 @@
  */
 package com.clueride.domain.account.member;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import javax.transaction.*;
+import java.util.List;
 
 /**
  * JPA Implementation of the MemberStore (DAO) interface.
@@ -86,14 +80,18 @@ public class MemberStoreJpa implements MemberStore {
 
     @Override
     public List<MemberEntity> getAllMembers() {
-        return entityManager.createQuery("SELECT m FROM MemberEntity m").getResultList();
+        return entityManager.createQuery(
+                "SELECT m FROM MemberEntity m",
+                MemberEntity.class
+        ).getResultList();
     }
 
     @Override
     public List<MemberEntity> getMatchingMembers(String pattern) {
         return entityManager.createQuery(
                 "SELECT m FROM MemberEntity m " +
-                        " WHERE lower(m.displayName) like :pattern"
+                        " WHERE lower(m.displayName) like :pattern",
+                MemberEntity.class
         ).setParameter(
                 "pattern",
                 "%"+pattern.toLowerCase()+"%")

@@ -1,5 +1,7 @@
 package com.clueride.domain.attraction;
 
+import java.util.List;
+
 public interface AttractionStore {
 
     /**
@@ -10,5 +12,14 @@ public interface AttractionStore {
      * if not present.
      */
     AttractionEntity getById(Integer attractionId);
+
+    /**
+     * Retrieve all Attractions.
+     *
+     * Filtering for this particular call would happen client-side.
+     *
+     * @return List of all Attraction instances.
+     */
+    List<AttractionEntity> getAllAttractions();
 
 }
