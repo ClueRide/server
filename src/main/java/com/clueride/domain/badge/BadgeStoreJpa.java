@@ -17,13 +17,12 @@
  */
 package com.clueride.domain.badge;
 
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
+import java.util.List;
 
 /**
  * JPA implementation of Badge Store.
@@ -41,7 +40,8 @@ public class BadgeStoreJpa implements BadgeStore {
         LOGGER.debug("Retrieving Badges for User ID {}", userId);
         List<BadgeEntity> builderList;
         builderList = entityManager.createQuery(
-                    "SELECT b FROM BadgeEntity b WHERE b.userId = :userId"
+                "SELECT b FROM BadgeEntity b WHERE b.userId = :userId",
+                BadgeEntity.class
         )
                 .setParameter("userId", userId)
                 .getResultList();

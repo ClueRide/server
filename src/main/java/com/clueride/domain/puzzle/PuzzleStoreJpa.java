@@ -17,19 +17,13 @@
  */
 package com.clueride.domain.puzzle;
 
-import java.util.List;
+import com.clueride.domain.location.LocationEntity;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
-import com.clueride.domain.location.LocationEntity;
+import javax.transaction.*;
+import java.util.List;
 
 /**
  * Implementation of the Puzzle Store.
@@ -65,8 +59,9 @@ public class PuzzleStoreJpa implements PuzzleStore {
     public List<PuzzleEntity> getPuzzlesForLocation(LocationEntity locationEntity) {
         List<PuzzleEntity> puzzleEntities;
         puzzleEntities = entityManager.createQuery(
-                        "SELECT p FROM PuzzleEntity p where p.locationEntity = :locationEntity"
-                ).setParameter("locationEntity", locationEntity)
+                "SELECT p FROM PuzzleEntity p where p.locationEntity = :locationEntity",
+                PuzzleEntity.class
+        ).setParameter("locationEntity", locationEntity)
                 .getResultList();
         return puzzleEntities;
     }

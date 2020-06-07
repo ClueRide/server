@@ -31,7 +31,7 @@ public class PageStoreJpa implements PageStore {
     public PageEntity getPageBySlug(String slug) {
 
         return entityManager.createQuery(
-                "SELECT p from Page p " +
+                "SELECT p from PageEntity p " +
                         "WHERE p.pageSlug = :slug",
                     PageEntity.class
                 )

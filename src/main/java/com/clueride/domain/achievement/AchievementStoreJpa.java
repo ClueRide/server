@@ -17,13 +17,12 @@
  */
 package com.clueride.domain.achievement;
 
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
+import java.util.List;
 
 /**
  * JPA-based implementation of {@link AchievementStore}.
@@ -37,15 +36,18 @@ public class AchievementStoreJpa implements AchievementStore {
 
     @Override
     public List<AchievementEntity> getAllAchievements() {
-        return entityManager.createQuery("SELECT ach FROM AchievementEntity ach")
-                .getResultList();
+        return entityManager.createQuery(
+                "SELECT ach FROM AchievementEntity ach",
+                AchievementEntity.class
+        ).getResultList();
     }
 
     @Override
     public List<AchievementEntity> getAchievementsForUser(Integer userId) {
         return entityManager.createQuery("SELECT ach FROM AchievementEntity ach " +
-                "WHERE ach.userId = :userId")
-                .setParameter("userId", userId)
+                "WHERE ach.userId = :userId",
+                AchievementEntity.class
+        ).setParameter("userId", userId)
                 .getResultList();
     }
 

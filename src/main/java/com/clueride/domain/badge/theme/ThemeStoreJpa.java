@@ -17,13 +17,12 @@
  */
 package com.clueride.domain.badge.theme;
 
-import java.util.List;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
+import java.util.List;
 
 /**
  * JPA implementation of {@link ThemeStore}.
@@ -38,28 +37,28 @@ public class ThemeStoreJpa implements ThemeStore {
     @Override
     public List<ThemeEntity> getThemes() {
         LOGGER.debug("Retrieving list of All Themes");
-        List<ThemeEntity> themes = entityManager.createQuery(
-                "SELECT t FROM ThemeEntity t"
+        return entityManager.createQuery(
+                "SELECT t FROM ThemeEntity t",
+                ThemeEntity.class
         ).getResultList();
-        return themes;
     }
 
     @Override
     public List<ThemeEntity> getClosedThemes() {
         LOGGER.debug("Retrieving list of Closed Themes");
-        List<ThemeEntity> themes = entityManager.createQuery(
-                "SELECT t FROM ThemeEntity t WHERE t.themeType = 'closed'"
+        return entityManager.createQuery(
+                "SELECT t FROM ThemeEntity t WHERE t.themeType = 'closed'",
+                ThemeEntity.class
         ).getResultList();
-        return themes;
     }
 
     @Override
     public List<ThemeEntity> getOpenThemes() {
         LOGGER.debug("Retrieving list of Open Themes");
-        List<ThemeEntity> themes = entityManager.createQuery(
-                "SELECT t FROM ThemeEntity t WHERE t.themeType = 'open'"
+        return entityManager.createQuery(
+                "SELECT t FROM ThemeEntity t WHERE t.themeType = 'open'",
+                ThemeEntity.class
         ).getResultList();
-        return themes;
     }
 
 }

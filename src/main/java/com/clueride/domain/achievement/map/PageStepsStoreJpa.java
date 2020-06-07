@@ -17,10 +17,9 @@
  */
 package com.clueride.domain.achievement.map;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * JPA-based implementation of {@link PageStepsStore}.
@@ -32,7 +31,8 @@ public class PageStepsStoreJpa implements PageStepsStore {
     @Override
     public List<PageStepEntity> getAllRecords() {
         return entityManager.createQuery(
-                "SELECT p2s from PageStepEntity p2s"
+                "SELECT p2s from PageStepEntity p2s",
+                PageStepEntity.class
         ).getResultList();
     }
 

@@ -17,10 +17,9 @@
  */
 package com.clueride.domain.location.category;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * JPA implementation of {@link CategoryStore}.
@@ -33,7 +32,8 @@ public class CategoryStoreJpa implements CategoryStore {
     @Override
     public List<CategoryEntity> fetchAll() {
         return entityManager.createQuery(
-                "SELECT c FROM CategoryEntity c order by c.name"
+                "SELECT c FROM CategoryEntity c order by c.name",
+                CategoryEntity.class
         ).getResultList();
     }
 

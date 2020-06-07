@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.place;
 
+import com.clueride.domain.attraction.AttractionEntity;
 import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.location.ReadinessLevel;
 
@@ -30,5 +31,19 @@ public interface ScoredLocationService {
      * @return Readiness Level
      */
     ReadinessLevel calculateReadinessLevel(LocationEntity location);
+
+    /**
+     * Given an AttractionEntity from the dataStore, compute the Readiness level
+     * for that Attraction.
+     *
+     * This is orthogonal to any Flags on the Attraction, but obviously, if
+     * an Attraction has Flags, then it isn't ready. In geneneral however,
+     * only Attractions which have reached the level of Attraction would be
+     * flagged.
+     *
+     * @param attractionEntity to be evaluated.
+     * @return Readiness Level for the Attraction.
+     */
+    ReadinessLevel calculateReadinessLevel(AttractionEntity attractionEntity);
 
 }

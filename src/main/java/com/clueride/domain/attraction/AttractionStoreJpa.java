@@ -2,6 +2,7 @@ package com.clueride.domain.attraction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 public class AttractionStoreJpa implements AttractionStore {
 
@@ -15,6 +16,14 @@ public class AttractionStoreJpa implements AttractionStore {
             throw new AttractionNotFoundException("Attraction ID " + attractionId + " not found");
         }
         return entity;
+    }
+
+    @Override
+    public List<AttractionEntity> getAllAttractions() {
+        return entityManager.createQuery(
+                "SELECT a FROM AttractionEntity a",
+                AttractionEntity.class
+        ).getResultList();
     }
 
 }
