@@ -17,31 +17,19 @@
  */
 package com.clueride.domain.location;
 
+import com.clueride.domain.image.ImageLinkEntity;
+import com.clueride.domain.location.latlon.LatLonEntity;
+import com.clueride.domain.location.loclink.LocLinkEntity;
+import com.clueride.domain.puzzle.PuzzleEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import com.clueride.domain.image.ImageLinkEntity;
-import com.clueride.domain.location.latlon.LatLonEntity;
-import com.clueride.domain.location.loclink.LocLinkEntity;
-import com.clueride.domain.puzzle.PuzzleEntity;
 
 /**
  * Knows how to assemble the parts of a Location.
@@ -78,7 +66,7 @@ public class LocationEntity {
     @JoinColumn(name= "main_link_id")
     private LocLinkEntity mainLink;
 
-    @Column(name="location_type_id", updatable = false, insertable = false)
+    @Column(name="location_type_id")
     private Integer locationTypeId;
 
     @Column(name="location_group_id") private Integer locationGroupId;
