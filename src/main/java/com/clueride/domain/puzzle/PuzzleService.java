@@ -17,9 +17,9 @@
  */
 package com.clueride.domain.puzzle;
 
-import java.util.List;
-
 import com.clueride.domain.location.LocationEntity;
+
+import java.util.List;
 
 /**
  * Defines the operations on a Puzzle.
@@ -51,5 +51,15 @@ public interface PuzzleService {
      * @return Empty Puzzle ready to be filled by the client.
      */
     Puzzle getBlankPuzzleForLocation(LocationEntity locationEntity);
+
+    /**
+     * Deletes all puzzles for the given Location ID.
+     *
+     * This includes the answers for the puzzle as well.
+     *
+     * @param locationEntity {@link LocationEntity} that represents the Location.
+     * @return List of the Puzzle instances deleted.
+     */
+    List<Puzzle> removeByLocation(LocationEntity locationEntity);
 
 }

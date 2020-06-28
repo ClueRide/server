@@ -17,31 +17,19 @@
  */
 package com.clueride.domain.puzzle;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.clueride.domain.location.LocationEntity;
+import com.clueride.domain.puzzle.answer.AnswerEntity;
+import com.clueride.domain.puzzle.answer.AnswerKey;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import com.clueride.domain.location.LocationEntity;
-import com.clueride.domain.puzzle.answer.AnswerEntity;
-import com.clueride.domain.puzzle.answer.AnswerKey;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Persistable Builder for {@link Puzzle} instances.
@@ -56,18 +44,20 @@ public final class PuzzleEntity {
 
     private String name;
     private String question;
+    private Integer points;
 
     @OneToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
             mappedBy = "puzzleEntity"
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("answers")
     private List<AnswerEntity> answerEntities = new ArrayList<>();
 
     @Column(name = "correct_answer")
     private AnswerKey correctAnswer;
-    private Integer points;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")

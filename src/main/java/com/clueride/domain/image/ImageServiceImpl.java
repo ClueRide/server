@@ -17,19 +17,18 @@
  */
 package com.clueride.domain.image;
 
+import com.clueride.config.ConfigService;
+import com.clueride.domain.location.LocationEntity;
+import com.clueride.domain.location.LocationStore;
+import com.google.common.io.BaseEncoding;
+import org.slf4j.Logger;
+
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import com.google.common.io.BaseEncoding;
-import org.slf4j.Logger;
-
-import com.clueride.config.ConfigService;
-import com.clueride.domain.location.LocationEntity;
-import com.clueride.domain.location.LocationStore;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -73,6 +72,14 @@ public class ImageServiceImpl implements ImageService {
             locationStore.update(locationEntity);
         }
         return image;
+    }
+
+    @Override
+    public List<ImageLinkEntity> releaseImagesForLocation(Integer locationId) {
+        requireNonNull(locationId, "Must specify location");
+        List<ImageLinkEntity> imageLinkEntities = imageStore.getImagesForLocation(locationId);
+        imageStore.releaseImagesForLocation(locationId);
+        return imageLinkEntities;
     }
 
     private Integer persistImageContent(Integer locationId, InputStream fileData) {

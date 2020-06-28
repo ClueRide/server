@@ -17,9 +17,9 @@
  */
 package com.clueride.domain.image;
 
-import java.util.List;
-
 import com.clueride.domain.location.Location;
+
+import java.util.List;
 
 /**
  * Defines operations on {@link ImageLinkEntity} instances.
@@ -49,5 +49,15 @@ public interface ImageService {
      * @return Identifying record for this image, including its URL on the system.
      */
     ImageLinkEntity saveLocationImage(ImageUploadRequest imageUploadRequest);
+
+    /**
+     * Unlinks the images for the given location by removing the records in the database,
+     * but not the files on disk.
+     *
+     * @param locationId unique identifier for the Location.
+     * @return List of {@link ImageLinkEntity} matching the given location and no longer
+     * related to the location.
+     */
+    List<ImageLinkEntity> releaseImagesForLocation(Integer locationId);
 
 }

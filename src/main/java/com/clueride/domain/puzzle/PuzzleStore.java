@@ -17,9 +17,9 @@
  */
 package com.clueride.domain.puzzle;
 
-import java.util.List;
-
 import com.clueride.domain.location.LocationEntity;
+
+import java.util.List;
 
 /**
  * Definition of operations on Puzzle records.
@@ -37,9 +37,10 @@ public interface PuzzleStore {
     PuzzleEntity getPuzzleById(Integer id);
 
     /**
-     * Given a Location ID, retrieve all Puzzles for that location.
+     * Given a Location, retrieve all Puzzles for that location.
      *
-     * @param locationEntity@return (possibly empty) list of Puzzles for the Location.
+     * @param locationEntity instance representing Location.
+     * @return (possibly empty) list of Puzzles for the Location.
      */
     List<PuzzleEntity> getPuzzlesForLocation(LocationEntity locationEntity);
 
@@ -49,4 +50,10 @@ public interface PuzzleStore {
      */
     void update(PuzzleEntity puzzleEntity);
 
+    /**
+     * Delete the given Puzzle and its answers.
+     *
+     * @param puzzleEntity to be removed.
+     */
+    void removePuzzle(PuzzleEntity puzzleEntity);
 }
