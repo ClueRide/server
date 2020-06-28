@@ -77,4 +77,19 @@ public class PuzzleStoreJpa implements PuzzleStore {
         }
     }
 
+    @Override
+    public void removePuzzle(PuzzleEntity puzzleEntity) {
+        try {
+            userTransaction.begin();
+            entityManager.remove(
+                    entityManager.contains(puzzleEntity)
+                            ? puzzleEntity
+                            : entityManager.merge(puzzleEntity)
+            );
+            userTransaction.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -30,6 +30,7 @@ import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loclink.LocLinkService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.place.ScoredLocationService;
+import com.clueride.domain.puzzle.PuzzleService;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.SessionScoped;
@@ -60,6 +61,7 @@ public class LocationServiceImpl implements LocationService {
     private final LatLonService latLonService;
     private final ScoredLocationService scoredLocationService;
     private final ImageStore imageStore;
+    private final PuzzleService puzzleService;
     private final LocLinkService locLinkService;
 
     @Inject
@@ -69,6 +71,7 @@ public class LocationServiceImpl implements LocationService {
             LatLonService latLonService,
             ScoredLocationService scoredLocationService,
             ImageStore imageStore,
+            PuzzleService puzzleService,
             LocLinkService locLinkService
     ) {
         this.courseService = courseService;
@@ -76,6 +79,7 @@ public class LocationServiceImpl implements LocationService {
         this.latLonService = latLonService;
         this.scoredLocationService = scoredLocationService;
         this.imageStore = imageStore;
+        this.puzzleService = puzzleService;
         this.locLinkService = locLinkService;
     }
 
@@ -157,6 +161,10 @@ public class LocationServiceImpl implements LocationService {
 
         LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
         if (locationEntity != null) {
+            /* Drop all images & puzzles. */
+            imageStore.releaseImagesForLocation(locationId);
+            puzzleService.removeByLocation(locationEntity);
+
             locationStore.delete(locationEntity);
             return locationEntity.build();
         } else {

@@ -17,6 +17,14 @@
  */
 package com.clueride.domain.image;
 
+import com.clueride.config.ConfigService;
+import org.apache.commons.io.IOUtils;
+
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,20 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
-import org.apache.commons.io.IOUtils;
-
-import com.clueride.config.ConfigService;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -147,6 +141,19 @@ public class ImageStoreImpl implements ImageStore {
             e.printStackTrace();
         }
         return imageLinkEntity.getId();
+    }
+
+    @Override
+    public void releaseImagesForLocation(Integer locationId) {
+        try {
+            userTransaction.begin();
+            entityManager.createQuery("DELETE from ImageByLocationEntity where locationId = :locationId")
+                    .setParameter("locationId", locationId)
+                    .executeUpdate();
+            userTransaction.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -17,10 +17,10 @@
  */
 package com.clueride.domain.image;
 
+import com.clueride.domain.location.Location;
+
 import java.io.InputStream;
 import java.util.List;
-
-import com.clueride.domain.location.Location;
 
 /**
  * Defines JPA and File System operations on {@link ImageLinkEntity} instances.
@@ -72,5 +72,15 @@ public interface ImageStore {
      * @return unique identifier for the link record.
      */
     Integer addNewToLocation(ImageLinkEntity imageLinkEntity, Integer locationId);
+
+    /**
+     * Removes the records for the ImageLinkEntity instances which are assigned to
+     * the given location ID.
+     *
+     * Files on disk are not removed.
+     *
+     * @param locationId Unique identifier for the {@link Location} instance.
+     */
+    void releaseImagesForLocation(Integer locationId);
 
 }
