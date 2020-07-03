@@ -23,6 +23,7 @@ import com.clueride.network.path.PathService;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getAllCourses() {
         return courseStore.getCourses().stream().map(c -> c.build()).collect(Collectors.toList());
+    }
+
+    @Override
+    public Course addNewCourse(CourseEntity courseEntity) {
+        try {
+            courseStore.addNew(courseEntity);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return courseEntity.build();
     }
 
     @Override

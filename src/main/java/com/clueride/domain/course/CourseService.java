@@ -51,4 +51,13 @@ public interface CourseService {
      */
     List<Course> getAllCourses();
 
+    /**
+     * Given the Course instance which hasn't yet been entered to the database,
+     * create a new record with the details provided.
+     *
+     * @param courseEntity mutable instance to be created.
+     * @return same course but with the ID populated from the database.
+     */
+    Course addNewCourse(CourseEntity courseEntity);
+
 }
