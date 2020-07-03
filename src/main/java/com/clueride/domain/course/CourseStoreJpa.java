@@ -17,8 +17,10 @@
  */
 package com.clueride.domain.course;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,9 +31,19 @@ public class CourseStoreJpa implements CourseStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
+    @Resource
+    private UserTransaction userTransaction;
+
     @Override
     public Integer addNew(CourseEntity courseEntity) throws IOException {
-        return null;
+        try {
+            userTransaction.begin();
+            entityManager.persist(courseEntity);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
+        return courseEntity.getId();
     }
 
     @Override

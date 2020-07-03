@@ -17,17 +17,9 @@
  */
 package com.clueride.domain.course;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Builder for Course instances (which are probably CourseView Instances).
@@ -36,6 +28,8 @@ import javax.persistence.Transient;
 @Table(name="course")
 public class CourseEntity {
     @Id
+    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "course_pk_sequence")
+    @SequenceGenerator(name="course_pk_sequence", sequenceName = "course_id_seq", allocationSize = 1)
     private Integer id;
     private String name;
     private String description;
