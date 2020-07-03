@@ -15,7 +15,12 @@ package com.clueride.domain.badge.features;/*
  *
  * Created by jett on 5/28/19.
  */
-// TODO: Website page discussing these levels:
+
+/**
+ * Defines the badge levels.
+ *
+ * Colors for these levels are described on this page: http://bikehighways.wikidot.com/badge-levels.
+ */
 public enum ALevel {
     NO_LEVEL,
     AWARE,
