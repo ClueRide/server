@@ -17,19 +17,15 @@
  */
 package com.clueride.domain.account.member;
 
-import java.util.List;
+import com.clueride.auth.Secured;
+import org.apache.http.HttpHeaders;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
-import com.clueride.auth.Secured;
+import java.util.List;
 
 /**
  * REST API for Members.
@@ -39,6 +35,9 @@ import com.clueride.auth.Secured;
 public class MemberWebService {
     @Inject
     private MemberService memberService;
+
+    @Inject
+    HttpServletRequest httpServletRequest;
 
     @GET
     @Secured
@@ -64,13 +63,12 @@ public class MemberWebService {
     }
 
     @POST
-    @Secured
     @Path("cross-check")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Member performCrossCheck(Member member) {
-        return memberService.crossCheck(member);
+        String authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        return memberService.crossCheck(member, authHeader);
     }
-
 
 }

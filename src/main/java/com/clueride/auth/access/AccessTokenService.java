@@ -17,12 +17,14 @@
  */
 package com.clueride.auth.access;
 
-import java.util.concurrent.ExecutionException;
-
 import com.clueride.auth.identity.ClueRideIdentity;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Describes the features provided for Access Tokens.
+ *
+ * Much of this service is backed by a 3rd-party Auth service.
  */
 public interface AccessTokenService {
     /**
@@ -69,5 +71,10 @@ public interface AccessTokenService {
      * @return true if the represented session is active.
      */
     boolean isSessionActive(String token);
+
+    /**
+     * Given the Auth Header, validate that there is an Access Token that can be obtained.
+     */
+    void validateAuthHeader(String authHeader);
 
 }

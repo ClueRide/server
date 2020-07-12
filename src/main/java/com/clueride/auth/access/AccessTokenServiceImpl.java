@@ -17,22 +17,21 @@
  */
 package com.clueride.auth.access;
 
-import java.io.Serializable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
+import com.clueride.RecordNotFoundException;
+import com.clueride.auth.InvalidAuthTokenException;
+import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.identity.IdentityStore;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.slf4j.Logger;
 
-import com.clueride.RecordNotFoundException;
-import com.clueride.auth.identity.ClueRideIdentity;
-import com.clueride.auth.identity.IdentityStore;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Default implementation of AccessTokenService.
@@ -98,6 +97,16 @@ public class AccessTokenServiceImpl implements AccessTokenService, Serializable 
     @Override
     public boolean isSessionActive(String token) {
         return identityCache.asMap().containsKey(token);
+    }
+
+    @Override
+    public void validateAuthHeader(String authHeader) {
+        if (authHeader == null) {
+            throw new InvalidAuthTokenException("No Auth Header provided");
+        };
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new InvalidAuthTokenException("Auth Header missing the word 'Bearer'");
+        }
     }
 
 }

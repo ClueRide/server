@@ -19,6 +19,7 @@ package com.clueride.domain.course;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.domain.outing.NoSessionOutingException;
 import com.clueride.network.path.PathService;
 
 import javax.enterprise.context.SessionScoped;
@@ -26,6 +27,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of CourseService.
@@ -50,6 +53,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getSessionCourse() {
+        requireNonNull(clueRideSessionDto, "Session not established");
+
+        if (clueRideSessionDto.hasNoOuting()) {
+            throw new NoSessionOutingException();
+        }
         return getById(
                 clueRideSessionDto.getOutingView().getCourseId()
         );

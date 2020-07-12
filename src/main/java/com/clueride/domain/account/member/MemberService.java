@@ -17,12 +17,11 @@
  */
 package com.clueride.domain.account.member;
 
-import java.util.List;
+import com.clueride.auth.identity.ClueRideIdentity;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-
-import com.clueride.auth.identity.ClueRideIdentity;
+import java.util.List;
 
 /**
  * Provides business-layer services for Clue Ride Members.
@@ -68,7 +67,7 @@ public interface MemberService {
      * @param clueRideIdentity personal data provided by Identity Provider.
      * @return Member instance built from ClueRideIdentity.
      */
-    Member createNewMember(ClueRideIdentity clueRideIdentity);
+    MemberEntity createNewMember(ClueRideIdentity clueRideIdentity);
 
     /**
      * Given a pattern, return a list of members that match the pattern.
@@ -88,8 +87,9 @@ public interface MemberService {
      * </ul>
      *
      * @param member to be checked.
+     * @param authHeader the token which can be confirmed against 3rd-party Auth service.
      * @return Updates for conflicting information, if appropriate.
      */
-    Member crossCheck(Member member);
+    Member crossCheck(Member member, String authHeader);
 
 }
