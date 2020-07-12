@@ -17,10 +17,10 @@
  */
 package com.clueride.domain.invite;
 
+import com.clueride.domain.account.member.Member;
+
 import java.io.IOException;
 import java.util.List;
-
-import com.clueride.domain.account.member.Member;
 
 /**
  * Service supporting the Invite Model which ties together an Outing and a Member.
@@ -47,7 +47,9 @@ public interface InviteService {
      * an Invite.
      * Both the Outing and the Member are validated to make sure we have what
      * is needed.
-     * TODO: Inviting an entire team makes more sense.
+     *
+     * This is useful when a new Member is created just prior to joining an existing Outing.
+     *
      * @param outingId The identifier for the Outing which we're inviting people to attend.
      * @param memberId Unique identifier for the person ({@link Member}) who we invite.
      * @return Fully-populated Invite instance.

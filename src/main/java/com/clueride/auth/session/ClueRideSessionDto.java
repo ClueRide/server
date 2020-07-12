@@ -17,14 +17,14 @@
  */
 package com.clueride.auth.session;
 
-import java.io.Serializable;
-
 import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.invite.Invite;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.puzzle.state.PuzzleState;
+
+import java.io.Serializable;
 
 /**
  * "Holder" for session-related class instances.
@@ -83,6 +83,11 @@ public class ClueRideSessionDto implements Serializable {
 
     public PuzzleState getPuzzleState() {
         return puzzleState;
+    }
+
+    /** Convenience method. */
+    public boolean hasNoOuting() {
+        return (this.outingView == null);
     }
 
 }

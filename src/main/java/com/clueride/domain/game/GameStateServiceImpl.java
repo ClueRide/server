@@ -26,6 +26,7 @@ import com.clueride.domain.course.CourseService;
 import com.clueride.domain.game.ssevent.SSEventService;
 import com.clueride.domain.location.Location;
 import com.clueride.domain.location.LocationService;
+import com.clueride.domain.outing.NoSessionOutingException;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.puzzle.Puzzle;
 import com.clueride.domain.puzzle.PuzzleService;
@@ -89,8 +90,11 @@ public class GameStateServiceImpl implements GameStateService {
 
     /**
      * Retrieves the GameState by Outing ID.
+     *
      * If other sessions have advanced the GameState, it will be available in our map.
      * If not, we want to set it to an appropriate state.
+     * If there is no Game in progress, or there is no Outing, the Game State should reflect this.
+     *
      * @return the GameState instance for the Outing.
      */
     @Override
@@ -99,6 +103,12 @@ public class GameStateServiceImpl implements GameStateService {
     }
 
     private GameState.Builder getBuilderForSession() {
+        requireNonNull(clueRideSessionDto, "Session has not been established");
+
+        if (clueRideSessionDto.hasNoOuting()) {
+            throw new NoSessionOutingException();
+        }
+
         Integer outingId = clueRideSessionDto.getOutingView().getId();
         /* TODO: What to do if outingId is empty?  CA-330: Exception mapping. */
         if (outingId == null) {

@@ -36,4 +36,13 @@ public interface ClueRideSessionService {
      */
     void setSessionForToken(String token, ClueRideSessionDto sessionDto);
 
+    /**
+     * Given the Access Token, look up and populate the Session instance
+     * for an existing Member.
+     *
+     * @param accessToken unique and opaque token representing the user's active session.
+     * @return Session instance populated with values appropriate to the user's session.
+     */
+    ClueRideSessionDto loadSessionForExistingAccount(String accessToken);
+
 }

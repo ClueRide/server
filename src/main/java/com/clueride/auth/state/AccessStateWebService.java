@@ -17,15 +17,14 @@
  */
 package com.clueride.auth.state;
 
+import com.clueride.domain.account.member.Member;
+import org.apache.http.HttpHeaders;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
-import org.apache.http.HttpHeaders;
 
 /**
  * REST API for certain operations on an AccessToken's state.
@@ -34,7 +33,7 @@ import org.apache.http.HttpHeaders;
  *
  * Obtaining an AccessToken is the responsibility of a 3rd-party identity provider.
  */
-@Path("access/state")
+@Path("/access/state")
 @RequestScoped
 public class AccessStateWebService {
     @Inject
@@ -47,6 +46,23 @@ public class AccessStateWebService {
     public Boolean getAccessTokenState() {
         String authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         return accessStateService.isRegistered(authHeader);
+    }
+
+    @GET
+    @Path("account")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccountState getAccountState() {
+        String authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        return accessStateService.getAccountState(authHeader);
+    }
+
+    @POST
+    @Path("init")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Member registerNewMember(Member member) {
+        String authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        return accessStateService.registerNewMember(member, authHeader);
     }
 
 }

@@ -17,22 +17,21 @@
  */
 package com.clueride.domain.account.member;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.clueride.RecordNotFoundException;
+import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.domain.account.register.RegisterService;
+import org.slf4j.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.slf4j.Logger;
-
-import com.clueride.RecordNotFoundException;
-import com.clueride.auth.identity.ClueRideIdentity;
-import com.clueride.auth.session.ClueRideSession;
-import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.domain.account.register.RegisterService;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -100,12 +99,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    // TODO: CA-405 connects the Image URL more tightly (SVR-37 addresses this in part).
-    public Member createNewMember(ClueRideIdentity clueRideIdentity) {
-        MemberEntity memberEntity = memberStore.addNew(
+    public MemberEntity createNewMember(ClueRideIdentity clueRideIdentity) {
+        return memberStore.addNew(
                 MemberEntity.from(clueRideIdentity)
         );
-        return memberEntity.build();
     }
 
     @Override
@@ -119,30 +116,41 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * This is called by clients when they believe the profile for an account is
+     * either brand new or has updated information.
+     *
+     * The Member record supplied should correspond to the one that is placed in
+     * the session during the API's check for the access token.
+     *
      * This implementation performs a brief verification that the email addresses
-     * match up. There is also an opportunity to update / create the BadgeOS account
+     * match up. This is also the opportunity to update / create the BadgeOS account
      * if it doesn't exist.
      *
-     * This does invoke the registration of the device.
+     * This does invoke the registration of the device, but should only do so if the
+     * account is new (no BadgeOS record; we can't award the badge without a BadgeOS
+     * record and once we have that record, we shouldn't award the badge again).
      *
-     * @param member to be checked.
+     * @param clientSideMember to be checked.
+     * @param authHeader
      * @return same (or updated?) member.
      */
     @Override
-    public Member crossCheck(Member member) {
-        requireNonNull(member, "Unable to run cross check without Member");
+    public Member crossCheck(Member clientSideMember, String authHeader) {
+        requireNonNull(clientSideMember, "Unable to run cross check without Member");
 
-        Member sessionMember = clueRideSessionDto.getMember();
-        /* TODO: Check that we have the BadgeOS Account. */
-        if (sessionMember.getEmailAddress().equals(member.getEmailAddress())) {
-            registerService.register();
-        } else {
-            LOGGER.warn("Session address ({}) doesn't match chosen address ({})",
-                    sessionMember.getEmailAddress(),
-                    member.getEmailAddress()
-            );
-        }
-        return member;
+//        Member sessionMember;
+//
+//        /* TODO: SVR-109 Check that we have the BadgeOS Account. */
+//
+//        if (sessionMember.getEmailAddress().equals(clientSideMember.getEmailAddress())) {
+//            registerService.register();
+//        } else {
+//            LOGGER.warn("Session address ({}) doesn't match chosen address ({})",
+//                    sessionMember.getEmailAddress(),
+//                    clientSideMember.getEmailAddress()
+//            );
+//        }
+        return clientSideMember;
     }
 
 }

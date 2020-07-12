@@ -17,12 +17,12 @@
  */
 package com.clueride.domain.account.member;
 
-import java.io.Serializable;
-import java.util.Collections;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.io.Serializable;
+import java.util.Collections;
 
 public class Member implements Serializable {
     private int id;
@@ -86,6 +86,11 @@ public class Member implements Serializable {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    /** Alias for `emailAddress` supporting JWT profile instance. */
+    public void setEmail(String email) {
+        this.emailAddress = email;
     }
 
     @Override

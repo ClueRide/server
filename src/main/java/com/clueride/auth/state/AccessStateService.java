@@ -17,6 +17,8 @@
  */
 package com.clueride.auth.state;
 
+import com.clueride.domain.account.member.Member;
+
 /**
  * Supports AccessStateWebService REST API.
  */
@@ -37,5 +39,25 @@ public interface AccessStateService {
      * </ul>
      */
     Boolean isRegistered(String authHeader);
+
+    /**
+     * Returns an evaluation of the Account represented by the AuthHeader
+     * -- specifically, an instance of {@link AccountState}.
+     *
+     * @param authHeader Access token representing a given account.
+     * @return Determination of {@link AccountState}.
+     */
+    AccountState getAccountState(String authHeader);
+
+    /**
+     * Upon confirmation of an email address, the client will have an access token which
+     * when validated by the 3rd-party Auth service, allows this service to establish records
+     * for both ClueRide and BadgeOS.
+     *
+     * @param member {@link Member} instance as assembled by the client from JWT token from 3rd-party Auth service.
+     * @param authHeader String representing the raw Authorization header -- expects 'Bearer' style header.
+     * @return the updated Member record including the IDs required (member ID and BadgeOS ID).
+     */
+    Member registerNewMember(Member member, String authHeader);
 
 }

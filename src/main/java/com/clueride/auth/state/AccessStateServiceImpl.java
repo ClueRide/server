@@ -17,19 +17,25 @@
  */
 package com.clueride.auth.state;
 
-import javax.inject.Inject;
-import javax.mail.internet.InternetAddress;
-
-import org.slf4j.Logger;
-
 import com.clueride.RecordNotFoundException;
+import com.clueride.auth.InvalidAuthTokenException;
 import com.clueride.auth.access.AccessTokenService;
 import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.auth.session.ClueRideSessionService;
 import com.clueride.config.ConfigService;
 import com.clueride.domain.account.member.Member;
+import com.clueride.domain.account.member.MemberEntity;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.BadgeOsPrincipalService;
+import com.clueride.domain.invite.InviteService;
+import com.clueride.domain.outing.OutingService;
+import org.slf4j.Logger;
+
+import javax.inject.Inject;
+import javax.mail.internet.InternetAddress;
+import java.io.IOException;
 
 /**
  * Implementation of {@link AccessStateService}.
@@ -42,37 +48,48 @@ public class AccessStateServiceImpl implements AccessStateService {
     private final ConfigService configService;
     private final BadgeOsPrincipalService badgeOsPrincipalService;
     private final MemberService memberService;
+    private final OutingService outingService;
+    private final ClueRideSessionService clueRideSessionService;
+    private final InviteService inviteService;
 
     @Inject
     public AccessStateServiceImpl(
             AccessTokenService accessTokenService,
             ConfigService configService,
             BadgeOsPrincipalService badgeOsPrincipalService,
-            MemberService memberService
+            MemberService memberService,
+            OutingService outingService,
+            ClueRideSessionService clueRideSessionService,
+            InviteService inviteService
     ) {
         this.accessTokenService = accessTokenService;
         this.configService = configService;
         this.badgeOsPrincipalService = badgeOsPrincipalService;
         this.memberService = memberService;
+        this.outingService = outingService;
+        this.clueRideSessionService = clueRideSessionService;
+        this.inviteService = inviteService;
     }
 
     @Override
     public Boolean isRegistered(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
+        try {
+            accessTokenService.validateAuthHeader(authHeader);
+        } catch (InvalidAuthTokenException e) {
+            /* No need to reveal too much info regarding auth failure; leave it in the logs. */
+            LOGGER.error("isRegistered() finds problem with authHeader", e);
             return false;
         }
+
         String token = authHeader.substring("Bearer".length()).trim();
         if (accessTokenService.isSessionActive(token)) {
             return true;
         } else {
-            if (token.equals(configService.getTestToken())) {
-                LOGGER.info("Allowing Test Token");
+            if (isTestAccount(token)) {
                 return true;
             }
-            if (configService.getTestAccountMap().containsKey(token)) {
-                LOGGER.info("Allowing Configurable Test Token");
-                return true;
-            }
+
             try {
                 ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(token);
                 createOrUpdatePrincipal(clueRideIdentity);
@@ -81,6 +98,117 @@ public class AccessStateServiceImpl implements AccessStateService {
             }
         }
         return true;
+    }
+
+    /* Experimental. */
+    @Override
+    public AccountState getAccountState(String authHeader) {
+        try {
+            accessTokenService.validateAuthHeader(authHeader);
+        } catch (InvalidAuthTokenException e) {
+            LOGGER.error("getAccountState() finds problem with authHeader", e);
+            return AccountState.INVALID;
+        }
+
+        String token = authHeader.substring("Bearer".length()).trim();
+        if (accessTokenService.isSessionActive(token)) {
+            return AccountState.EXISTING;
+        }
+
+        if (isTestAccount(token)) {
+            return AccountState.TEST;
+        }
+
+        try {
+            ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(token);
+            createOrUpdatePrincipal(clueRideIdentity);
+        } catch (RecordNotFoundException rnfe) {
+            return AccountState.UNRECOGNIZED;
+        }
+
+        return AccountState.NEW;
+    }
+
+    @Override
+    public Member registerNewMember(Member member, String authHeader) {
+        /* Throws exception if programmer error messes up supplying a valid token. */
+        accessTokenService.validateAuthHeader(authHeader);
+        String token = authHeader.substring("Bearer".length()).trim();
+
+        if (member.getEmailAddress().isEmpty()) {
+            throw new RuntimeException("Missing Email Address on Member instance");
+        }
+
+        /* Ask 3rd-party Auth service who it thinks is registering with this token. */
+        ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(token);
+
+        MemberEntity memberEntity = MemberEntity.from(member);
+        if (member.getEmailAddress().equals(clueRideIdentity.getEmail().getAddress())) {
+            LOGGER.info("Registering {}", member.getEmailAddress());
+
+            /* Establish new Member record. */
+            memberEntity = memberService.createNewMember(clueRideIdentity);
+
+            // TODO: Create Session DTO.
+            ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
+
+            /* Establish BadgeOS record. */
+            // TODO: SVR-109 to create the Record; when that record comes back, we can use that
+            // instead of something like this:
+//             clueRideSessionDto.setBadgeOSPrincipal(
+//                     badgeOsPrincipalService.getBadgeOsPrincipal(memberEntity.getEmailAddress())
+//             );
+
+            /* Temporary, just to avoid client crashing while attempting to setup badge channel. */
+            clueRideSessionDto.setBadgeOSPrincipal(
+                    badgeOsPrincipalService.getBadgeOsPrincipal("noInviteUser@clueride.com")
+            );
+            memberEntity.withBadgeOSId(53);
+            /* 53 == noInviteUser. */
+
+            // TODO: Add registration.
+
+            /* Invite them to the "eternal" Outing. */
+            final int ETERNAL_OUTING = 1;
+            try {
+                clueRideSessionDto.setInvite(
+                        inviteService.createNew(ETERNAL_OUTING, memberEntity.getId())
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // TODO: Interesting that we have both Member and ClueRideIdentity and BadgeOSID.
+            clueRideSessionDto.setMember(memberEntity.build());
+            clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
+            clueRideSessionDto.setOutingView(
+                    outingService.getViewById(ETERNAL_OUTING)
+            );
+
+            clueRideSessionService.setSessionForToken(token, clueRideSessionDto);
+        }
+
+        return memberEntity.build();
+    }
+
+    /**
+     * Returns true if the given token represents a TEST account.
+     *
+     * Token is assumed to have been validated.
+     *
+     * @param token String representing a Test account.
+     * @return true if this token represents a TEST account.
+     */
+    private boolean isTestAccount(String token) {
+        if (token.equals(configService.getTestToken())) {
+            LOGGER.info("Allowing Test Token");
+            return true;
+        }
+        if (configService.getTestAccountMap().containsKey(token)) {
+            LOGGER.info("Allowing Configurable Test Token");
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -115,6 +243,6 @@ public class AccessStateServiceImpl implements AccessStateService {
             /* No existing Member record, let's create one from ClueRideIdentity. */
             memberService.createNewMember(clueRideIdentity);
         }
-
     }
+
 }

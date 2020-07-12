@@ -17,19 +17,13 @@
  */
 package com.clueride.domain.account.member;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import com.clueride.auth.identity.ClueRideIdentity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.clueride.auth.identity.ClueRideIdentity;
+import javax.persistence.*;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -79,6 +73,7 @@ public class MemberEntity {
                 .withId(member.getId())
                 .withBadgeOSId(member.getBadgeOSId())
                 .withPhone(member.getPhoneNumber())
+                .withImageUrl(member.getImageUrl())
                 .withFirstName(member.getFirstName())
                 .withLastName(member.getLastName())
                 .withDisplayName(member.getDisplayName())
