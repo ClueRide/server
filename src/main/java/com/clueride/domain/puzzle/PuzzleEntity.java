@@ -46,11 +46,10 @@ public class PuzzleEntity {
 
     @OneToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH},
             orphanRemoval = true,
             mappedBy = "puzzleEntity"
     )
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("answers")
     private List<AnswerEntity> answerEntities = new ArrayList<>();
 

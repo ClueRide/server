@@ -78,7 +78,7 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle addNew(PuzzleEntity puzzleEntity) {
+    public Puzzle addOrUpdate(PuzzleEntity puzzleEntity) {
         LocationEntity locationEntity = locationStore.getLocationBuilderById(puzzleEntity.getLocationId());
         puzzleEntity.withLocationBuilder(locationEntity);
         linkPuzzleToAnswers(puzzleEntity);
@@ -98,6 +98,8 @@ public class PuzzleServiceImpl implements PuzzleService {
 
     @Override
     public Puzzle getBlankPuzzleForLocation(LocationEntity locationEntity) {
+        LOGGER.debug("Creating Blank puzzle for {}", locationEntity.getName());
+
         List<AnswerEntity> answerEntities = new ArrayList<>();
         answerEntities.add(new AnswerEntity( AnswerKey.A, "" ));
         answerEntities.add(new AnswerEntity( AnswerKey.B, "" ));
