@@ -40,11 +40,14 @@ public interface PuzzleService {
     List<Puzzle> getByLocation(Integer locationId);
 
     /**
-     * Create a New puzzle instance for the given Location.
-     * @param puzzleEntity data for the new Puzzle.
+     * Create new or update existing puzzle instance for the given Location.
+     *
+     * Presence of a Puzzle ID tells us whether it is new or not.
+     *
+     * @param puzzleEntity data for the new or existing Puzzle.
      * @return fully-populated instance of the new Puzzle.
      */
-    Puzzle addNew(PuzzleEntity puzzleEntity);
+    Puzzle addOrUpdate(PuzzleEntity puzzleEntity);
 
     /**
      * Creates a New puzzle instance for the front-end to populate.

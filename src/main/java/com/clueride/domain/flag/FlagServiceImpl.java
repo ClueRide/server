@@ -54,7 +54,7 @@ public class FlagServiceImpl implements FlagService {
     public List<Flag> getFlagsForCourse(Integer courseId) {
         /* Check existence of Course; exception is thrown if not found. */
         Course course = courseService.getById(courseId);
-        LOGGER.info("Retrieving Flags for " + course.getName());
+        LOGGER.debug("Retrieving Flags for " + course.getName());
         LOGGER.debug("Attraction IDs: {}", course.getLocationIds());
 
         List<FlagEntity> flagEntities = flagStore.getFlagsForAttractions(

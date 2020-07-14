@@ -17,17 +17,6 @@
  */
 package com.clueride.domain.puzzle;
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.clueride.aop.badge.BadgeCapture;
 import com.clueride.auth.Secured;
 import com.clueride.domain.game.GameStateService;
@@ -35,6 +24,11 @@ import com.clueride.domain.location.LocationEntity;
 import com.clueride.domain.puzzle.answer.AnswerEntity;
 import com.clueride.domain.puzzle.answer.AnswerPost;
 import com.clueride.domain.puzzle.answer.AnswerSummary;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * REST API for {@link Puzzle} instances and their {@link AnswerEntity} instances.
@@ -70,7 +64,7 @@ public class PuzzleWebService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Puzzle savePuzzle(PuzzleEntity puzzleEntity) {
-        return puzzleService.addNew(puzzleEntity);
+        return puzzleService.addOrUpdate(puzzleEntity);
     }
 
     @POST

@@ -18,8 +18,10 @@
 package com.clueride.domain.puzzle;
 
 import com.clueride.domain.location.LocationEntity;
+import org.slf4j.Logger;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
@@ -29,6 +31,8 @@ import java.util.List;
  * Implementation of the Puzzle Store.
  */
 public class PuzzleStoreJpa implements PuzzleStore {
+    @Inject
+    private Logger LOGGER;
 
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
@@ -38,6 +42,7 @@ public class PuzzleStoreJpa implements PuzzleStore {
 
     @Override
     public Integer addNew(PuzzleEntity puzzleEntity) {
+        LOGGER.debug("Adding New Puzzle {}", puzzleEntity.getName());
         try {
             userTransaction.begin();
             entityManager.persist(puzzleEntity);
@@ -68,6 +73,7 @@ public class PuzzleStoreJpa implements PuzzleStore {
 
     @Override
     public void update(PuzzleEntity puzzleEntity) {
+        LOGGER.debug("Updating Existing Puzzle {}", puzzleEntity.getName());
         try {
             userTransaction.begin();
             entityManager.merge(puzzleEntity);
