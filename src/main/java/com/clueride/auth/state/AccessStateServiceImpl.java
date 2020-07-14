@@ -24,11 +24,14 @@ import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.auth.session.ClueRideSessionService;
 import com.clueride.config.ConfigService;
+import com.clueride.domain.account.badgeos.BadgeOsUserEntity;
+import com.clueride.domain.account.badgeos.BadgeOsUserService;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.member.MemberEntity;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.BadgeOsPrincipalService;
+import com.clueride.domain.account.register.RegisterService;
 import com.clueride.domain.invite.InviteService;
 import com.clueride.domain.outing.OutingService;
 import org.slf4j.Logger;
@@ -51,6 +54,8 @@ public class AccessStateServiceImpl implements AccessStateService {
     private final OutingService outingService;
     private final ClueRideSessionService clueRideSessionService;
     private final InviteService inviteService;
+    private final BadgeOsUserService badgeOsUserService;
+    private final RegisterService registerService;
 
     @Inject
     public AccessStateServiceImpl(
@@ -60,7 +65,9 @@ public class AccessStateServiceImpl implements AccessStateService {
             MemberService memberService,
             OutingService outingService,
             ClueRideSessionService clueRideSessionService,
-            InviteService inviteService
+            InviteService inviteService,
+            BadgeOsUserService badgeOsUserService,
+            RegisterService registerService
     ) {
         this.accessTokenService = accessTokenService;
         this.configService = configService;
@@ -69,6 +76,8 @@ public class AccessStateServiceImpl implements AccessStateService {
         this.outingService = outingService;
         this.clueRideSessionService = clueRideSessionService;
         this.inviteService = inviteService;
+        this.badgeOsUserService = badgeOsUserService;
+        this.registerService = registerService;
     }
 
     @Override
@@ -149,24 +158,15 @@ public class AccessStateServiceImpl implements AccessStateService {
             /* Establish new Member record. */
             memberEntity = memberService.createNewMember(clueRideIdentity);
 
-            // TODO: Create Session DTO.
             ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
 
             /* Establish BadgeOS record. */
-            // TODO: SVR-109 to create the Record; when that record comes back, we can use that
-            // instead of something like this:
-//             clueRideSessionDto.setBadgeOSPrincipal(
-//                     badgeOsPrincipalService.getBadgeOsPrincipal(memberEntity.getEmailAddress())
-//             );
-
-            /* Temporary, just to avoid client crashing while attempting to setup badge channel. */
+            BadgeOsUserEntity badgeOsUserEntity = BadgeOsUserEntity.from(memberEntity, clueRideIdentity);
+            badgeOsUserService.add(badgeOsUserEntity);
             clueRideSessionDto.setBadgeOSPrincipal(
-                    badgeOsPrincipalService.getBadgeOsPrincipal("noInviteUser@clueride.com")
+                    badgeOsPrincipalService.getBadgeOsPrincipal(memberEntity.getEmailAddress())
             );
-            memberEntity.withBadgeOSId(53);
-            /* 53 == noInviteUser. */
-
-            // TODO: Add registration.
+            memberEntity.withBadgeOSId(badgeOsUserEntity.getId());
 
             /* Invite them to the "eternal" Outing. */
             final int ETERNAL_OUTING = 1;
@@ -178,7 +178,6 @@ public class AccessStateServiceImpl implements AccessStateService {
                 e.printStackTrace();
             }
 
-            // TODO: Interesting that we have both Member and ClueRideIdentity and BadgeOSID.
             clueRideSessionDto.setMember(memberEntity.build());
             clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
             clueRideSessionDto.setOutingView(
@@ -186,6 +185,10 @@ public class AccessStateServiceImpl implements AccessStateService {
             );
 
             clueRideSessionService.setSessionForToken(token, clueRideSessionDto);
+
+            /* This will not work even if we have the DTO placed inside the session. */
+            // TODO: SVR-113: How to register outside of @Secured.
+//            registerService.register();
         }
 
         return memberEntity.build();
@@ -219,6 +222,7 @@ public class AccessStateServiceImpl implements AccessStateService {
      * @param clueRideIdentity from the Identity Provider.
      */
     private void createOrUpdatePrincipal(ClueRideIdentity clueRideIdentity) {
+        // TODO: Can serve as SVR-111 and/or SVR-112 code
 
         /* Find Badge OS record. */
         InternetAddress emailAddress = clueRideIdentity.getEmail();

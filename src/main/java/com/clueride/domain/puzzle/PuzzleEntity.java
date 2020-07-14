@@ -24,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "puzzle")
-public final class PuzzleEntity {
+public class PuzzleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "puzzle_pk_sequence")
     @SequenceGenerator(name = "puzzle_pk_sequence", sequenceName = "puzzle_id_seq", allocationSize = 1)

@@ -17,23 +17,20 @@
  */
 package com.clueride.auth.identity;
 
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.annotation.concurrent.Immutable;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Optional;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -60,12 +57,12 @@ import static java.util.Objects.requireNonNull;
 @Immutable
 public class ClueRideIdentity {
     private final String sub;
-    private final Optional<String> givenName;
-    private final Optional<String> familyName;
+    private final String givenName;
+    private final String familyName;
     private final String displayName;
     private final String nickName;
     private final URL pictureUrl;
-    private final Optional<String> gender;
+    private final String gender;
     private final String locale;
     private final Date updatedAt;
     private final InternetAddress email;
@@ -89,11 +86,11 @@ public class ClueRideIdentity {
         return sub;
     }
 
-    public Optional<String> getGivenName() {
+    public String getGivenName() {
         return givenName;
     }
 
-    public Optional<String> getFamilyName() {
+    public String getFamilyName() {
         return familyName;
     }
 
@@ -109,7 +106,7 @@ public class ClueRideIdentity {
         return pictureUrl;
     }
 
-    public Optional<String> getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -171,11 +168,11 @@ public class ClueRideIdentity {
                     .withEmailString(clueRideIdentity.getEmail().toString())
                     .withEmailVerified(clueRideIdentity.getEmailVerified())
                     .withDisplayName(clueRideIdentity.getDisplayName())
-                    .withGivenName(clueRideIdentity.getGivenName().orNull())
-                    .withFamilyName(clueRideIdentity.getFamilyName().orNull())
+                    .withGivenName(clueRideIdentity.getGivenName())
+                    .withFamilyName(clueRideIdentity.getFamilyName())
                     .withNickName(clueRideIdentity.getNickName())
                     .withPictureUrl(clueRideIdentity.getPictureUrl().toString())
-                    .withGender(clueRideIdentity.getGender().orNull())
+                    .withGender(clueRideIdentity.getGender())
                     .withLocale(clueRideIdentity.getLocale())
                     .withUpdatedAt(clueRideIdentity.getUpdatedAt())
                     ;
@@ -183,10 +180,6 @@ public class ClueRideIdentity {
 
         public ClueRideIdentity build() {
             return new ClueRideIdentity(this);
-        }
-
-        public void validate() throws MalformedURLException {
-            // TODO Would like better control over when we check the inputs; instead of during build().
         }
 
         public String getSub() {
@@ -198,8 +191,8 @@ public class ClueRideIdentity {
             return this;
         }
 
-        public Optional<String> getGivenName() {
-            return Optional.fromNullable(givenName);
+        public String getGivenName() {
+            return Objects.toString(givenName, "");
         }
 
         @JsonProperty("given_name")
@@ -208,8 +201,8 @@ public class ClueRideIdentity {
             return this;
         }
 
-        public Optional<String> getFamilyName() {
-            return Optional.fromNullable(familyName);
+        public String getFamilyName() {
+            return Objects.toString(familyName, "");
         }
 
         @JsonProperty("family_name")
@@ -262,8 +255,8 @@ public class ClueRideIdentity {
             return this;
         }
 
-        public Optional<String> getGender() {
-            return Optional.fromNullable(gender);
+        public String getGender() {
+            return Objects.toString(gender, "");
         }
 
         public Builder withGender(String gender) {
