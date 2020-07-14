@@ -138,18 +138,8 @@ public class MemberServiceImpl implements MemberService {
     public Member crossCheck(Member clientSideMember, String authHeader) {
         requireNonNull(clientSideMember, "Unable to run cross check without Member");
 
-//        Member sessionMember;
-//
-//        /* TODO: SVR-109 Check that we have the BadgeOS Account. */
-//
-//        if (sessionMember.getEmailAddress().equals(clientSideMember.getEmailAddress())) {
-//            registerService.register();
-//        } else {
-//            LOGGER.warn("Session address ({}) doesn't match chosen address ({})",
-//                    sessionMember.getEmailAddress(),
-//                    clientSideMember.getEmailAddress()
-//            );
-//        }
+        /* Creation of New Members has been moved to the AccessStateService. */
+
         return clientSideMember;
     }
 

@@ -83,8 +83,8 @@ public class MemberEntity {
     public static MemberEntity from(ClueRideIdentity clueRideIdentity) {
         requireNonNull(clueRideIdentity);
         return builder()
-                .withFirstName(clueRideIdentity.getGivenName().get())
-                .withLastName(clueRideIdentity.getFamilyName().get())
+                .withFirstName(clueRideIdentity.getGivenName())
+                .withLastName(clueRideIdentity.getFamilyName())
                 .withEmailAddress(clueRideIdentity.getEmail().toString())
                 .withDisplayName(clueRideIdentity.getDisplayName())
                 .withImageUrl(clueRideIdentity.getPictureUrl().toString())
