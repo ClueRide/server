@@ -63,6 +63,6 @@ public interface PuzzleService {
      * @param locationEntity {@link LocationEntity} that represents the Location.
      * @return List of the Puzzle instances deleted.
      */
-    List<Puzzle> removeByLocation(LocationEntity locationEntity);
+    List<PuzzleEntity> removeByLocation(LocationEntity locationEntity);
 
 }

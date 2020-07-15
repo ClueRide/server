@@ -112,12 +112,12 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public List<Puzzle> removeByLocation(LocationEntity locationEntity) {
-        List<Puzzle> puzzles = getByLocation(locationEntity.getId());
-        for (Puzzle puzzle: puzzles) {
-            puzzleStore.removePuzzle(PuzzleEntity.from(puzzle));
+    public List<PuzzleEntity> removeByLocation(LocationEntity locationEntity) {
+        List<PuzzleEntity> puzzleEntities = puzzleStore.getPuzzlesForLocation(locationEntity);
+        for (PuzzleEntity puzzleEntity: puzzleEntities) {
+            puzzleStore.removePuzzle(puzzleEntity);
         }
-        return puzzles;
+        return puzzleEntities;
     }
 
 }
