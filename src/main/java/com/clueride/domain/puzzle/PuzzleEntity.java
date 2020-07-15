@@ -46,7 +46,12 @@ public class PuzzleEntity {
 
     @OneToMany(
             fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH},
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.REMOVE,
+                    CascadeType.REFRESH,
+                    CascadeType.MERGE
+            },
             orphanRemoval = true,
             mappedBy = "puzzleEntity"
     )

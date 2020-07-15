@@ -66,9 +66,10 @@ public class FlagServiceImpl implements FlagService {
 
     @Override
     public List<Flag> getFlagsForAttraction(Integer attractionId) {
-        LOGGER.info("Retrieving Flags for Attraction ID {}", attractionId);
-
         List<FlagEntity> flagEntities = flagStore.getFlagsForAttractions(Collections.singletonList(attractionId));
+        if (flagEntities.size() > 0 ) {
+            LOGGER.info("Retrieving Flags for Attraction ID {}", attractionId);
+        }
         return buildFlagEntities(flagEntities);
     }
 
