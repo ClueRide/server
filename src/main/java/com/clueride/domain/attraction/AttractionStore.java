@@ -22,4 +22,11 @@ public interface AttractionStore {
      */
     List<AttractionEntity> getAllAttractions();
 
+    /**
+     * Retrieve a list of up to 10 Attractions whose name matches the name Fragment passed in.
+     *
+     * @param nameFragment string representing a set of characters to match against.
+     * @return List of matching Attractions.
+     */
+    List<AttractionEntity> getByNameFragment(String nameFragment);
 }

@@ -26,4 +26,18 @@ public class AttractionStoreJpa implements AttractionStore {
         ).getResultList();
     }
 
+    @Override
+    public List<AttractionEntity> getByNameFragment(String nameFragment) {
+        return entityManager.createQuery(
+                "SELECT a FROM AttractionEntity a " +
+                        "WHERE LOWER(a.name) LIKE :fragment " +
+                        "ORDER BY a.name",
+                        AttractionEntity.class
+        ).setParameter(
+                "fragment", nameFragment.toLowerCase() + '%'
+        ).setMaxResults(
+                10
+        ).getResultList();
+    }
+
 }
