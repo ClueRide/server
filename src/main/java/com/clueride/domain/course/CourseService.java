@@ -60,4 +60,15 @@ public interface CourseService {
      */
     Course addNewCourse(CourseEntity courseEntity);
 
+    /**
+     * Given an existing course with modified details or list of Paths/Attractions,
+     * update the relevant records.
+     *
+     * Note that this will update the presence or absence of Path records, not the Path records
+     * themselves.
+     *
+     * @param courseEntity mutable instance with details regarding the course.
+     * @return pretty much the same as what was passed in.
+     */
+    Course updateCourse(CourseEntity courseEntity);
 }

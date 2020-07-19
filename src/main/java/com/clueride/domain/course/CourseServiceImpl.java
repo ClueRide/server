@@ -21,6 +21,7 @@ import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.outing.NoSessionOutingException;
 import com.clueride.network.path.PathService;
+import org.slf4j.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -34,6 +35,9 @@ import static java.util.Objects.requireNonNull;
  * Implementation of CourseService.
  */
 public class CourseServiceImpl implements CourseService {
+    @Inject
+    private Logger LOGGER;
+
     private final PathService pathService;
     private final CourseStore courseStore;
 
@@ -80,6 +84,13 @@ public class CourseServiceImpl implements CourseService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return courseEntity.build();
+    }
+
+    @Override
+    public Course updateCourse(CourseEntity courseEntity) {
+        LOGGER.debug("Updating {}", courseEntity.getName());
+        courseStore.update(courseEntity);
         return courseEntity.build();
     }
 

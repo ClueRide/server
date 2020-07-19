@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * REST API for {@link Course} operations.
  */
-@Path("course")
+@Path("/course")
 public class CourseWebService {
     @Inject
     private CourseService courseService;
@@ -55,12 +55,20 @@ public class CourseWebService {
         return courseService.getById(courseId);
     }
 
-    @POST
+    @PUT
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Course addNewCourse(CourseEntity courseEntity) {
         return courseService.addNewCourse(courseEntity);
+    }
+
+    @POST
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Course updateCourse(CourseEntity courseEntity) {
+        return courseService.updateCourse(courseEntity);
     }
 
 }

@@ -53,7 +53,13 @@ public class CourseStoreJpa implements CourseStore {
 
     @Override
     public void update(CourseEntity courseEntity) {
-
+        try {
+            userTransaction.begin();
+            entityManager.merge(courseEntity);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
