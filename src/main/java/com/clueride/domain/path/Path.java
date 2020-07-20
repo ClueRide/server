@@ -17,10 +17,10 @@
  */
 package com.clueride.domain.path;
 
-import java.util.List;
-
 import com.clueride.domain.course.Course;
 import com.clueride.domain.location.Location;
+
+import java.util.List;
 
 /**
  * Represents a particular choice of Segments to travel between two
@@ -71,15 +71,15 @@ public interface Path {
     List<Integer> getEdgeIds();
 
     /**
-     * ID of the departure Location.
-     * @return unique Integer representing the Departure Location.
+     * ID of the departure Attraction.
+     * @return unique Integer representing the Departure Attraction.
      */
-    Integer getStartLocationId();
+    Integer getStartAttractionId();
 
     /**
-     * ID of the Destination Location.
-     * @return unique Integer representing the Destination Location.
+     * ID of the Destination Attraction.
+     * @return unique Integer representing the Destination Attraction.
      */
-    Integer getEndLocationId();
+    Integer getEndAttractionId();
 
 }

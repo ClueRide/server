@@ -123,8 +123,13 @@ public class CourseEntity {
         return courseToPathEntities;
     }
 
-    public CourseEntity withCourseToPathBuilders(List<CourseToPathEntity> courseToPathEntities) {
+    public CourseEntity withCourseToPathEntities(List<CourseToPathEntity> courseToPathEntities) {
         this.courseToPathEntities = courseToPathEntities;
+        return this;
+    }
+
+    public CourseEntity withCourseToPathEntity(CourseToPathEntity courseToPathEntity) {
+        this.courseToPathEntities.add(courseToPathEntity);
         return this;
     }
 

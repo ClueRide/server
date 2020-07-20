@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.path;
 
+import com.clueride.domain.course.Course;
+
 import java.util.List;
 
 /**
@@ -35,5 +37,15 @@ public interface PathService {
      * @return List of all Paths.
      */
     List<Path> getAll();
+
+    /**
+     * When building a Course, lists of Attractions are turned into
+     * a list of Paths linking those Attractions.
+     *
+     * @param courseId Unique identifier to for the {@link Course}.
+     * @param attractionIds ordered List of Attraction IDs to link together.
+     * @return ordered List of the {@link Path} instances that link together the Attractions.
+     */
+    List<LinkPath> getLinkPathsForAttractions(Integer courseId, List<Integer> attractionIds);
 
 }
