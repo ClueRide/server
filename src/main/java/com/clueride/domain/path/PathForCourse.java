@@ -17,14 +17,13 @@
  */
 package com.clueride.domain.path;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.concurrent.Immutable;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import javax.annotation.concurrent.Immutable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The data for a Path which links a Course to its Locations.
@@ -73,12 +72,12 @@ public class PathForCourse implements Path {
     }
 
     @Override
-    public Integer getStartLocationId() {
+    public Integer getStartAttractionId() {
         return this.startLocationId;
     }
 
     @Override
-    public Integer getEndLocationId() {
+    public Integer getEndAttractionId() {
         return this.endLocationId;
     }
 

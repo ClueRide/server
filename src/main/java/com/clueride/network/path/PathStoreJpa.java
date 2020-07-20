@@ -19,6 +19,7 @@ package com.clueride.network.path;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigInteger;
 
 /**
  * JPA implementation of {@link PathStore} that supports GeoJSON query.
@@ -46,5 +47,22 @@ public class PathStoreJpa implements PathStore {
                 .setParameter(1, pathId)
                 .getSingleResult();
     }
+
+    @Override
+    public Integer getEdgeCount(Integer pathId) {
+        return ((BigInteger) entityManager.createNativeQuery(
+                "SELECT count(edge_id) " +
+                        "FROM path_view " +
+                        " WHERE path_id = ?")
+                .setParameter(1, pathId)
+                .getSingleResult()
+        ).intValue();
+    }
+
+    @Override
+    public Integer addEdge(Integer pathId) {
+        return null;
+    }
+
 
 }

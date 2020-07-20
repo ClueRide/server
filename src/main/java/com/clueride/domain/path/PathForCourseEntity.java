@@ -17,22 +17,24 @@
  */
 package com.clueride.domain.path;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  * JPA-aware reading of Path information for assembling the data
  * without Geometry for a Course and its locations.
  *
+ * This is a read-only entity because it is backed by a view.
+ *
  * This class is used to tie together the IDs, but not necessarily
  * the actual entities behind those IDs. It's the responsibility of
- * the Location and Course services to fill out those objects.
+ * the Attraction and Course services to fill out those objects.
  */
 @Entity
 @Table(name="course_path_location")
@@ -50,9 +52,16 @@ public class PathForCourseEntity {
     @Column(name="end_node_id")
     private Integer endNodeId;
     @Column(name="start_location_id")
-    private Integer startLocationId;
+    private Integer startAttractionId;
     @Column(name="end_location_id")
-    private Integer endLocationId;
+    private Integer endAttractionId;
+
+    public static LinkPathEntity from(PathForCourseEntity existingPath) {
+        return LinkPathEntity.builder()
+                .withId(existingPath.id)
+                .withStartAttractionId(existingPath.startAttractionId)
+                .withEndAttractionId(existingPath.endAttractionId);
+    }
 
     public PathForCourse build() {
         return new PathForCourse(this);
@@ -87,11 +96,11 @@ public class PathForCourseEntity {
     }
 
     public Integer getStartLocationId() {
-        return startLocationId;
+        return startAttractionId;
     }
 
     public Integer getEndLocationId() {
-        return endLocationId;
+        return endAttractionId;
     }
 
     public void setId(Integer id) {
@@ -114,12 +123,12 @@ public class PathForCourseEntity {
         this.endNodeId = endNodeId;
     }
 
-    public void setStartLocationId(Integer startLocationId) {
-        this.startLocationId = startLocationId;
+    public void setStartAttractionId(Integer startAttractionId) {
+        this.startAttractionId = startAttractionId;
     }
 
-    public void setEndLocationId(Integer endLocationId) {
-        this.endLocationId = endLocationId;
+    public void setEndAttractionId(Integer endAttractionId) {
+        this.endAttractionId = endAttractionId;
     }
 
     @Override

@@ -17,6 +17,8 @@
  */
 package com.clueride.network.path;
 
+import com.clueride.auth.Secured;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,10 +26,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.clueride.auth.Secured;
-
 /**
- * REST API for {@link Path} instances.
+ * REST API for the GeoJson representation of Path instances.
+ *
+ * The entire sequence of edges is collapsed down to a single line.
  */
 @Path("/path")
 public class PathWebService {

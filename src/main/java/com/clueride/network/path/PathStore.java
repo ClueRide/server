@@ -37,4 +37,20 @@ public interface PathStore {
      */
     String getPathGeoJson(Integer pathId);
 
+    /**
+     * Returns number of Edge records for the given Path ID.
+     *
+     * @param pathId unique identifier for the Path.
+     * @return count of the number of Edge records for the Path.
+     */
+    Integer getEdgeCount(Integer pathId);
+
+    /**
+     * TBD: what needs to be provided so we can persist an edge?
+     *
+     * @param pathId unique identifier for the Path.
+     * @return Unique ID of the new Edge.
+     */
+    Integer addEdge(Integer pathId);
+
 }

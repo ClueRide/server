@@ -17,13 +17,7 @@
  */
 package com.clueride.domain.course;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Entity representing records in the Course To Path relationship table.
@@ -32,7 +26,10 @@ import javax.persistence.Table;
 @Table(name="course_to_path")
 public class CourseToPathEntity {
     @Id
+    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "ctp_pk_sequence")
+    @SequenceGenerator(name="ctp_pk_sequence", sequenceName = "course_to_path_id_seq", allocationSize = 1)
     private Integer id;
+
     @Column(name="path_order")
     private Integer pathOrder;
 
@@ -42,6 +39,11 @@ public class CourseToPathEntity {
 
     @Column(name="path_id")
     private Integer pathId;
+
+    public static CourseToPathEntity builder() {
+        return new CourseToPathEntity();
+    }
+
 
     public Integer getId() {
         return id;
