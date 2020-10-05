@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.path;
 
+import com.clueride.domain.path.meta.PathMetaEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -56,8 +57,8 @@ public class PathForCourseEntity {
     @Column(name="end_location_id")
     private Integer endAttractionId;
 
-    public static LinkPathEntity from(PathForCourseEntity existingPath) {
-        return LinkPathEntity.builder()
+    public static PathMetaEntity from(PathForCourseEntity existingPath) {
+        return PathMetaEntity.builder()
                 .withId(existingPath.id)
                 .withStartAttractionId(existingPath.startAttractionId)
                 .withEndAttractionId(existingPath.endAttractionId);

@@ -1,19 +1,19 @@
-package com.clueride.domain.path;
+package com.clueride.domain.path.meta;
 
 import javax.annotation.concurrent.Immutable;
 
 @Immutable
-public class LinkPath {
+public class PathMeta {
     private final Integer id;
     private final Integer startAttractionId;
     private final Integer endAttractionId;
     private final Boolean hasEdges;
 
-    public LinkPath(LinkPathEntity linkPathEntity) {
-        this.id = linkPathEntity.getId();
-        this.startAttractionId = linkPathEntity.getStartAttractionId();
-        this.endAttractionId = linkPathEntity.getEndAttractionId();
-        this.hasEdges = linkPathEntity.hasEdges();
+    public PathMeta(PathMetaEntity pathMetaEntity) {
+        this.id = pathMetaEntity.getId();
+        this.startAttractionId = pathMetaEntity.getStartAttractionId();
+        this.endAttractionId = pathMetaEntity.getEndAttractionId();
+        this.hasEdges = pathMetaEntity.hasEdges();
     }
 
     public Integer getId() {

@@ -17,6 +17,8 @@
  */
 package com.clueride.domain.course;
 
+import com.clueride.domain.course.link.CourseToPathLinkEntity;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,10 @@ public class CourseEntity {
             cascade = CascadeType.ALL,
             mappedBy = "course"
     )
-    private List<CourseToPathEntity> courseToPathEntities = new ArrayList<>();
+    private List<CourseToPathLinkEntity> courseToPathEntities = new ArrayList<>();
+
+    @Column(name="starting_location_id")
+    private Integer startingAttractionId;
 
     @Transient  /* From the CourseToPathBuilders. */
     private List<Integer> pathIds;
@@ -67,7 +72,7 @@ public class CourseEntity {
 
     public Course build() {
         this.pathIds = new ArrayList<>();
-        for (CourseToPathEntity builder : courseToPathEntities) {
+        for (CourseToPathLinkEntity builder : courseToPathEntities) {
             pathIds.add(builder.getPathId());
         }
 
@@ -119,21 +124,21 @@ public class CourseEntity {
         return this;
     }
 
-    public List<CourseToPathEntity> getCourseToPathEntities() {
+    public List<CourseToPathLinkEntity> getCourseToPathEntities() {
         return courseToPathEntities;
     }
 
-    public CourseEntity withCourseToPathEntities(List<CourseToPathEntity> courseToPathEntities) {
+    public CourseEntity withCourseToPathEntities(List<CourseToPathLinkEntity> courseToPathEntities) {
         this.courseToPathEntities = courseToPathEntities;
         return this;
     }
 
-    public CourseEntity withCourseToPathEntity(CourseToPathEntity courseToPathEntity) {
-        this.courseToPathEntities.add(courseToPathEntity);
+    public CourseEntity withCourseToPathEntity(CourseToPathLinkEntity courseToPathLinkEntity) {
+        this.courseToPathEntities.add(courseToPathLinkEntity);
         return this;
     }
 
-    public void setCourseToPathEntities(List<CourseToPathEntity> courseToPathEntities) {
+    public void setCourseToPathEntities(List<CourseToPathLinkEntity> courseToPathEntities) {
         this.courseToPathEntities = courseToPathEntities;
     }
 
@@ -155,4 +160,12 @@ public class CourseEntity {
         return this;
     }
 
+    public Integer getStartingAttractionId() {
+        return startingAttractionId;
+    }
+
+    public CourseEntity withStartingAttractionId(Integer startingAttractionId) {
+        this.startingAttractionId = startingAttractionId;
+        return this;
+    }
 }

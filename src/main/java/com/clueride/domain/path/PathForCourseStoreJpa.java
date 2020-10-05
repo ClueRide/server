@@ -17,8 +17,10 @@
  */
 package com.clueride.domain.path;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import java.util.List;
 
 /**
@@ -27,6 +29,9 @@ import java.util.List;
 public class PathForCourseStoreJpa implements PathForCourseStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
+
+    @Resource
+    private UserTransaction userTransaction;
 
     @Override
     public List<PathForCourseEntity> getPathsForCourse(Integer courseId) {
@@ -42,4 +47,5 @@ public class PathForCourseStoreJpa implements PathForCourseStore {
 
         return builders;
     }
+
 }

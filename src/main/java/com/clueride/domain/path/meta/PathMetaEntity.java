@@ -1,10 +1,10 @@
-package com.clueride.domain.path;
+package com.clueride.domain.path.meta;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="path")
-public class LinkPathEntity {
+public class PathMetaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "path_pk_sequence")
     @SequenceGenerator(name = "path_pk_sequence", sequenceName = "path_id_seq", allocationSize = 1)
@@ -25,19 +25,19 @@ public class LinkPathEntity {
     @Transient
     private Integer endAttractionId;
 
-    public static LinkPathEntity builder() {
-        return new LinkPathEntity();
+    public static PathMetaEntity builder() {
+        return new PathMetaEntity();
     }
 
-    public LinkPath build() {
-        return new LinkPath(this);
+    public PathMeta build() {
+        return new PathMeta(this);
     }
 
     public Integer getId() {
         return id;
     }
 
-    public LinkPathEntity withId(Integer id) {
+    public PathMetaEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -50,12 +50,12 @@ public class LinkPathEntity {
         return endNodeId;
     }
 
-    public LinkPathEntity withStartNodeId(Integer startNodeId) {
+    public PathMetaEntity withStartNodeId(Integer startNodeId) {
         this.startNodeId = startNodeId;
         return this;
     }
 
-    public LinkPathEntity withEndNodeId(Integer endNodeId) {
+    public PathMetaEntity withEndNodeId(Integer endNodeId) {
         this.endNodeId = endNodeId;
         return this;
     }
@@ -64,7 +64,7 @@ public class LinkPathEntity {
         return hasEdges;
     }
 
-    public LinkPathEntity withHasEdges(Boolean hasEdges) {
+    public PathMetaEntity withHasEdges(Boolean hasEdges) {
         this.hasEdges = hasEdges;
         return this;
     }
@@ -73,7 +73,7 @@ public class LinkPathEntity {
         return startAttractionId;
     }
 
-    public LinkPathEntity withStartAttractionId(Integer startAttractionId) {
+    public PathMetaEntity withStartAttractionId(Integer startAttractionId) {
         this.startAttractionId = startAttractionId;
         return this;
     }
@@ -82,7 +82,7 @@ public class LinkPathEntity {
         return endAttractionId;
     }
 
-    public LinkPathEntity withEndAttractionId(Integer endAttractionId) {
+    public PathMetaEntity withEndAttractionId(Integer endAttractionId) {
         this.endAttractionId = endAttractionId;
         return this;
     }
