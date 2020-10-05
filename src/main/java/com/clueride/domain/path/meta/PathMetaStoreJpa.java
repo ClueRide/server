@@ -1,11 +1,12 @@
-package com.clueride.domain.course;
+package com.clueride.domain.path.meta;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 
-public class CourseToPathStoreJpa implements CourseToPathStore {
+public class PathMetaStoreJpa implements PathMetaStore {
+
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
@@ -13,19 +14,20 @@ public class CourseToPathStoreJpa implements CourseToPathStore {
     private UserTransaction userTransaction;
 
     @Override
-    public CourseToPathEntity createNew(CourseToPathEntity courseToPathEntity) {
+    public PathMetaEntity createNew(PathMetaEntity pathMetaEntity) {
         try {
             userTransaction.begin();
-            entityManager.persist(courseToPathEntity);
+            entityManager.persist(pathMetaEntity);
             userTransaction.commit();
         } catch (NotSupportedException
+                | SystemException
                 | RollbackException
                 | HeuristicMixedException
-                | HeuristicRollbackException
-                | SystemException e
+                | HeuristicRollbackException e
         ) {
             e.printStackTrace();
         }
-        return courseToPathEntity;
+        return pathMetaEntity;
     }
+
 }

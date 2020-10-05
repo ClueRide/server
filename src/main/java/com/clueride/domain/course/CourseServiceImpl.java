@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -90,8 +91,19 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course updateCourse(CourseEntity courseEntity) {
         LOGGER.debug("Updating {}", courseEntity.getName());
+        prepareCourseAttractionsForUpdate(courseEntity);
         courseStore.update(courseEntity);
         return courseEntity.build();
+    }
+
+    private void prepareCourseAttractionsForUpdate(CourseEntity courseEntity) {
+        List<Integer> attractionIds = courseEntity.getLocationIds();
+        if (isNull(attractionIds) || attractionIds.size() == 0) {
+            LOGGER.debug("No Attraction IDs in this Course");
+            return;
+        }
+
+        courseEntity.withStartingAttractionId(attractionIds.get(0));
     }
 
     @Override

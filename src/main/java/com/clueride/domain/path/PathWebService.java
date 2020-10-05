@@ -2,6 +2,7 @@ package com.clueride.domain.path;
 
 import com.clueride.auth.Secured;
 import com.clueride.domain.course.CourseEntity;
+import com.clueride.domain.path.meta.PathMeta;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -31,7 +32,7 @@ public class PathWebService {
     @Secured
     @Path("link")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<LinkPath> getLinkPathsForAttractions(CourseEntity courseEntity) {
+    public List<PathMeta> getLinkPathsForAttractions(CourseEntity courseEntity) {
         return pathService.getLinkPathsForAttractions(
                 courseEntity.getId(),
                 courseEntity.getLocationIds()

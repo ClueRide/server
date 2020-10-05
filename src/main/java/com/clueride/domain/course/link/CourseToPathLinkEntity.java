@@ -15,7 +15,9 @@
  *
  * Created by jett on 3/19/19.
  */
-package com.clueride.domain.course;
+package com.clueride.domain.course.link;
+
+import com.clueride.domain.course.CourseEntity;
 
 import javax.persistence.*;
 
@@ -24,7 +26,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="course_to_path")
-public class CourseToPathEntity {
+public class CourseToPathLinkEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "ctp_pk_sequence")
     @SequenceGenerator(name="ctp_pk_sequence", sequenceName = "course_to_path_id_seq", allocationSize = 1)
@@ -40,8 +42,8 @@ public class CourseToPathEntity {
     @Column(name="path_id")
     private Integer pathId;
 
-    public static CourseToPathEntity builder() {
-        return new CourseToPathEntity();
+    public static CourseToPathLinkEntity builder() {
+        return new CourseToPathLinkEntity();
     }
 
 
@@ -49,7 +51,7 @@ public class CourseToPathEntity {
         return id;
     }
 
-    public CourseToPathEntity withId(Integer id) {
+    public CourseToPathLinkEntity withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -58,7 +60,7 @@ public class CourseToPathEntity {
         return pathOrder;
     }
 
-    public CourseToPathEntity withPathOrder(Integer pathOrder) {
+    public CourseToPathLinkEntity withPathOrder(Integer pathOrder) {
         this.pathOrder = pathOrder;
         return this;
     }
@@ -67,7 +69,7 @@ public class CourseToPathEntity {
         return course;
     }
 
-    public CourseToPathEntity withCourse(CourseEntity course) {
+    public CourseToPathLinkEntity withCourse(CourseEntity course) {
         this.course = course;
         return this;
     }
@@ -76,7 +78,7 @@ public class CourseToPathEntity {
         return pathId;
     }
 
-    public CourseToPathEntity withPathId(Integer pathId) {
+    public CourseToPathLinkEntity withPathId(Integer pathId) {
         this.pathId = pathId;
         return this;
     }
