@@ -17,6 +17,9 @@ public class PathMetaEntity {
     private Integer endNodeId;
 
     @Transient
+    private Integer courseToPathId;
+
+    @Transient
     private Boolean hasEdges;
 
     @Transient
@@ -39,6 +42,15 @@ public class PathMetaEntity {
 
     public PathMetaEntity withId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public Integer getCourseToPathId() {
+        return this.courseToPathId;
+    }
+
+    public PathMetaEntity withCourseToPathId(Integer courseToPathId) {
+        this.courseToPathId = courseToPathId;
         return this;
     }
 

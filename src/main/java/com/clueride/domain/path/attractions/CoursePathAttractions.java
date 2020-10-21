@@ -15,8 +15,9 @@
  *
  * Created by jett on 1/27/19.
  */
-package com.clueride.domain.path;
+package com.clueride.domain.path.attractions;
 
+import com.clueride.domain.path.Path;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,7 +30,7 @@ import java.util.List;
  * The data for a Path which links a Course to its Locations.
  */
 @Immutable
-public class PathForCourse implements Path {
+public class CoursePathAttractions implements Path {
     private final Integer id;
     private final Integer courseId;
     private final Integer startNodeId;
@@ -37,13 +38,13 @@ public class PathForCourse implements Path {
     private final Integer endNodeId;
     private final Integer endLocationId;
 
-    public PathForCourse(PathForCourseEntity pathForCourseEntity) {
-        this.id = pathForCourseEntity.getId();
-        this.courseId = pathForCourseEntity.getCourseId();
-        this.startNodeId = pathForCourseEntity.getStartNodeId();
-        this.startLocationId = pathForCourseEntity.getStartLocationId();
-        this.endNodeId = pathForCourseEntity.getEndNodeId();
-        this.endLocationId = pathForCourseEntity.getEndLocationId();
+    public CoursePathAttractions(CoursePathAttractionsEntity coursePathAttractionsEntity) {
+        this.id = coursePathAttractionsEntity.getId();
+        this.courseId = coursePathAttractionsEntity.getCourseId();
+        this.startNodeId = coursePathAttractionsEntity.getStartNodeId();
+        this.startLocationId = coursePathAttractionsEntity.getStartLocationId();
+        this.endNodeId = coursePathAttractionsEntity.getEndNodeId();
+        this.endLocationId = coursePathAttractionsEntity.getEndLocationId();
     }
 
     @Override

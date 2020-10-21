@@ -17,9 +17,10 @@
  */
 package com.clueride.network.edge;
 
-import java.util.List;
-
 import com.clueride.domain.path.Path;
+import com.clueride.network.edge.upload.EdgeUploadRequest;
+
+import java.util.List;
 
 /**
  * Defines operations on {@link Edge} instances.
@@ -41,5 +42,14 @@ public interface EdgeService {
      * @return String formatted as a GeoJSON feature collection containing the Geometry for a LineString.
      */
     String getEdgeGeoJsonById(Integer edgeId);
+
+    /**
+     * Creates a new Edge for the given path based on an InputStream that is part of the {@link EdgeUploadRequest}.
+     *
+     * @param pathId Unique identifier for the Path that needs this Edge.
+     * @param edgeUploadRequest Multipart Form instance containing the InputStream with the GPX data.
+     * @return The new instance of Edge that is created.
+     */
+    Edge addEdgeToPath(Integer pathId, EdgeUploadRequest edgeUploadRequest);
 
 }

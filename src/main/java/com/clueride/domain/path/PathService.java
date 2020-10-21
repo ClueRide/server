@@ -41,16 +41,17 @@ public interface PathService {
 
     /**
      * When building a Course, lists of Attractions are turned into
-     * a list of Paths linking those Attractions.
+     * a list of Path Meta information linking those Attractions.
      *
      * The list of Attractions is a source record, so if an attraction is
-     * removed from a prior list, the existing path records must be changed
-     * to match the given list of attractionIds.
+     * removed from a prior list, or if the order is changed, the ordered
+     * set of CourseToPath records must be changed to match this given list
+     * of Attraction IDs.
      *
      * @param courseId Unique identifier to for the {@link Course}.
      * @param attractionIds ordered List of Attraction IDs to link together.
-     * @return ordered List of the {@link Path} instances that link together the Attractions.
+     * @return ordered List of the {@link PathMeta} instances that link together the Attractions.
      */
-    List<PathMeta> getLinkPathsForAttractions(Integer courseId, List<Integer> attractionIds);
+    List<PathMeta> getPathMetaForAttractions(Integer courseId, List<Integer> attractionIds);
 
 }

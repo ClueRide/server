@@ -17,8 +17,10 @@
  */
 package com.clueride.network.edge;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.*;
 
 /**
  * JPA-based implementation of {@link EdgeStore}.
@@ -27,6 +29,9 @@ public class EdgeStoreJpa implements EdgeStore {
 
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
+
+    @Resource
+    private UserTransaction userTransaction;
 
     @Override
     public EdgeEntity getEdgeById(Integer id) {
@@ -54,6 +59,23 @@ public class EdgeStoreJpa implements EdgeStore {
                 ") as feature")
                     .setParameter(1, edgeId)
                 .getSingleResult();
+    }
+
+    @Override
+    public void add(EdgeEntity edgeEntity) {
+        try {
+            userTransaction.begin();
+            entityManager.persist(edgeEntity);
+            userTransaction.commit();
+        } catch (
+                NotSupportedException |
+                        SystemException |
+                        HeuristicRollbackException |
+                        RollbackException |
+                        HeuristicMixedException e
+        ) {
+            e.printStackTrace();
+        }
     }
 
 }

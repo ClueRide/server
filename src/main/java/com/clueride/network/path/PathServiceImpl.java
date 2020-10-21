@@ -17,16 +17,15 @@
  */
 package com.clueride.network.path;
 
+import com.clueride.domain.path.attractions.CoursePathAttractionsEntity;
+import com.clueride.domain.path.attractions.CoursePathAttractionsStore;
+import org.slf4j.Logger;
+
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-
-import com.clueride.domain.path.PathForCourseEntity;
-import com.clueride.domain.path.PathForCourseStore;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -40,7 +39,7 @@ public class PathServiceImpl implements PathService {
     private PathStore pathStore;
 
     @Inject
-    private PathForCourseStore pathForCourseStore;
+    private CoursePathAttractionsStore coursePathAttractionsStore;
 
     @Override
     public String getPathGeoJsonById(Integer pathId) {
@@ -52,15 +51,15 @@ public class PathServiceImpl implements PathService {
     public List<Integer> getLocationIds(Integer courseId) {
         requireNonNull(courseId, "Course ID must be provided");
 
-        List<PathForCourseEntity> paths = pathForCourseStore.getPathsForCourse(courseId);
+        List<CoursePathAttractionsEntity> paths = coursePathAttractionsStore.getPathAttractionsForCourse(courseId);
         if (paths.size() == 0) {
             LOGGER.warn("No paths found for course ID {}", courseId );
             return Collections.emptyList();
         }
 
         List<Integer> locationIds = new ArrayList<>();
-        PathForCourseEntity lastBuilder = null;
-        for (PathForCourseEntity builder : paths) {
+        CoursePathAttractionsEntity lastBuilder = null;
+        for (CoursePathAttractionsEntity builder : paths) {
             locationIds.add(builder.getStartLocationId());
             lastBuilder = builder;
         }

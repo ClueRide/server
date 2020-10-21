@@ -15,22 +15,32 @@
  *
  * Created by jett on 1/27/19.
  */
-package com.clueride.domain.path;
-
-import java.util.List;
+package com.clueride.domain.path.attractions;
 
 import com.clueride.domain.course.Course;
 
+import java.util.List;
+
 /**
- * Defines Persistence operations for {@link PathForCourse} instances.
+ * Defines Persistence operations for {@link CoursePathAttractions} instances.
  */
-public interface PathForCourseStore {
+public interface CoursePathAttractionsStore {
     /**
      * Retrieves the list of ordered Paths associated with the given Course ID.
      * @param courseId unique identifier for the {@link Course}.
-     * @return Ordered list of the {@link PathForCourseEntity} instances defined
+     * @return Ordered list of the {@link CoursePathAttractionsEntity} instances defined
      * for the given course.
      */
-    List<PathForCourseEntity> getPathsForCourse(Integer courseId);
+    List<CoursePathAttractionsEntity> getPathAttractionsForCourse(Integer courseId);
 
+    /**
+     * Finds a Path that links between a pair of AttractionIDs.
+     *
+     * The direction is significant (but should it be?).
+     *
+     * @param startId Starting Attraction ID.
+     * @param endId Ending Attraction ID.
+     * @return First matching CoursePathAttractions record, whether it has been assigned to a Course or not.
+     */
+    CoursePathAttractionsEntity findSuitablePath(Integer startId, Integer endId);
 }

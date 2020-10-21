@@ -17,11 +17,14 @@
  */
 package com.clueride.network.edge;
 
-import java.util.List;
+import com.clueride.domain.path.edge.PathEdgeEntity;
+import com.clueride.domain.path.edge.PathEdgeStore;
+import com.clueride.imp.gpx.GpxToEdge;
+import com.clueride.network.edge.upload.EdgeUploadRequest;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,6 +37,12 @@ public class EdgeServiceImpl implements EdgeService {
 
     @Inject
     private EdgeStore edgeStore;
+
+    @Inject
+    private GpxToEdge gpxToEdge;
+
+    @Inject
+    private PathEdgeStore pathEdgeStore;
 
     @Override
     public List<Edge> getPathEdges(Integer pathId) {
@@ -52,5 +61,24 @@ public class EdgeServiceImpl implements EdgeService {
     public String getEdgeGeoJsonById(Integer edgeId) {
         requireNonNull(edgeId, "Edge ID must be provided");
         return edgeStore.getEdgeGeoJson(edgeId);
+    }
+
+    @Override
+    public Edge addEdgeToPath(Integer pathId, EdgeUploadRequest edgeUploadRequest) {
+        LOGGER.debug("Adding Edge to the Path with ID " + pathId);
+
+        /* First, create the Edge. */
+        EdgeEntity edgeEntity = gpxToEdge.edgeFromGpxStream(edgeUploadRequest.getFileData());
+        edgeStore.add(edgeEntity);
+
+        /* Now that we have the Edge we want to put in the Path, let's update the Path. */
+        PathEdgeEntity pathEdgeEntity = PathEdgeEntity.builder()
+                .withPathId(pathId)
+                .withEdgeId(edgeEntity.getId())
+                .withEdgeOrder(1);
+        pathEdgeStore.createNew(pathEdgeEntity);
+
+        /* Return newly created Edge. */
+        return edgeEntity.build();
     }
 }

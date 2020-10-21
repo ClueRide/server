@@ -31,4 +31,10 @@ public interface EdgeStore {
      */
     String getEdgeGeoJson(Integer edgeId);
 
+    /**
+     * Creates a new instance from the given {@link EdgeEntity} instance.
+     * @param edgeEntity newly populated EdgeEntity.
+     */
+    void add(EdgeEntity edgeEntity);
+
 }

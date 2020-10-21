@@ -15,7 +15,7 @@
  *
  * Created by jett on 7/10/16.
  */
-package com.clueride.domain.course;
+package com.clueride.domain.course.type;
 
 import java.io.IOException;
 
