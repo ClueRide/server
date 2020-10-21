@@ -15,7 +15,7 @@
  *
  * Created by jett on 1/27/19.
  */
-package com.clueride.domain.path;
+package com.clueride.domain.path.attractions;
 
 import com.clueride.domain.path.meta.PathMetaEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -38,8 +38,8 @@ import javax.persistence.Table;
  * the Attraction and Course services to fill out those objects.
  */
 @Entity
-@Table(name="course_path_location")
-public class PathForCourseEntity {
+@Table(name="course_path_attraction")
+public class CoursePathAttractionsEntity {
     @Id
     private Integer id;
     @Column(name="course_id")
@@ -52,20 +52,21 @@ public class PathForCourseEntity {
     private Integer startNodeId;
     @Column(name="end_node_id")
     private Integer endNodeId;
-    @Column(name="start_location_id")
+    @Column(name="start_attraction_id")
     private Integer startAttractionId;
-    @Column(name="end_location_id")
+    @Column(name="end_attraction_id")
     private Integer endAttractionId;
 
-    public static PathMetaEntity from(PathForCourseEntity existingPath) {
+    public static PathMetaEntity from(CoursePathAttractionsEntity existingPath) {
         return PathMetaEntity.builder()
-                .withId(existingPath.id)
+                .withId(existingPath.pathId)
+                .withCourseToPathId(existingPath.id)
                 .withStartAttractionId(existingPath.startAttractionId)
                 .withEndAttractionId(existingPath.endAttractionId);
     }
 
-    public PathForCourse build() {
-        return new PathForCourse(this);
+    public CoursePathAttractions build() {
+        return new CoursePathAttractions(this);
     }
 
     public Integer getId() {

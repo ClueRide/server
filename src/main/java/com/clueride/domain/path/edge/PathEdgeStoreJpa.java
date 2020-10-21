@@ -1,12 +1,11 @@
-package com.clueride.domain.path.meta;
+package com.clueride.domain.path.edge;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 
-public class PathMetaStoreJpa implements PathMetaStore {
-
+public class PathEdgeStoreJpa implements PathEdgeStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
 
@@ -14,15 +13,10 @@ public class PathMetaStoreJpa implements PathMetaStore {
     private UserTransaction userTransaction;
 
     @Override
-    public PathMetaEntity get(Integer pathId) {
-        return entityManager.find(PathMetaEntity.class, pathId);
-    }
-
-    @Override
-    public PathMetaEntity createNew(PathMetaEntity pathMetaEntity) {
+    public PathEdgeEntity createNew(PathEdgeEntity pathEdgeEntity) {
         try {
             userTransaction.begin();
-            entityManager.persist(pathMetaEntity);
+            entityManager.persist(pathEdgeEntity);
             userTransaction.commit();
         } catch (NotSupportedException
                 | SystemException
@@ -32,12 +26,6 @@ public class PathMetaStoreJpa implements PathMetaStore {
         ) {
             e.printStackTrace();
         }
-        return pathMetaEntity;
+        return pathEdgeEntity;
     }
-
-    @Override
-    public PathMetaEntity findSuitablePath(Integer startId, Integer endId) {
-        return null;
-    }
-
 }

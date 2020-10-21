@@ -17,14 +17,13 @@
  */
 package com.clueride.network.edge;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.clueride.auth.Secured;
+import com.clueride.network.edge.upload.EdgeUploadRequest;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 /**
  * REST API for {@link Edge} instances.
@@ -50,4 +49,15 @@ public class EdgeWebService {
         return edgeService.getEdgeGeoJsonById(edgeId);
     }
 
+    @POST
+    @Secured
+    @Path("{pathId}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Edge addEdgeToPath(
+            @PathParam("pathId") Integer pathId,
+            @MultipartForm EdgeUploadRequest edgeUploadRequest
+    ) {
+        return edgeService.addEdgeToPath(pathId, edgeUploadRequest);
+    }
 }

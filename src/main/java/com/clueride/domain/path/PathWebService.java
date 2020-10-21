@@ -30,10 +30,10 @@ public class PathWebService {
 
     @POST
     @Secured
-    @Path("link")
+    @Path("meta")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<PathMeta> getLinkPathsForAttractions(CourseEntity courseEntity) {
-        return pathService.getLinkPathsForAttractions(
+    public List<PathMeta> getPathMetaForAttractions(CourseEntity courseEntity) {
+        return pathService.getPathMetaForAttractions(
                 courseEntity.getId(),
                 courseEntity.getLocationIds()
         );

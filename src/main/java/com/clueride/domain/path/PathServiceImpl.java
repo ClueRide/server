@@ -7,10 +7,13 @@ import com.clueride.domain.course.CourseEntity;
 import com.clueride.domain.course.CourseStore;
 import com.clueride.domain.course.link.CourseToPathLinkEntity;
 import com.clueride.domain.course.link.CourseToPathLinkStore;
+import com.clueride.domain.path.attractions.CoursePathAttractionsEntity;
+import com.clueride.domain.path.attractions.CoursePathAttractionsStore;
 import com.clueride.domain.path.meta.PathMeta;
 import com.clueride.domain.path.meta.PathMetaEntity;
 import com.clueride.domain.path.meta.PathMetaStore;
 import com.clueride.network.path.PathStore;
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,14 +25,17 @@ import java.util.Map;
 
 public class PathServiceImpl implements PathService {
     private CourseEntity courseEntity;
-    private List<PathForCourseEntity> existingPathForCourseEntities;
+    private List<CoursePathAttractionsEntity> existingPathForCourseEntities;
     private Map<Integer, AttractionEntity> attractionMap = new HashMap<>();
 
     @Inject
     private CourseStore courseStore;
 
     @Inject
-    private PathForCourseStore pathForCourseStore;
+    private CoursePathAttractionsStore coursePathAttractionsStore;
+
+    @Inject
+    private Logger LOGGER;
 
     @Inject
     private PathStore pathStore;
@@ -63,7 +69,7 @@ public class PathServiceImpl implements PathService {
      * @return updated list of {@link PathMeta} instances.
      */
     @Override
-    public List<PathMeta> getLinkPathsForAttractions(
+    public List<PathMeta> getPathMetaForAttractions(
             Integer courseId,
             List<Integer> newAttractionIds
     ) {
@@ -74,14 +80,15 @@ public class PathServiceImpl implements PathService {
             /* No reason to prepare link paths for less than a single pair of newAttractionIds. */
             return paths;
         }
+        LOGGER.debug("Setting up Paths for " + newAttractionIds.size() + " Attractions");
 
         /* Store a local copy of what we have at this point before the update. */
-        existingPathForCourseEntities = pathForCourseStore.getPathsForCourse(courseId);
+        existingPathForCourseEntities = coursePathAttractionsStore.getPathAttractionsForCourse(courseId);
 
         /* We'll want a current instance from the DB. */
         courseEntity = courseStore.getCourseById(courseId);
 
-        /* Loop through the list of requested Attaction IDs. */
+        /* Loop through the list of requested Attraction IDs. */
         for (Integer attractionId : newAttractionIds) {
             attractionMap.put(attractionId, attractionStore.getById(attractionId));
         }
@@ -103,7 +110,7 @@ public class PathServiceImpl implements PathService {
         );
 
         /* Make and persist changes to the Course. */
-        courseEntity.withCourseToPathEntities(courseToPathEntities);
+//        courseEntity.withCourseToPathEntities(courseToPathEntities);
         courseStore.update(courseEntity);
 
         return paths;
@@ -128,25 +135,39 @@ public class PathServiceImpl implements PathService {
     ) {
         PathMetaEntity pathMetaEntity;
 
-        PathForCourseEntity existingPath = findExistingPath(startId, endId);
-        if (existingPath != null) {
+        CoursePathAttractionsEntity existingCachedPath = findExistingPath(startId, endId);
+        if (existingCachedPath != null) {
             /* Create from existing. */
-            pathMetaEntity = PathForCourseEntity.from(existingPath)
+            pathMetaEntity = CoursePathAttractionsEntity.from(existingCachedPath)
                     .withHasEdges(
-                            pathStore.getEdgeCount(existingPath.getPathId()) > 0
+                            pathStore.getEdgeCount(existingCachedPath.getPathId()) > 0
                     );
-            /* If path exists, no need to mess with the CourseToPath instances. */
+            /* If we can use previous instance, we will. */
         } else {
-            /* Instantiate a new one. */
-            pathMetaEntity = PathMetaEntity.builder()
-                    .withStartAttractionId(startId)
-                    .withStartNodeId(attractionMap.get(startId).getNodeId())
-                    .withEndAttractionId(endId)
-                    .withEndNodeId(attractionMap.get(endId).getNodeId())
-                    .withHasEdges(false);
+            /* See if the database has a suitable CoursePathAttractions record to start with. */
+            CoursePathAttractionsEntity existingDbPath = coursePathAttractionsStore.findSuitablePath(startId, endId);
 
-            // Persist it so it exists in the DB.
-            pathMetaStore.createNew(pathMetaEntity);
+            if (existingDbPath != null) {
+                Integer pathId = existingDbPath.getPathId();
+                pathMetaEntity = pathMetaStore.get(pathId)
+                        .withStartAttractionId(startId)
+                        .withStartNodeId(attractionMap.get(startId).getNodeId())
+                        .withEndAttractionId(endId)
+                        .withEndNodeId(attractionMap.get(endId).getNodeId())
+                        .withHasEdges(pathStore.getEdgeCount(pathId) > 0);
+//                pathMetaStore.createNew(pathMetaEntity);
+            } else {
+                /* Instantiate a new one from scratch. */
+                pathMetaEntity = PathMetaEntity.builder()
+                        .withStartAttractionId(startId)
+                        .withStartNodeId(attractionMap.get(startId).getNodeId())
+                        .withEndAttractionId(endId)
+                        .withEndNodeId(attractionMap.get(endId).getNodeId())
+                        .withHasEdges(false);
+
+                // Persist it so it exists in the DB.
+                pathMetaStore.createNew(pathMetaEntity);
+            }
 
             /* Obtain appropriate link between Path and Course with incrementing order. */
             CourseToPathLinkEntity courseToPathLinkEntity = CourseToPathLinkEntity.builder()
@@ -155,6 +176,7 @@ public class PathServiceImpl implements PathService {
                     .withCourse(courseEntity);
 
             courseToPathLinkStore.createNew(courseToPathLinkEntity);
+            pathMetaEntity.withCourseToPathId(courseToPathLinkEntity.getId());
 
             courseEntity.withCourseToPathEntity(
                     courseToPathLinkEntity
@@ -165,15 +187,16 @@ public class PathServiceImpl implements PathService {
     }
 
     @Nullable
-    private PathForCourseEntity findExistingPath(
+    private CoursePathAttractionsEntity findExistingPath(
             Integer startId,
             Integer endId
     ) {
-        for (PathForCourseEntity pathForCourseEntity : existingPathForCourseEntities) {
-            if (pathForCourseEntity.getStartLocationId().equals(startId) &&
-                    pathForCourseEntity.getEndLocationId().equals(endId)
+        /* Check the earlier set of the course's records first; these have been cached. */
+        for (CoursePathAttractionsEntity coursePathAttractionsEntity : existingPathForCourseEntities) {
+            if (coursePathAttractionsEntity.getStartLocationId().equals(startId) &&
+                    coursePathAttractionsEntity.getEndLocationId().equals(endId)
             ) {
-                return pathForCourseEntity;
+                return coursePathAttractionsEntity;
             }
         }
         return null;
@@ -187,15 +210,15 @@ public class PathServiceImpl implements PathService {
      */
     private void removeObsoleteCourseToPathRecords(
             List<Integer> newAttractionIds,
-            List<PathForCourseEntity> existingPathForCourseEntities
+            List<CoursePathAttractionsEntity> existingPathForCourseEntities
     ) {
 
-        for (PathForCourseEntity pathForCourseEntity : existingPathForCourseEntities) {
+        for (CoursePathAttractionsEntity coursePathAttractionsEntity : existingPathForCourseEntities) {
             /* brute force */
             boolean removePath = true;
             for (int index = 0; index < newAttractionIds.size()-1; index++) {
-                if (pathForCourseEntity.getStartLocationId().equals(newAttractionIds.get(index))
-                    && pathForCourseEntity.getEndLocationId().equals(newAttractionIds.get(index+1))) {
+                if (coursePathAttractionsEntity.getStartLocationId().equals(newAttractionIds.get(index))
+                    && coursePathAttractionsEntity.getEndLocationId().equals(newAttractionIds.get(index+1))) {
                     removePath = false;
                     break;
                 }
@@ -203,7 +226,7 @@ public class PathServiceImpl implements PathService {
 
             if (removePath) {
                 CourseToPathLinkEntity courseToPathLinkEntity = CourseToPathLinkEntity.builder()
-                        .withId(pathForCourseEntity.getId());
+                        .withId(coursePathAttractionsEntity.getId());
 
                 courseToPathLinkStore.remove(courseToPathLinkEntity);
             }
