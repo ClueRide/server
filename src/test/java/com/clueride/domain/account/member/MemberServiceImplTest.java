@@ -16,11 +16,7 @@ package com.clueride.domain.account.member;/*
  * Created by jett on 10/7/17.
  */
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
+import com.clueride.util.TestOnly;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.NgCdiRunner;
 import org.mockito.InjectMocks;
@@ -29,7 +25,11 @@ import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.clueride.util.TestOnly;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -50,6 +50,7 @@ public class MemberServiceImplTest extends NgCdiRunner {
 
     @Produces
     @Mock
+    @TestOnly
     Logger LOGGER;
 
     @Inject

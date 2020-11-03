@@ -20,4 +20,11 @@ public interface AttractionService {
      */
     List<Attraction> getByNameFragment(NameFragmentQuery nameFragmentQuery);
 
+    /**
+     * Given the Course ID, return the ordered list of Attractions for the Course.
+     *
+     * @param courseId unique identifier for the Course.
+     * @return Ordered list of the Attractions for the Course.
+     */
+    List<Attraction> getAttractionsForCourse(Integer courseId);
 }

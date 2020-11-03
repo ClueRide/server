@@ -1,6 +1,7 @@
-package com.clueride.domain.attraction;
+package com.clueride.domain.attraction.flagged;
 
 import com.clueride.auth.Secured;
+import com.clueride.domain.attraction.Attraction;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;

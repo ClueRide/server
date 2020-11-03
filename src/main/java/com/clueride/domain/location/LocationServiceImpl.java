@@ -223,9 +223,9 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<Location> getAttractionsForCourse(Integer courseId) {
+    public Set<Location> getAttractionsForCourse(Integer courseId) {
         LOGGER.debug("Retrieving Attractions for Course {}", courseId);
-        List<Location> attractions = new ArrayList<>();
+        Set<Location> attractions = new HashSet<>();
         Set<Integer> loadedAttractionIds = new HashSet<>();
 
         /* Course Service knows which Attraction IDs are associated with the Course. */

@@ -1,5 +1,6 @@
 package com.clueride.domain.account.badgeos;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 public class BadgeOsUserServiceImpl implements BadgeOsUserService {
@@ -9,6 +10,12 @@ public class BadgeOsUserServiceImpl implements BadgeOsUserService {
     @Override
     public BadgeOsUserEntity add(BadgeOsUserEntity badgeOsUserEntity) {
         return badgeOsUserStore.add(badgeOsUserEntity);
+    }
+
+    @Nullable
+    @Override
+    public BadgeOsUserEntity getByEmailAddress(String emailAddress) {
+        return badgeOsUserStore.getByEmailAddress(emailAddress);
     }
 
 }

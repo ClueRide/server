@@ -1,5 +1,7 @@
 package com.clueride.domain.account.badgeos;
 
+import javax.annotation.Nullable;
+
 public interface BadgeOsUserService {
 
     /**
@@ -9,5 +11,14 @@ public interface BadgeOsUserService {
      * @return same instance with the ID populated with the record from the DB.
      */
     BadgeOsUserEntity add(BadgeOsUserEntity badgeOsUserEntity);
+
+    /**
+     * Retrieve an existing BadgeOS user based on a match against the Email Address.
+     *
+     * @param emailAddress String representation of their Email Address.
+     * @return Entity instance matching the given email Address or null if not found.
+     */
+    @Nullable
+    BadgeOsUserEntity getByEmailAddress(String emailAddress);
 
 }

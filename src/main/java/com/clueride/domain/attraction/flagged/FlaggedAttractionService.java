@@ -1,4 +1,6 @@
-package com.clueride.domain.attraction;
+package com.clueride.domain.attraction.flagged;
+
+import com.clueride.domain.attraction.Attraction;
 
 import java.util.List;
 
