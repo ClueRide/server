@@ -16,11 +16,14 @@ package com.clueride.auth.state;/*
  * Created by jett on 12/9/18.
  */
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.clueride.RecordNotFoundException;
+import com.clueride.auth.access.AccessTokenService;
+import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.config.ConfigService;
+import com.clueride.domain.account.member.MemberService;
+import com.clueride.domain.account.principal.BadgeOsPrincipal;
+import com.clueride.domain.account.principal.BadgeOsPrincipalService;
+import com.clueride.util.TestOnly;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.NgCdiRunner;
 import org.mockito.InjectMocks;
@@ -31,19 +34,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-import com.clueride.RecordNotFoundException;
-import com.clueride.auth.access.AccessTokenService;
-import com.clueride.auth.identity.ClueRideIdentity;
-import com.clueride.config.ConfigService;
-import com.clueride.domain.account.member.MemberService;
-import com.clueride.domain.account.principal.BadgeOsPrincipal;
-import com.clueride.domain.account.principal.BadgeOsPrincipalService;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * Exercises the AccessStateServiceImplTest class.
@@ -53,6 +52,7 @@ public class AccessStateServiceImplTest extends NgCdiRunner {
 
     @Produces
     @Mock
+    @TestOnly
     Logger LOGGER;
 
     private String TEST_TOKEN = "Test Token";

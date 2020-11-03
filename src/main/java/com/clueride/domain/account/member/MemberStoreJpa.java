@@ -62,13 +62,13 @@ public class MemberStoreJpa implements MemberStore {
     @Override
     public MemberEntity getMemberByEmail(InternetAddress emailAddress) {
         MemberEntity memberEntity;
-            memberEntity = entityManager
-                    .createQuery(
-                            "select m from MemberEntity m where m.emailAddress = :emailAddress",
-                            MemberEntity.class
-                    )
-                    .setParameter("emailAddress", emailAddress.toString())
-                    .getSingleResult();
+        memberEntity = entityManager
+                .createQuery(
+                        "select m from MemberEntity m where m.emailAddress = :emailAddress",
+                        MemberEntity.class
+                )
+                .setParameter("emailAddress", emailAddress.toString())
+                .getSingleResult();
 
         return memberEntity;
     }

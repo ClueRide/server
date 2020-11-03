@@ -17,25 +17,18 @@
  */
 package com.clueride.domain.location;
 
-import java.net.MalformedURLException;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import com.clueride.auth.Secured;
 import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loctype.LocationType;
 import com.clueride.domain.location.loctype.LocationTypeService;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * REST API for {@link Location} instances.
@@ -133,7 +126,7 @@ public class LocationWebService {
     @Secured
     @Path("{courseId}/course")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Location> getAttractionsForCourse(
+    public Set<Location> getAttractionsForCourse(
             @PathParam("courseId") Integer courseId
     ) {
         return locationService.getAttractionsForCourse(courseId);

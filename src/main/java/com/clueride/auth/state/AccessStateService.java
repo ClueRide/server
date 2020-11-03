@@ -54,10 +54,13 @@ public interface AccessStateService {
      * when validated by the 3rd-party Auth service, allows this service to establish records
      * for both ClueRide and BadgeOS.
      *
+     * There may be cases where an existing Member is registering a new device, so we want to check if
+     * records already exist.
+     *
      * @param member {@link Member} instance as assembled by the client from JWT token from 3rd-party Auth service.
      * @param authHeader String representing the raw Authorization header -- expects 'Bearer' style header.
      * @return the updated Member record including the IDs required (member ID and BadgeOS ID).
      */
-    Member registerNewMember(Member member, String authHeader);
+    Member registerPossibleNewMember(Member member, String authHeader);
 
 }

@@ -1,5 +1,8 @@
-package com.clueride.domain.attraction;
+package com.clueride.domain.attraction.flagged;
 
+import com.clueride.domain.attraction.Attraction;
+import com.clueride.domain.attraction.AttractionEntity;
+import com.clueride.domain.attraction.AttractionStore;
 import com.clueride.domain.flag.FlagService;
 import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.place.ScoredLocationService;

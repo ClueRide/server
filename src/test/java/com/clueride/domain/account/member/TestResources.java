@@ -17,13 +17,12 @@
  */
 package com.clueride.domain.account.member;
 
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-
+import com.clueride.util.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.clueride.util.TestOnly;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
 
 /**
  * Provides Test-oriented CDI bindings.
@@ -39,6 +38,7 @@ public class TestResources {
     }
 
     @Produces
+    @TestOnly
     public Logger produceLog(InjectionPoint injectionPoint) {
         return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }

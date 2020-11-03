@@ -31,4 +31,14 @@ public class AttractionWebService {
         return attractionService.getByNameFragment(nameFragmentQuery);
     }
 
+    @GET
+    @Secured
+    @Path("{courseId}/course")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Attraction> getAttractionsForCourse(
+            @PathParam("courseId") Integer courseId
+    ) {
+        return attractionService.getAttractionsForCourse(courseId);
+    }
+
 }

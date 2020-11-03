@@ -17,12 +17,13 @@
  */
 package com.clueride.domain.location;
 
-import java.net.MalformedURLException;
-import java.util.List;
-
 import com.clueride.domain.course.Course;
 import com.clueride.domain.location.latlon.LatLonEntity;
 import com.clueride.domain.location.loclink.LocLink;
+
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Defines operations on {@link Location} instances.
@@ -118,6 +119,6 @@ public interface LocationService {
      * @param courseId unique identifier for the desired Course.
      * @return List of Attractions for the Course in the order defined by the Course.
      */
-    List<Location> getAttractionsForCourse(Integer courseId);
+    Set<Location> getAttractionsForCourse(Integer courseId);
 
 }

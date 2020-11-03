@@ -25,4 +25,17 @@ public class BadgeOsUserStoreJpa implements BadgeOsUserStore {
         return badgeOsUserEntity;
     }
 
+    @Override
+    public BadgeOsUserEntity getByEmailAddress(String emailAddress) {
+        BadgeOsUserEntity badgeOsUserEntity;
+        badgeOsUserEntity = entityManager.createQuery(
+                "select b from BadgeOsUserEntity b where b.email = :emailAddress",
+                BadgeOsUserEntity.class
+        )
+                .setParameter("emailAddress", emailAddress)
+                .getSingleResult();
+
+        return badgeOsUserEntity;
+    }
+
 }

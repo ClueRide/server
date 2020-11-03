@@ -37,6 +37,7 @@ import com.clueride.domain.outing.OutingService;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 
@@ -139,7 +140,7 @@ public class AccessStateServiceImpl implements AccessStateService {
     }
 
     @Override
-    public Member registerNewMember(Member member, String authHeader) {
+    public Member registerPossibleNewMember(Member member, String authHeader) {
         /* Throws exception if programmer error messes up supplying a valid token. */
         accessTokenService.validateAuthHeader(authHeader);
         String token = authHeader.substring("Bearer".length()).trim();
@@ -152,37 +153,46 @@ public class AccessStateServiceImpl implements AccessStateService {
         ClueRideIdentity clueRideIdentity = accessTokenService.getIdentity(token);
 
         MemberEntity memberEntity = MemberEntity.from(member);
+        /* Verify that the submitted member's email address matches the Auth service's idea of that email address. */
         if (member.getEmailAddress().equals(clueRideIdentity.getEmail().getAddress())) {
             LOGGER.info("Registering {}", member.getEmailAddress());
 
+            /* Check to see if records already exist for this email address. */
+            Member existingMember = null;
+            try {
+                existingMember = memberService.getMemberByEmail(member.getEmailAddress());
+            } catch (AddressException e) {
+                e.printStackTrace();
+            }
+
             /* Establish new Member record. */
-            memberEntity = memberService.createNewMember(clueRideIdentity);
+            if (existingMember == null) {
+                memberEntity = memberService.createNewMember(clueRideIdentity);
+            } else {
+                memberEntity = MemberEntity.from(existingMember);
+            }
 
             ClueRideSessionDto clueRideSessionDto = new ClueRideSessionDto();
 
+            /* Check to see if existing BadgeOS record exists. */
+            BadgeOsUserEntity existingBadgeOsUserEntity = badgeOsUserService.getByEmailAddress(member.getEmailAddress());
+
             /* Establish BadgeOS record. */
-            BadgeOsUserEntity badgeOsUserEntity = BadgeOsUserEntity.from(memberEntity, clueRideIdentity);
-            badgeOsUserService.add(badgeOsUserEntity);
+            BadgeOsUserEntity badgeOsUserEntity;
+            if (existingBadgeOsUserEntity == null) {
+                badgeOsUserEntity = BadgeOsUserEntity.from(memberEntity, clueRideIdentity);
+                badgeOsUserService.add(badgeOsUserEntity);
+            } else {
+                badgeOsUserEntity = existingBadgeOsUserEntity;
+            }
+
             clueRideSessionDto.setBadgeOSPrincipal(
                     badgeOsPrincipalService.getBadgeOsPrincipal(memberEntity.getEmailAddress())
             );
             memberEntity.withBadgeOSId(badgeOsUserEntity.getId());
 
             /* Invite them to the "eternal" Outing. */
-            final int ETERNAL_OUTING = 1;
-            try {
-                clueRideSessionDto.setInvite(
-                        inviteService.createNew(ETERNAL_OUTING, memberEntity.getId())
-                );
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            clueRideSessionDto.setMember(memberEntity.build());
-            clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
-            clueRideSessionDto.setOutingView(
-                    outingService.getViewById(ETERNAL_OUTING)
-            );
+            addEternalInvite(clueRideIdentity, memberEntity, clueRideSessionDto);
 
             clueRideSessionService.setSessionForToken(token, clueRideSessionDto);
 
@@ -192,6 +202,23 @@ public class AccessStateServiceImpl implements AccessStateService {
         }
 
         return memberEntity.build();
+    }
+
+    private void addEternalInvite(ClueRideIdentity clueRideIdentity, MemberEntity memberEntity, ClueRideSessionDto clueRideSessionDto) {
+        final int ETERNAL_OUTING = 1;
+        try {
+            clueRideSessionDto.setInvite(
+                    inviteService.createNew(ETERNAL_OUTING, memberEntity.getId())
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        clueRideSessionDto.setMember(memberEntity.build());
+        clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
+        clueRideSessionDto.setOutingView(
+                outingService.getViewById(ETERNAL_OUTING)
+        );
     }
 
     /**

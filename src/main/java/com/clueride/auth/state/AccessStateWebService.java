@@ -62,7 +62,7 @@ public class AccessStateWebService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Member registerNewMember(Member member) {
         String authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        return accessStateService.registerNewMember(member, authHeader);
+        return accessStateService.registerPossibleNewMember(member, authHeader);
     }
 
 }
