@@ -17,14 +17,8 @@
  */
 package com.clueride.badgeos;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
+import com.clueride.config.ConfigService;
+import com.clueride.util.MainLogger;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -40,7 +34,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 
-import com.clueride.config.ConfigService;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of {@link BadgeOSSessionService}.
@@ -52,6 +51,7 @@ import com.clueride.config.ConfigService;
  */
 public class BadgeOSSessionServiceImpl implements BadgeOSSessionService {
     @Inject
+    @MainLogger
     private Logger LOGGER;
 
     private final BadgeOSCredentials badgeOSCredentials;

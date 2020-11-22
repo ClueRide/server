@@ -17,10 +17,13 @@
  */
 package com.clueride.auth.filter;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Date;
-import java.util.Map;
+import com.clueride.RecordNotFoundException;
+import com.clueride.auth.Secured;
+import com.clueride.auth.access.AccessTokenService;
+import com.clueride.auth.identity.ClueRideIdentity;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.config.ConfigService;
+import org.slf4j.Logger;
 
 import javax.annotation.Priority;
 import javax.enterprise.event.Event;
@@ -31,16 +34,10 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-
-import org.slf4j.Logger;
-
-import com.clueride.RecordNotFoundException;
-import com.clueride.auth.Secured;
-import com.clueride.auth.access.AccessTokenService;
-import com.clueride.auth.identity.ClueRideIdentity;
-import com.clueride.auth.session.ClueRideSession;
-import com.clueride.config.ConfigService;
-import com.clueride.domain.account.principal.PrincipalService;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Allows picking up Authorization headers and extracting the Principal.
@@ -60,9 +57,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Inject
     @ClueRideSession
     private Event<String> accessTokenEvent;
-
-    @Inject
-    private PrincipalService principalService;
 
     @Inject
     private AccessTokenService accessTokenService;

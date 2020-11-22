@@ -63,10 +63,12 @@ public class AccessStateServiceImplTest extends NgCdiRunner {
     @Singleton
     @Produces
     @Mock
+    @TestOnly
     private AccessTokenService accessTokenService;
 
     @Produces
     @Mock
+    @TestOnly
     private BadgeOsPrincipalService badgeOsPrincipalService;
 
     @Inject
@@ -79,10 +81,12 @@ public class AccessStateServiceImplTest extends NgCdiRunner {
 
     @Produces
     @Mock
+    @TestOnly
     private ConfigService configService;
 
     @Produces
     @Mock
+    @TestOnly
     private MemberService memberService;
 
     @InjectMocks
