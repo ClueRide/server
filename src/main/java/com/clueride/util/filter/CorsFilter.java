@@ -17,21 +17,11 @@
  */
 package com.clueride.util.filter;
 
-import java.io.IOException;
-
-import javax.inject.Inject;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.clueride.config.ConfigService;
+import java.io.IOException;
 
 /**
  * Implements CORS request handling.
@@ -44,8 +34,8 @@ import com.clueride.config.ConfigService;
 public class CorsFilter implements Filter {
     private ServletContext servletContext;
 
-    @Inject
-    private ConfigService configService;
+//    @Inject
+//    private ConfigService configService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -62,9 +52,9 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        response.setHeader("Access-Control-Allow-Origin",
-                configService.get("clueride.accessControl.allowedOrigins")
-        );
+//        response.setHeader("Access-Control-Allow-Origin",
+//                configService.get("clueride.accessControl.allowedOrigins")
+//        );
         response.setHeader(
                 "Access-Control-Allow-Headers",
                 new StringBuilder()

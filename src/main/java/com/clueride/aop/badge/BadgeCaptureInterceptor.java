@@ -17,20 +17,18 @@
  */
 package com.clueride.aop.badge;
 
-import java.util.Date;
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.domain.badge.event.BadgeEventEntity;
+import com.clueride.domain.badge.event.BadgeEventService;
+import org.slf4j.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-
-import org.slf4j.Logger;
-
-import com.clueride.auth.session.ClueRideSession;
-import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.domain.badge.event.BadgeEventEntity;
-import com.clueride.domain.badge.event.BadgeEventService;
+import java.util.Date;
 
 /**
  * Method Interceptor responsible for capturing events that count toward the awarding of badges.

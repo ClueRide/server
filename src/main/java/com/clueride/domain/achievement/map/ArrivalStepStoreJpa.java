@@ -17,6 +17,7 @@
  */
 package com.clueride.domain.achievement.map;
 
+import com.clueride.util.MainLogger;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ArrivalStepStoreJpa implements ArrivalStepStore {
 
     @Inject
+    @MainLogger
     private Logger LOGGER;
 
     @PersistenceContext(unitName = "clueride")

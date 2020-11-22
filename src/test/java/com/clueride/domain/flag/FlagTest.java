@@ -28,7 +28,10 @@ public class FlagTest {
         Archive<?>[] dependencies = pomEquippedResolveStage
                 .resolve("org.apache.commons:commons-lang3").withTransitivity().as(JavaArchive.class);
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class)
-                .addPackages(true, "com.clueride.domain.flag")
+                .addClass("com.clueride.domain.flag.Flag")
+                .addClass("com.clueride.domain.flag.FlagEntity")
+                .addClass("com.clueride.domain.flag.FlaggedAttribute")
+                .addClass("com.clueride.domain.flag.reason.FlagReason")
                 .addAsManifestResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
                 .addAsResource("META-INF/persistence.xml");
         for (Archive<?> archive : dependencies) {
