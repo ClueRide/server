@@ -18,7 +18,6 @@
 package com.clueride.badgeos;
 
 import com.clueride.config.ConfigService;
-import com.clueride.util.MainLogger;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -51,7 +50,6 @@ import java.util.Map;
  */
 public class BadgeOSSessionServiceImpl implements BadgeOSSessionService {
     @Inject
-    @MainLogger
     private Logger LOGGER;
 
     private final BadgeOSCredentials badgeOSCredentials;

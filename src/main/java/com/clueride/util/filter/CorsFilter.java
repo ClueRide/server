@@ -17,6 +17,9 @@
  */
 package com.clueride.util.filter;
 
+import com.clueride.config.ConfigService;
+
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +37,8 @@ import java.io.IOException;
 public class CorsFilter implements Filter {
     private ServletContext servletContext;
 
-//    @Inject
-//    private ConfigService configService;
+    @Inject
+    private ConfigService configService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -52,9 +55,9 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-//        response.setHeader("Access-Control-Allow-Origin",
-//                configService.get("clueride.accessControl.allowedOrigins")
-//        );
+        response.setHeader("Access-Control-Allow-Origin",
+                configService.get("clueride.accessControl.allowedOrigins")
+        );
         response.setHeader(
                 "Access-Control-Allow-Headers",
                 new StringBuilder()

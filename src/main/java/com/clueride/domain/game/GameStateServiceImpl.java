@@ -226,11 +226,17 @@ public class GameStateServiceImpl implements GameStateService {
      * This happens when we've received an arrival event and we're on the last path
      * of the course.
      *
+     * Package Private for testing purposes.
+     *
      * @param gameStateBuilder the current state which we're evaluating.
      * @return true if we're at the last location in the Course.
      */
-    private boolean isEndOfCourse(GameState.Builder gameStateBuilder) {
+    boolean isEndOfCourse(GameState.Builder gameStateBuilder) {
+        requireNonNull(clueRideSessionDto, "expected Session to be established");
+        requireNonNull(courseService, "expected courseService to be provided");
+
         OutingView outingView = clueRideSessionDto.getOutingView();
+        requireNonNull(outingView, "expected session to hold valid outing");
         Course course = requireNonNull(
                 courseService.getById(outingView.getCourseId()),
                 "Expected Outing to hold valid Course"
