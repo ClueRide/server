@@ -17,13 +17,11 @@
  */
 package com.clueride;
 
-import javax.inject.Inject;
+import org.jboss.resteasy.spi.DefaultOptionsMethodException;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.jboss.resteasy.spi.DefaultOptionsMethodException;
-import org.slf4j.Logger;
 
 /**
  * Handles uncaught exceptions by wrapping them in a 500 Response.
@@ -31,8 +29,8 @@ import org.slf4j.Logger;
 @Provider
 public class DefaultExceptionMapper implements ExceptionMapper<Throwable> {
 
-    @Inject
-    private Logger LOGGER;
+//    @Inject
+//    private Logger LOGGER;
 
     public Response toResponse(Throwable e) {
         /* TODO: SVR-84 improve response to this exception. */
@@ -40,7 +38,7 @@ public class DefaultExceptionMapper implements ExceptionMapper<Throwable> {
             return null;
         }
 
-        LOGGER.error(e.getMessage(), e);
+//        LOGGER.error(e.getMessage(), e);
 
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
