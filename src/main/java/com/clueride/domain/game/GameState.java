@@ -17,11 +17,11 @@
  */
 package com.clueride.domain.game;
 
-import javax.annotation.concurrent.Immutable;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Defines what we need to track the state of the Game for the clients.
@@ -191,8 +191,12 @@ public class GameState {
         }
 
         public Builder incrementPathIndex(int moduloValue) {
-            /* Game State is set to "Outing Complete" when this wraps; for testing, it's convenient to wrap. */
-            return withPathIndex((pathIndex + 1) % moduloValue);
+            /* Game State is set to "Outing Complete" when this wraps and we no longer increment. */
+            if (pathIndex + 1 == moduloValue) {
+                return this;
+            } else {
+                return  withPathIndex(pathIndex + 1);
+            }
         }
 
         public Integer getLocationId() {
