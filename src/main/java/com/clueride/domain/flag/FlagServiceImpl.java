@@ -2,7 +2,7 @@ package com.clueride.domain.flag;
 
 import com.clueride.domain.attraction.Attraction;
 import com.clueride.domain.attraction.AttractionNotFoundException;
-import com.clueride.domain.attraction.AttractionService;
+import com.clueride.domain.attraction.AttractionStore;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseService;
 import com.clueride.domain.flag.reason.FlagReason;
@@ -21,17 +21,17 @@ public class FlagServiceImpl implements FlagService {
     private Logger LOGGER;
 
     private final FlagStore flagStore;
-    private final AttractionService attractionService;
+    private final AttractionStore attractionStore;
     private final CourseService courseService;
 
     @Inject
     public FlagServiceImpl(
             FlagStore flagStore,
-            AttractionService attractionService,
+            AttractionStore attractionStore,
             CourseService courseService
     ) {
         this.flagStore = flagStore;
-        this.attractionService = attractionService;
+        this.attractionStore = attractionStore;
         this.courseService = courseService;
     }
 
@@ -106,7 +106,7 @@ public class FlagServiceImpl implements FlagService {
         );
 
         Integer attractionId = requireNonNull(flagEntity.getAttractionId(), "Attraction ID must be provided");
-        Attraction attraction = attractionService.getById(attractionId);
+        Attraction attraction = attractionStore.getById(attractionId).build();
         if (attraction == null) {
             throw new AttractionNotFoundException("Attraction ID " + attractionId + " not found");
         }

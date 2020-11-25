@@ -63,7 +63,7 @@ public class FlaggedAttractionServiceImpl implements FlaggedAttractionService {
      *
      * @param entity
      */
-    private void fillAndGradeAttraction(AttractionEntity entity) {
+    public void fillAndGradeAttraction(AttractionEntity entity) {
         entity.withLatLon(latLonService.getLatLonById(entity.getNodeId()));
         entity.withFlags(flagService.getFlagsForAttraction(entity.getId()));
         entity.withReadinessLevel(scoredLocationService.calculateReadinessLevel(entity));

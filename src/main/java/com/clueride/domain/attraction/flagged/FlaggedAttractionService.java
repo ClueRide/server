@@ -1,6 +1,7 @@
 package com.clueride.domain.attraction.flagged;
 
 import com.clueride.domain.attraction.Attraction;
+import com.clueride.domain.attraction.AttractionEntity;
 
 import java.util.List;
 
@@ -23,5 +24,12 @@ public interface FlaggedAttractionService {
      * @return List of all Attractions with their Flags populated.
      */
     List<Attraction> getAllAttractions();
+
+    /**
+     * Performs the work of populating and grading an AttractionEntity.
+     *
+     * @param attractionEntity to fill and Grade.
+     */
+    void fillAndGradeAttraction(AttractionEntity attractionEntity);
 
 }
