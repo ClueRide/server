@@ -17,10 +17,10 @@
  */
 package com.clueride.domain.outing;
 
-import java.util.Date;
-
 import com.clueride.domain.course.Course;
 import com.clueride.domain.team.Team;
+
+import java.util.Date;
 
 /**
  * Model for the Outing: a particular {@link Team} running a particular {@link Course}
@@ -34,6 +34,14 @@ public class Outing {
     private Integer guideMemberId;
 
     Outing(OutingViewEntity builder) {
+        this.id = builder.getId();
+        this.teamId = builder.getTeamId();
+        this.courseId = builder.getCourseId();
+        this.scheduledTime = builder.getScheduledTime();
+        this.guideMemberId = builder.getGuideMemberId();
+    }
+
+    Outing(OutingEntity builder) {
         this.id = builder.getId();
         this.teamId = builder.getTeamId();
         this.courseId = builder.getCourseId();

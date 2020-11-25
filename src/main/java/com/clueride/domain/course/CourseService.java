@@ -71,4 +71,15 @@ public interface CourseService {
      * @return pretty much the same as what was passed in.
      */
     Course updateCourse(CourseEntity courseEntity);
+
+    /**
+     * Given an existing course, make it the default course for new Outings.
+     *
+     * This resets the Game State if the course is already the Default.
+     *
+     * @param courseEntity instance of the Course to reset; the ID is sufficient.
+     * @return the same instance.
+     */
+    Course makeDefault(CourseEntity courseEntity);
+
 }
