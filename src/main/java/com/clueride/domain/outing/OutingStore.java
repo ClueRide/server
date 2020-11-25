@@ -46,4 +46,9 @@ public interface OutingStore {
      */
     OutingViewEntity getOutingViewById(Integer outingId);
 
+    /**
+     * Given a Course ID, make the Eternal Outing use that Course.
+     */
+    OutingViewEntity setCourseForEternalOuting(Integer courseId);
+
 }

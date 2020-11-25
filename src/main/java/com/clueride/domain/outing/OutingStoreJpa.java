@@ -17,8 +17,10 @@
  */
 package com.clueride.domain.outing;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.*;
 import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
@@ -29,6 +31,9 @@ import static java.util.Objects.requireNonNull;
 public class OutingStoreJpa implements OutingStore {
     @PersistenceContext(unitName = "clueride")
     private EntityManager entityManager;
+
+    @Resource
+    private UserTransaction userTransaction;
 
     @Override
     public Integer addNew(OutingViewEntity entity) throws IOException {
@@ -45,6 +50,31 @@ public class OutingStoreJpa implements OutingStore {
     public OutingViewEntity getOutingViewById(Integer outingId) {
         requireNonNull(outingId, "Must specify an outing ID");
         return entityManager.find(OutingViewEntity.class, outingId);
+    }
+
+    @Override
+    public OutingViewEntity setCourseForEternalOuting(Integer courseId) {
+        requireNonNull(courseId, "Must specify a course ID");
+
+        OutingEntity outingEntity = entityManager.find(
+                OutingEntity.class,
+                OutingConstants.ETERNAL_OUTING_ID
+        );
+
+        outingEntity.withCourseId(courseId);
+
+        try {
+            userTransaction.begin();
+            entityManager.merge(outingEntity);
+            userTransaction.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException e) {
+            e.printStackTrace();
+        }
+
+        return entityManager.find(
+                OutingViewEntity.class,
+                OutingConstants.ETERNAL_OUTING_ID
+        );
     }
 
 }

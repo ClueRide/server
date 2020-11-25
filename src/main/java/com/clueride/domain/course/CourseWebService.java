@@ -65,6 +65,16 @@ public class CourseWebService {
 
     @POST
     @Secured
+    @Path("default")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Course makeDefault(CourseEntity courseEntity) {
+        return courseService.makeDefault(courseEntity);
+    }
+
+
+    @POST
+    @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Course updateCourse(CourseEntity courseEntity) {

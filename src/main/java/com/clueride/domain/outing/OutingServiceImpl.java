@@ -59,4 +59,9 @@ public class OutingServiceImpl implements OutingService {
         return clueRideSessionDto.getOutingView();
     }
 
+    @Override
+    public OutingView setCourseForEternalOuting(Integer courseId) {
+        return outingStore.setCourseForEternalOuting(courseId).build();
+    }
+
 }

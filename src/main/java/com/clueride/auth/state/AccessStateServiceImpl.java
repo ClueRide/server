@@ -31,8 +31,8 @@ import com.clueride.domain.account.member.MemberEntity;
 import com.clueride.domain.account.member.MemberService;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.BadgeOsPrincipalService;
-import com.clueride.domain.account.register.RegisterService;
 import com.clueride.domain.invite.InviteService;
+import com.clueride.domain.outing.OutingConstants;
 import com.clueride.domain.outing.OutingService;
 import org.slf4j.Logger;
 
@@ -56,7 +56,6 @@ public class AccessStateServiceImpl implements AccessStateService {
     private final ClueRideSessionService clueRideSessionService;
     private final InviteService inviteService;
     private final BadgeOsUserService badgeOsUserService;
-    private final RegisterService registerService;
 
     @Inject
     public AccessStateServiceImpl(
@@ -67,8 +66,7 @@ public class AccessStateServiceImpl implements AccessStateService {
             OutingService outingService,
             ClueRideSessionService clueRideSessionService,
             InviteService inviteService,
-            BadgeOsUserService badgeOsUserService,
-            RegisterService registerService
+            BadgeOsUserService badgeOsUserService
     ) {
         this.accessTokenService = accessTokenService;
         this.configService = configService;
@@ -78,7 +76,6 @@ public class AccessStateServiceImpl implements AccessStateService {
         this.clueRideSessionService = clueRideSessionService;
         this.inviteService = inviteService;
         this.badgeOsUserService = badgeOsUserService;
-        this.registerService = registerService;
     }
 
     @Override
@@ -205,10 +202,9 @@ public class AccessStateServiceImpl implements AccessStateService {
     }
 
     private void addEternalInvite(ClueRideIdentity clueRideIdentity, MemberEntity memberEntity, ClueRideSessionDto clueRideSessionDto) {
-        final int ETERNAL_OUTING = 1;
         try {
             clueRideSessionDto.setInvite(
-                    inviteService.createNew(ETERNAL_OUTING, memberEntity.getId())
+                    inviteService.createNew(OutingConstants.ETERNAL_OUTING_ID, memberEntity.getId())
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -217,7 +213,7 @@ public class AccessStateServiceImpl implements AccessStateService {
         clueRideSessionDto.setMember(memberEntity.build());
         clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
         clueRideSessionDto.setOutingView(
-                outingService.getViewById(ETERNAL_OUTING)
+                outingService.getViewById(OutingConstants.ETERNAL_OUTING_ID)
         );
     }
 
@@ -267,9 +263,8 @@ public class AccessStateServiceImpl implements AccessStateService {
 
         // TODO: CA-409 connect new identities with updated records & test coverage.
         /* Check to see if we have a Member Record. */
-        Member member = null;
         try {
-            member = memberService.getMemberByEmail(emailAddress);
+            memberService.getMemberByEmail(emailAddress);
         } catch (RecordNotFoundException rnfe) {
             /* No existing Member record, let's create one from ClueRideIdentity. */
             memberService.createNewMember(clueRideIdentity);

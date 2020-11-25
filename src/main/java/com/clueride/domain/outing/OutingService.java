@@ -42,4 +42,12 @@ public interface OutingService {
      */
     OutingView getActiveOutingView();
 
+    /**
+     * Given a Course ID, make the Eternal Outing use that Course.
+     *
+     * @param courseId Course to use as the "default" course for the eternal outing.
+     * @return Updated instance of the OutingView.
+     */
+    OutingView setCourseForEternalOuting(Integer courseId);
+
 }

@@ -20,6 +20,7 @@ package com.clueride.domain.course;
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.outing.NoSessionOutingException;
+import com.clueride.domain.outing.OutingService;
 import com.clueride.network.path.PathService;
 import org.slf4j.Logger;
 
@@ -41,6 +42,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final PathService pathService;
     private final CourseStore courseStore;
+    private final OutingService outingService;
 
     @Inject
     @SessionScoped
@@ -50,10 +52,12 @@ public class CourseServiceImpl implements CourseService {
     @Inject
     public CourseServiceImpl(
             PathService pathService,
-            CourseStore courseStore
-    ) {
+            CourseStore courseStore,
+            OutingService outingService
+            ) {
         this.pathService = pathService;
         this.courseStore = courseStore;
+        this.outingService = outingService;
     }
 
     @Override
@@ -93,6 +97,13 @@ public class CourseServiceImpl implements CourseService {
         LOGGER.debug("Updating {}", courseEntity.getName());
         prepareCourseAttractionsForUpdate(courseEntity);
         courseStore.update(courseEntity);
+        return courseEntity.build();
+    }
+
+    @Override
+    public Course makeDefault(CourseEntity courseEntity) {
+        LOGGER.debug("Setting Course {} to be the Default", courseEntity.getName());
+        outingService.setCourseForEternalOuting(courseEntity.getId());
         return courseEntity.build();
     }
 
