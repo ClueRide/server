@@ -74,6 +74,10 @@ public class AttractionEntity {
     @Column(name="location_group_id") private Integer locationGroupId;
 
     @Transient
+    private String locationTypeName;
+    @Transient
+    private String locationTypeIcon;
+    @Transient
     private LatLonEntity latLonEntity;
     @Transient
     private URL featuredImageUrl;
@@ -174,8 +178,8 @@ public class AttractionEntity {
     }
 
     /**
-     * Service is responsible for taking this value and looking up the
-     * LocationType(Entity) via its service.
+     * When provided by the client, server-side Service is responsible for taking this value and looking up the
+     * LocationType(Entity) via LocationTypeService.
      *
      * @param locationTypeId chosen from a list of possible Location Types.
      * @return this.
@@ -184,6 +188,25 @@ public class AttractionEntity {
         this.locationTypeId = locationTypeId;
         return this;
     }
+
+    public String getLocationTypeName() {
+        return locationTypeName;
+    }
+
+    public AttractionEntity withLocationTypeName(String locationTypeName) {
+        this.locationTypeName = locationTypeName;
+        return this;
+    }
+
+    public String getLocationTypeIcon() {
+        return locationTypeIcon;
+    }
+
+    public AttractionEntity withLocationTypeIcon(String locationTypeIcon) {
+        this.locationTypeIcon = locationTypeIcon;
+        return this;
+    }
+
 
     /* TODO CI-152: Flagging Attraction; expect to play with ReadinessLevel. */
 

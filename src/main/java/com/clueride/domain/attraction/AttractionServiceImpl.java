@@ -2,6 +2,8 @@ package com.clueride.domain.attraction;
 
 import com.clueride.domain.attraction.flagged.FlaggedAttractionService;
 import com.clueride.domain.course.CourseService;
+import com.clueride.domain.location.loctype.LocationType;
+import com.clueride.domain.location.loctype.LocationTypeService;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -18,16 +20,19 @@ public class AttractionServiceImpl implements AttractionService {
     private final AttractionStore attractionStore;
     private final CourseService courseService;
     private final FlaggedAttractionService flaggedAttractionService;
+    private final LocationTypeService locationTypeService;
 
     @Inject
     public AttractionServiceImpl(
             AttractionStore attractionStore,
             CourseService courseService,
-            FlaggedAttractionService flaggedAttractionService
+            FlaggedAttractionService flaggedAttractionService,
+            LocationTypeService locationTypeService
     ) {
         this.attractionStore = attractionStore;
         this.courseService = courseService;
         this.flaggedAttractionService = flaggedAttractionService;
+        this.locationTypeService = locationTypeService;
     }
 
     @Override
@@ -53,9 +58,19 @@ public class AttractionServiceImpl implements AttractionService {
         for (Integer attractionId : attractionIds) {
             AttractionEntity attractionEntity = attractionStore.getById(attractionId);
             flaggedAttractionService.fillAndGradeAttraction(attractionEntity);
+            fillLocationType(attractionEntity);
             attractions.add(attractionEntity.build());
         }
         return attractions;
     }
 
+    /**
+     * Populates the Transient Location Type values relevant to displaying Icons on the client.
+     * @param attractionEntity
+     */
+    private void fillLocationType(AttractionEntity attractionEntity) {
+        LocationType locationType = locationTypeService.getById(attractionEntity.getLocationTypeId());
+        attractionEntity.withLocationTypeName(locationType.getName());
+        attractionEntity.withLocationTypeIcon(locationType.getIcon());
+    }
 }
