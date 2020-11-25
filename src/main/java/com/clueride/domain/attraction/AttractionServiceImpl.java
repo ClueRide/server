@@ -1,5 +1,6 @@
 package com.clueride.domain.attraction;
 
+import com.clueride.domain.attraction.flagged.FlaggedAttractionService;
 import com.clueride.domain.course.CourseService;
 import org.slf4j.Logger;
 
@@ -16,14 +17,17 @@ public class AttractionServiceImpl implements AttractionService {
 
     private final AttractionStore attractionStore;
     private final CourseService courseService;
+    private final FlaggedAttractionService flaggedAttractionService;
 
     @Inject
     public AttractionServiceImpl(
             AttractionStore attractionStore,
-            CourseService courseService
+            CourseService courseService,
+            FlaggedAttractionService flaggedAttractionService
     ) {
         this.attractionStore = attractionStore;
         this.courseService = courseService;
+        this.flaggedAttractionService = flaggedAttractionService;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class AttractionServiceImpl implements AttractionService {
     public List<Attraction> getByNameFragment(NameFragmentQuery nameFragmentQuery) {
         List<Attraction> attractions = new ArrayList<>();
         for (AttractionEntity entity : attractionStore.getByNameFragment(nameFragmentQuery.fragment)) {
+            flaggedAttractionService.fillAndGradeAttraction(entity);
             attractions.add(entity.build());
         }
         return attractions;
@@ -46,9 +51,9 @@ public class AttractionServiceImpl implements AttractionService {
         List<Attraction> attractions = new ArrayList<>();
         List<Integer> attractionIds = courseService.getAttractionIdsForCourse(courseId);
         for (Integer attractionId : attractionIds) {
-            attractions.add(
-                    attractionStore.getById(attractionId).build()
-            );
+            AttractionEntity attractionEntity = attractionStore.getById(attractionId);
+            flaggedAttractionService.fillAndGradeAttraction(attractionEntity);
+            attractions.add(attractionEntity.build());
         }
         return attractions;
     }
