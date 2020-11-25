@@ -47,6 +47,8 @@ public class Attraction {
     private final String name;
     private final String description;
     private final Integer locationTypeId;
+    private final String locationTypeName;
+    private final String locationTypeIcon;
     private final ImageLink featuredImage;
     private final LocLink mainLink;
     private final Integer googlePlaceId;
@@ -74,6 +76,8 @@ public class Attraction {
         name = entity.getName();
         description = entity.getDescription();
         locationTypeId = entity.getLocationTypeId();
+        locationTypeName = entity.getLocationTypeName();
+        locationTypeIcon = entity.getLocationTypeIcon();
 
         /* OK for Location to be missing Featured Image. */
         if (entity.getFeaturedImage() != null) {
@@ -133,6 +137,14 @@ public class Attraction {
      */
     public Integer getLocationTypeId() {
         return (locationTypeId);
+    }
+
+    public String getLocationTypeName() {
+        return locationTypeName;
+    }
+
+    public String getLocationTypeIconName() {
+        return locationTypeIcon;
     }
 
     /**
