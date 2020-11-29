@@ -19,9 +19,10 @@ package com.clueride.domain.course;
 
 import com.clueride.auth.session.ClueRideSession;
 import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.domain.course.link.CourseToPathLinkEntity;
 import com.clueride.domain.outing.NoSessionOutingException;
 import com.clueride.domain.outing.OutingService;
-import com.clueride.network.path.PathService;
+import com.clueride.domain.path.PathService;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.SessionScoped;
@@ -107,12 +108,29 @@ public class CourseServiceImpl implements CourseService {
         return courseEntity.build();
     }
 
+    /**
+     * We've got a list of ordered Attractions that we turn into a list of Paths and from
+     * there, an ordered list of {@link CourseToPathLinkEntity} instances to attach to the
+     * Course.
+     *
+     * We also set the Starting Attraction ID for the Course.
+     *
+     * If there are no attractions yet, we can still persist the shell of the Course but this
+     * method won't have any work to be done and simply returns.
+     *
+     * @param courseEntity the Course instance to be prepared.
+     */
     private void prepareCourseAttractionsForUpdate(CourseEntity courseEntity) {
         List<Integer> attractionIds = courseEntity.getLocationIds();
         if (isNull(attractionIds) || attractionIds.size() == 0) {
-            LOGGER.debug("No Attraction IDs in this Course");
+            LOGGER.warn("No Attraction IDs in this Course");
             return;
         }
+
+        /* We have attractions; turn them into Link records on the course. */
+        courseEntity.withCourseToPathEntities(
+                pathService.getCourseToPathLinkEntities(courseEntity)
+        );
 
         courseEntity.withStartingAttractionId(attractionIds.get(0));
     }

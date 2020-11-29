@@ -25,14 +25,15 @@ public interface PathMetaStore {
     PathMetaEntity createNew(PathMetaEntity pathMetaEntity);
 
     /**
-     * Finds a Path that links between a pair of AttractionIDs.
+     * Finds a Path that links between a pair of Node IDs.
      *
-     * The direction is significant (but should it be?).
+     * The direction is significant because the Edge may be different
+     * depending on the direction of travel (one-way streets and uphills).
      *
-     * @param startId  Starting Attraction ID.
-     * @param endId Ending Attraction ID.
+     * @param startNodeId  Starting Node ID.
+     * @param endNodeId Ending Node ID.
      * @return First matching PathMeta record.
      */
-    PathMetaEntity findSuitablePath(Integer startId, Integer endId);
+    PathMetaEntity findSuitablePath(Integer startNodeId, Integer endNodeId);
 
 }

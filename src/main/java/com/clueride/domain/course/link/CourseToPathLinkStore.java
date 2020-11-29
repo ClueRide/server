@@ -20,4 +20,9 @@ public interface CourseToPathLinkStore {
      */
     void remove(CourseToPathLinkEntity courseToPathLinkEntity);
 
+    /**
+     * Removes all links between a Course and its Paths; we're building a complete new set.
+     * @param courseId unique identifier for the Course we're working on.
+     */
+    void dropAllForCourse(Integer courseId);
 }

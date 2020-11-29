@@ -16,6 +16,9 @@ public class PathMetaEntity {
     @Column(name="end_node_id")
     private Integer endNodeId;
 
+    @Column(name="name")
+    private String name;
+
     @Transient
     private Integer courseToPathId;
 
@@ -42,6 +45,15 @@ public class PathMetaEntity {
 
     public PathMetaEntity withId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public PathMetaEntity withName(String name) {
+        this.name = name;
         return this;
     }
 

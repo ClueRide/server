@@ -4,7 +4,6 @@ import com.clueride.domain.attraction.AttractionEntity;
 import com.clueride.domain.attraction.AttractionStore;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseEntity;
-import com.clueride.domain.course.CourseStore;
 import com.clueride.domain.course.link.CourseToPathLinkEntity;
 import com.clueride.domain.course.link.CourseToPathLinkStore;
 import com.clueride.domain.path.attractions.CoursePathAttractionsEntity;
@@ -16,20 +15,14 @@ import com.clueride.network.path.PathStore;
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.NoResultException;
+import java.util.*;
+
+import static java.util.Objects.requireNonNull;
 
 public class PathServiceImpl implements PathService {
-    private CourseEntity courseEntity;
-    private List<CoursePathAttractionsEntity> existingPathForCourseEntities;
     private Map<Integer, AttractionEntity> attractionMap = new HashMap<>();
-
-    @Inject
-    private CourseStore courseStore;
 
     @Inject
     private CoursePathAttractionsStore coursePathAttractionsStore;
@@ -59,10 +52,34 @@ public class PathServiceImpl implements PathService {
         return null;
     }
 
+    @Override
+    public List<Integer> getLocationIds(Integer courseId) {
+        requireNonNull(courseId, "Course ID must be provided");
+
+        List<CoursePathAttractionsEntity> paths = coursePathAttractionsStore.getPathAttractionsForCourse(courseId);
+        if (paths.size() == 0) {
+            LOGGER.warn("No paths found for course ID {}", courseId );
+            return Collections.emptyList();
+        }
+
+        List<Integer> locationIds = new ArrayList<>();
+        CoursePathAttractionsEntity lastBuilder = null;
+        for (CoursePathAttractionsEntity builder : paths) {
+            locationIds.add(builder.getStartLocationId());
+            lastBuilder = builder;
+        }
+        locationIds.add(lastBuilder.getEndLocationId());
+
+        return locationIds;
+    }
+
     /**
      * This implementation tests existing Paths to see if we want to patch it up, or tear it down
      * and rebuild from scratch. The easy approach is to add to existing if we don't find enough
      * and teardown and rebuild if we have too many.
+     *
+     * We want to create Path records for potential combinations of Attractions, but it isn't until
+     * we persist the Course that we worry about linking the course to those Paths.
      *
      * @param courseId Unique identifier to for the {@link Course}.
      * @param newAttractionIds requested ordered List of Attraction IDs to link together.
@@ -74,19 +91,15 @@ public class PathServiceImpl implements PathService {
             List<Integer> newAttractionIds
     ) {
         List<PathMeta> paths = new ArrayList<>();
-        List<CourseToPathLinkEntity> courseToPathEntities = new ArrayList<>();
 
         if (newAttractionIds.size() < 2) {
+            LOGGER.warn("Less than 2 Attractions; no path to be setup yet");
             /* No reason to prepare link paths for less than a single pair of newAttractionIds. */
             return paths;
         }
-        LOGGER.debug("Setting up Paths for " + newAttractionIds.size() + " Attractions");
-
-        /* Store a local copy of what we have at this point before the update. */
-        existingPathForCourseEntities = coursePathAttractionsStore.getPathAttractionsForCourse(courseId);
-
-        /* We'll want a current instance from the DB. */
-        courseEntity = courseStore.getCourseById(courseId);
+        LOGGER.debug("Setting up Paths for {} Attractions",
+                newAttractionIds.size()
+        );
 
         /* Loop through the list of requested Attraction IDs. */
         for (Integer attractionId : newAttractionIds) {
@@ -95,142 +108,112 @@ public class PathServiceImpl implements PathService {
 
         /* Run through pairs of Attraction IDs determining which have existing Paths for the course. */
         for (int i = 0; i < newAttractionIds.size() - 1; i++) {
+            int start_id = newAttractionIds.get(i);
+            int end_id = newAttractionIds.get(i+1);
+
             /* Obtain appropriate Path instance. */
             PathMeta path = getPathForAttractionPair(
-                    i+1,
-                    newAttractionIds.get(i),
-                    newAttractionIds.get(i+1)
+                    attractionMap.get(start_id),
+                    attractionMap.get(end_id)
             );
             paths.add(path);
         }
-
-        removeObsoleteCourseToPathRecords(
-                newAttractionIds,
-                existingPathForCourseEntities
-        );
-
-        /* Make and persist changes to the Course. */
-//        courseEntity.withCourseToPathEntities(courseToPathEntities);
-        courseStore.update(courseEntity);
 
         return paths;
     }
 
     /**
-     * For the given pair of Attraction IDs, look for an existing Path, and if not found,
+     * Generates set of Course to Path Links to be persisted with the Course starting
+     * with the ordered list of Attraction IDs.
+     *
+     * All required Path records for each pair of Attractions are expected to have been
+     * persisted already, but the {@link #getPathMetaForAttractions(Integer, List)} assures
+     * this is complete.
+     *
+     * An earlier implementation attempted to re-use Link records (course_to_path), but
+     * after adding a DB constraint to prevent duplicates (path_order for a course ID),
+     * it became too much trouble to try to re-apply a given link. Now we just tear down
+     * all the link records and provide a complete new set.
+     *
+     * @param courseEntity course possessing the list of Attractions.
+     * @return full set of links between the Course and its Paths.
+     */
+    @Override
+    public List<CourseToPathLinkEntity> getCourseToPathLinkEntities(CourseEntity courseEntity) {
+        List<PathMeta> pathMetaList = getPathMetaForAttractions(
+                courseEntity.getId(),
+                courseEntity.getLocationIds()
+        );
+
+        List<CourseToPathLinkEntity> newCourseToPathLinkEntities = new ArrayList<>();
+        /* If not enough attractions for a Path, we won't record any Paths. */
+        if (pathMetaList.size() == 0) {
+            return newCourseToPathLinkEntities;
+        }
+
+        /* Since we're building a new set, clear all the old links. */
+        courseToPathLinkStore.dropAllForCourse(courseEntity.getId());
+
+        /* Build new set. */
+        int pathOrder = 1;
+        for (PathMeta pathMeta : pathMetaList) {
+            newCourseToPathLinkEntities.add(
+                    CourseToPathLinkEntity.builder()
+                            .withCourse(courseEntity)
+                            .withPathId(pathMeta.getId())
+                            .withPathOrder(pathOrder++)
+            );
+        }
+        return newCourseToPathLinkEntities;
+    }
+
+    /**
+     * For the given pair of Attractions, look for an existing Path, and if not found,
      * create a new Path with an empty set of Edges.
      *
-     * At the same time, we're building a list of CourseToPathEntities that we no longer need; the Paths however,
-     * may be useful in the future, particularly if they have edges.
-     *
-     * @param startId Attraction ID for the start (or end, really) of this Path.
-     * @param endId Attraction ID for the end (or start, really) of this Path.
+     * @param startAttraction attraction for the start of this Path.
+     * @param endAttraction attraction for the end of this Path.
      * @return either existing Path (with or without Edges) or a new Path (without Edges).
      */
     @Nonnull
     private PathMeta getPathForAttractionPair(
-            Integer indexWithinCourse,
-            Integer startId,
-            Integer endId
+            AttractionEntity startAttraction,
+            AttractionEntity endAttraction
     ) {
         PathMetaEntity pathMetaEntity;
-
-        CoursePathAttractionsEntity existingCachedPath = findExistingPath(startId, endId);
-        if (existingCachedPath != null) {
-            /* Create from existing. */
-            pathMetaEntity = CoursePathAttractionsEntity.from(existingCachedPath)
-                    .withHasEdges(
-                            pathStore.getEdgeCount(existingCachedPath.getPathId()) > 0
-                    );
-            /* If we can use previous instance, we will. */
-        } else {
-            /* See if the database has a suitable CoursePathAttractions record to start with. */
-            CoursePathAttractionsEntity existingDbPath = coursePathAttractionsStore.findSuitablePath(startId, endId);
-
-            if (existingDbPath != null) {
-                Integer pathId = existingDbPath.getPathId();
-                pathMetaEntity = pathMetaStore.get(pathId)
-                        .withStartAttractionId(startId)
-                        .withStartNodeId(attractionMap.get(startId).getNodeId())
-                        .withEndAttractionId(endId)
-                        .withEndNodeId(attractionMap.get(endId).getNodeId())
-                        .withHasEdges(pathStore.getEdgeCount(pathId) > 0);
-//                pathMetaStore.createNew(pathMetaEntity);
-            } else {
-                /* Instantiate a new one from scratch. */
-                pathMetaEntity = PathMetaEntity.builder()
-                        .withStartAttractionId(startId)
-                        .withStartNodeId(attractionMap.get(startId).getNodeId())
-                        .withEndAttractionId(endId)
-                        .withEndNodeId(attractionMap.get(endId).getNodeId())
-                        .withHasEdges(false);
-
-                // Persist it so it exists in the DB.
-                pathMetaStore.createNew(pathMetaEntity);
-            }
-
-            /* Obtain appropriate link between Path and Course with incrementing order. */
-            CourseToPathLinkEntity courseToPathLinkEntity = CourseToPathLinkEntity.builder()
-                    .withPathOrder(indexWithinCourse)
-                    .withPathId(pathMetaEntity.getId())
-                    .withCourse(courseEntity);
-
-            courseToPathLinkStore.createNew(courseToPathLinkEntity);
-            pathMetaEntity.withCourseToPathId(courseToPathLinkEntity.getId());
-
-            courseEntity.withCourseToPathEntity(
-                    courseToPathLinkEntity
+        try {
+            pathMetaEntity = pathMetaStore.findSuitablePath(
+                    startAttraction.getNodeId(),
+                    endAttraction.getNodeId()
             );
+            pathMetaEntity.withHasEdges(pathStore.getEdgeCount(pathMetaEntity.getId()) > 0);
+        } catch (NoResultException nre)  {
+            pathMetaEntity = createNewPathMetaEntity(startAttraction, endAttraction);
+        } catch (RuntimeException re) {
+            LOGGER.error("Retrieving path from {} ({}) to {} ({}):",
+                    startAttraction.getName(),
+                    startAttraction.getNodeId(),
+                    endAttraction.getName(),
+                    endAttraction.getNodeId(),
+                    re);
+            throw re;
         }
 
         return pathMetaEntity.build();
     }
 
-    @Nullable
-    private CoursePathAttractionsEntity findExistingPath(
-            Integer startId,
-            Integer endId
-    ) {
-        /* Check the earlier set of the course's records first; these have been cached. */
-        for (CoursePathAttractionsEntity coursePathAttractionsEntity : existingPathForCourseEntities) {
-            if (coursePathAttractionsEntity.getStartLocationId().equals(startId) &&
-                    coursePathAttractionsEntity.getEndLocationId().equals(endId)
-            ) {
-                return coursePathAttractionsEntity;
-            }
-        }
-        return null;
-    }
+    private PathMetaEntity createNewPathMetaEntity(AttractionEntity startAttraction, AttractionEntity endAttraction) {
+        String name = startAttraction.getName() +
+                " - " +
+                endAttraction.getName();
 
-    /**
-     * Cycles through each of the existing Path For Course Entities to see which ones are no longer needed.
-     *
-     * @param newAttractionIds The desired ordered list of Attraction IDs.
-     * @param existingPathForCourseEntities what we used to have for the PathForCourseEntity records.
-     */
-    private void removeObsoleteCourseToPathRecords(
-            List<Integer> newAttractionIds,
-            List<CoursePathAttractionsEntity> existingPathForCourseEntities
-    ) {
+        PathMetaEntity pathMetaEntity = PathMetaEntity.builder()
+                .withStartNodeId(startAttraction.getNodeId())
+                .withEndNodeId(endAttraction.getNodeId())
+                .withHasEdges(false)
+                .withName(name);
 
-        for (CoursePathAttractionsEntity coursePathAttractionsEntity : existingPathForCourseEntities) {
-            /* brute force */
-            boolean removePath = true;
-            for (int index = 0; index < newAttractionIds.size()-1; index++) {
-                if (coursePathAttractionsEntity.getStartLocationId().equals(newAttractionIds.get(index))
-                    && coursePathAttractionsEntity.getEndLocationId().equals(newAttractionIds.get(index+1))) {
-                    removePath = false;
-                    break;
-                }
-            }
-
-            if (removePath) {
-                CourseToPathLinkEntity courseToPathLinkEntity = CourseToPathLinkEntity.builder()
-                        .withId(coursePathAttractionsEntity.getId());
-
-                courseToPathLinkStore.remove(courseToPathLinkEntity);
-            }
-        }
+        return pathMetaStore.createNew(pathMetaEntity);
     }
 
 }

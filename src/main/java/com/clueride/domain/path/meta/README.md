@@ -12,6 +12,6 @@ sorted out.
   
 # Collaborators
 
-* CourseToPath is the relationship between Path and Course and holds 
+* CourseToPathLink is the relationship between Path and Course and holds 
 the order for the Course.
 * PathGeometryEntity holds the GeoSpatial info for placement on the map.
