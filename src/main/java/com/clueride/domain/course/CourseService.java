@@ -77,9 +77,9 @@ public interface CourseService {
      *
      * This resets the Game State if the course is already the Default.
      *
-     * @param courseEntity instance of the Course to reset; the ID is sufficient.
+     * @param courseId unique identifier for the Course to serve as the Default.
      * @return the same instance.
      */
-    Course makeDefault(CourseEntity courseEntity);
+    Course makeDefault(Integer courseId);
 
 }

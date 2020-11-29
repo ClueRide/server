@@ -130,8 +130,9 @@ public class ClueRideSessionServiceImpl implements ClueRideSessionService {
             clueRideSessionDto.setInvite(invite);
 
             /* Check if we can retrieve the Outing. */
+            // TODO: What happens if there isn't an outing with that ID?
             OutingView outingView = outingService.getViewById(invite.getOutingId());
-            clueRideSessionDto.setOutingView(outingView);
+            clueRideSessionDto.setOutingId(outingView.getId());
         }
     }
 

@@ -17,6 +17,17 @@
  */
 package com.clueride.domain.game.ssevent;
 
+import com.clueride.auth.session.ClueRideSession;
+import com.clueride.auth.session.ClueRideSessionDto;
+import com.clueride.config.ConfigService;
+import com.clueride.domain.game.GameState;
+import com.clueride.domain.puzzle.answer.AnswerSummary;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,19 +35,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-
-import com.clueride.auth.session.ClueRideSession;
-import com.clueride.auth.session.ClueRideSessionDto;
-import com.clueride.config.ConfigService;
-import com.clueride.domain.game.GameState;
-import com.clueride.domain.puzzle.answer.AnswerSummary;
 
 
 /**
@@ -98,7 +96,7 @@ public class SSEventServiceImpl implements SSEventService {
     private String answerSummaryEventMessage(AnswerSummary answerSummary) {
         AnswerSummaryEvent answerSummaryEvent = new AnswerSummaryEvent(
                 SSEventType.ANSWER_SUMMARY.toString(),
-                clueRideSessionDto.getOutingView().getId(),
+                clueRideSessionDto.getOutingId(),
                 answerSummary
         );
         try {
@@ -114,7 +112,7 @@ public class SSEventServiceImpl implements SSEventService {
         SSEventMessage ssEventMessage =
                 new SSEventMessage(
                         event,
-                        clueRideSessionDto.getOutingView().getId(),
+                        clueRideSessionDto.getOutingId(),
                         gameState
                 );
         try {
@@ -184,7 +182,7 @@ public class SSEventServiceImpl implements SSEventService {
                 "http://" + sseHost
                         + "/rest/"
                         + endpoint + "/"
-                        + clueRideSessionDto.getOutingView().getId()
+                        + clueRideSessionDto.getOutingId()
         );
     }
 

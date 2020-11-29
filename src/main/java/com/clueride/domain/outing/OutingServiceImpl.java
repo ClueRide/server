@@ -56,7 +56,7 @@ public class OutingServiceImpl implements OutingService {
         if (clueRideSessionDto.hasNoOuting()) {
             throw new NoSessionOutingException();
         }
-        return clueRideSessionDto.getOutingView();
+        return outingStore.getOutingViewById(clueRideSessionDto.getOutingId()).build();
     }
 
     @Override

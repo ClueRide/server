@@ -17,20 +17,17 @@
  */
 package com.clueride.domain.game;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.clueride.auth.Secured;
+import com.clueride.domain.course.CourseEntity;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 /**
  * REST API for Game State.
  */
-@Path("game-state")
+@Path("/game-state")
 public class GameStateWebService {
 
     @Inject
@@ -68,6 +65,23 @@ public class GameStateWebService {
     @Path("departure")
     public GameState updateOutingWithDeparture() {
         return gameStateService.updateOutingStateWithDeparture();
+    }
+
+    @DELETE
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public GameState resetActiveSessionGameState() {
+        return gameStateService.resetDefaultOutingGameState();
+    }
+
+    @POST
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("default-course")
+    public GameState updateDefaultCourse(CourseEntity courseEntity) {
+        return gameStateService.updateDefaultCourse(courseEntity.getId());
     }
 
 }

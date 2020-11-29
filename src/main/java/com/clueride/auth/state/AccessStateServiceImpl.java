@@ -33,7 +33,6 @@ import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.account.principal.BadgeOsPrincipalService;
 import com.clueride.domain.invite.InviteService;
 import com.clueride.domain.outing.OutingConstants;
-import com.clueride.domain.outing.OutingService;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -52,7 +51,6 @@ public class AccessStateServiceImpl implements AccessStateService {
     private final ConfigService configService;
     private final BadgeOsPrincipalService badgeOsPrincipalService;
     private final MemberService memberService;
-    private final OutingService outingService;
     private final ClueRideSessionService clueRideSessionService;
     private final InviteService inviteService;
     private final BadgeOsUserService badgeOsUserService;
@@ -63,7 +61,6 @@ public class AccessStateServiceImpl implements AccessStateService {
             ConfigService configService,
             BadgeOsPrincipalService badgeOsPrincipalService,
             MemberService memberService,
-            OutingService outingService,
             ClueRideSessionService clueRideSessionService,
             InviteService inviteService,
             BadgeOsUserService badgeOsUserService
@@ -72,7 +69,6 @@ public class AccessStateServiceImpl implements AccessStateService {
         this.configService = configService;
         this.badgeOsPrincipalService = badgeOsPrincipalService;
         this.memberService = memberService;
-        this.outingService = outingService;
         this.clueRideSessionService = clueRideSessionService;
         this.inviteService = inviteService;
         this.badgeOsUserService = badgeOsUserService;
@@ -212,9 +208,7 @@ public class AccessStateServiceImpl implements AccessStateService {
 
         clueRideSessionDto.setMember(memberEntity.build());
         clueRideSessionDto.setClueRideIdentity(clueRideIdentity);
-        clueRideSessionDto.setOutingView(
-                outingService.getViewById(OutingConstants.ETERNAL_OUTING_ID)
-        );
+        clueRideSessionDto.setOutingId(OutingConstants.ETERNAL_OUTING_ID);
     }
 
     /**

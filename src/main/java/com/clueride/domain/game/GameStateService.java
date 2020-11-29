@@ -72,4 +72,24 @@ public interface GameStateService {
      */
     AnswerSummary postAnswer(AnswerPost answerPost);
 
+    /**
+     * During testing, a reset of the Game State is better than restarting the server.
+     *
+     * This can be called via REST API or whenever the Eternal Outing has a new default Course and
+     * the previous state for the Outing requires a reset.
+     *
+     * @param outingId identifier for the Outing.
+     * @return the Game State reset for the Eternal Outing.
+     */
+    GameState resetGameState(Integer outingId);
+
+    GameState resetDefaultOutingGameState();
+
+    /**
+     * During testing, when changing the default Course, we want the GameState to know about the changes.
+     *
+     * @param courseId unique identifier for the course we want to provide as the default.
+     * @return Updated (and reset) GameState.
+     */
+    GameState updateDefaultCourse(Integer courseId);
 }

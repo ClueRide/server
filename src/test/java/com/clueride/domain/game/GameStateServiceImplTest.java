@@ -3,6 +3,8 @@ package com.clueride.domain.game;
 import com.clueride.auth.session.ClueRideSessionDto;
 import com.clueride.domain.course.Course;
 import com.clueride.domain.course.CourseService;
+import com.clueride.domain.outing.OutingConstants;
+import com.clueride.domain.outing.OutingService;
 import com.clueride.domain.outing.OutingView;
 import org.jglue.cdiunit.NgCdiRunner;
 import org.junit.Before;
@@ -40,6 +42,9 @@ public class GameStateServiceImplTest extends NgCdiRunner {
     @Mock
     private Course mockCourse;
 
+    @Mock
+    private OutingService outingService;
+
     @Before
     public void setup() {
         initMocks(this);
@@ -58,7 +63,7 @@ public class GameStateServiceImplTest extends NgCdiRunner {
 
         /* Train Mocks */
         when(outingView.getCourseId()).thenReturn(TEST_COURSE_ID);
-        when(clueRideSessionDto.getOutingView()).thenReturn(outingView);
+        when(clueRideSessionDto.getOutingId()).thenReturn(OutingConstants.ETERNAL_OUTING_ID);
         when(courseService.getById(TEST_COURSE_ID)).thenReturn(mockCourse);
         when(mockCourse.getLocationIds()).thenReturn(FULL_SET_ATTRACTION_IDS);
 
@@ -77,9 +82,10 @@ public class GameStateServiceImplTest extends NgCdiRunner {
 
         /* Train Mocks */
         when(outingView.getCourseId()).thenReturn(TEST_COURSE_ID);
-        when(clueRideSessionDto.getOutingView()).thenReturn(outingView);
+        when(clueRideSessionDto.getOutingId()).thenReturn(OutingConstants.ETERNAL_OUTING_ID);
         when(courseService.getById(TEST_COURSE_ID)).thenReturn(mockCourse);
         when(mockCourse.getLocationIds()).thenReturn(FULL_SET_ATTRACTION_IDS);
+        when(outingService.getViewById(OutingConstants.ETERNAL_OUTING_ID)).thenReturn(outingView);
 
         /* Make call */
         boolean actual = toTest.isEndOfCourse(gameStateBuilder);
