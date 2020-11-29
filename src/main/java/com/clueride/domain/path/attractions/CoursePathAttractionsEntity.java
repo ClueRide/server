@@ -32,6 +32,7 @@ import javax.persistence.Table;
  * without Geometry for a Course and its locations.
  *
  * This is a read-only entity because it is backed by a view.
+ * However, it provides setters for the purposes of testing.
  *
  * This class is used to tie together the IDs, but not necessarily
  * the actual entities behind those IDs. It's the responsibility of
@@ -57,12 +58,21 @@ public class CoursePathAttractionsEntity {
     @Column(name="end_attraction_id")
     private Integer endAttractionId;
 
+    public static CoursePathAttractionsEntity builder() {
+        return new CoursePathAttractionsEntity();
+    }
+
     public static PathMetaEntity from(CoursePathAttractionsEntity existingPath) {
         return PathMetaEntity.builder()
                 .withId(existingPath.pathId)
                 .withCourseToPathId(existingPath.id)
                 .withStartAttractionId(existingPath.startAttractionId)
                 .withEndAttractionId(existingPath.endAttractionId);
+    }
+
+    public CoursePathAttractionsEntity withId(Integer id) {
+        this.id = id;
+        return this;
     }
 
     public CoursePathAttractions build() {
@@ -89,6 +99,11 @@ public class CoursePathAttractionsEntity {
         this.pathOrder = pathOrder;
     }
 
+    public CoursePathAttractionsEntity withPathOrder(Integer pathOrder) {
+        this.pathOrder = pathOrder;
+        return this;
+    }
+
     public Integer getStartNodeId() {
         return startNodeId;
     }
@@ -113,8 +128,18 @@ public class CoursePathAttractionsEntity {
         this.courseId = courseId;
     }
 
+    public CoursePathAttractionsEntity withCourseId(Integer courseId) {
+        this.courseId = courseId;
+        return this;
+    }
+
     public void setPathId(Integer pathId) {
         this.pathId = pathId;
+    }
+
+    public CoursePathAttractionsEntity withPathId(Integer pathId) {
+        this.pathId = pathId;
+        return this;
     }
 
     public void setStartNodeId(Integer startNodeId) {
@@ -129,8 +154,18 @@ public class CoursePathAttractionsEntity {
         this.startAttractionId = startAttractionId;
     }
 
+    public CoursePathAttractionsEntity withStartAttractionId(Integer startAttractionId) {
+        this.startAttractionId = startAttractionId;
+        return this;
+    }
+
     public void setEndAttractionId(Integer endAttractionId) {
         this.endAttractionId = endAttractionId;
+    }
+
+    public CoursePathAttractionsEntity withEndAttractionId(Integer endAttractionId) {
+        this.endAttractionId = endAttractionId;
+        return this;
     }
 
     @Override

@@ -48,4 +48,23 @@ public class CourseToPathLinkStoreJpa implements CourseToPathLinkStore {
         }
     }
 
+    @Override
+    public void dropAllForCourse(Integer courseId) {
+        try {
+            userTransaction.begin();
+            entityManager.createQuery("delete from CourseToPathLinkEntity where course.id = :courseId")
+                    .setParameter("courseId", courseId)
+                    .executeUpdate();
+            userTransaction.commit();
+        } catch (
+                NotSupportedException |
+                        SystemException |
+                        RollbackException |
+                        HeuristicMixedException |
+                        HeuristicRollbackException e
+        ) {
+            e.printStackTrace();
+        }
+    }
+
 }

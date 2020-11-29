@@ -48,7 +48,7 @@ public class CourseEntity {
     @Column(name="starting_location_id")
     private Integer startingAttractionId;
 
-    @Transient  /* From the CourseToPathBuilders. */
+    @Transient  /* From the CourseToPathEntities. */
     private List<Integer> pathIds;
 
     @Transient

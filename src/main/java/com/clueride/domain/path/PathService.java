@@ -18,6 +18,9 @@
 package com.clueride.domain.path;
 
 import com.clueride.domain.course.Course;
+import com.clueride.domain.course.CourseEntity;
+import com.clueride.domain.course.link.CourseToPathLinkEntity;
+import com.clueride.domain.location.Location;
 import com.clueride.domain.path.meta.PathMeta;
 
 import java.util.List;
@@ -40,6 +43,14 @@ public interface PathService {
     List<Path> getAll();
 
     /**
+     * Retrieves the ordered list of {@link Location} IDs for the course identified
+     * by the courseId.
+     * @param courseId unique identifier for the {@link Course}.
+     * @return Ordered list of the Location IDs for the Course.
+     */
+    List<Integer> getLocationIds(Integer courseId);
+
+    /**
      * When building a Course, lists of Attractions are turned into
      * a list of Path Meta information linking those Attractions.
      *
@@ -54,4 +65,12 @@ public interface PathService {
      */
     List<PathMeta> getPathMetaForAttractions(Integer courseId, List<Integer> attractionIds);
 
+    /**
+     * When persisting a Course, lists of Attractions are turned into
+     * a list of CourseToPathLink records linking Paths to the Course.
+     *
+     * @param courseEntity course possessing the list of Attractions.
+     * @return List of ordered {@link CourseToPathLinkEntity} instances from the Attractions.
+     */
+    List<CourseToPathLinkEntity> getCourseToPathLinkEntities(CourseEntity courseEntity);
 }

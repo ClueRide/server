@@ -17,10 +17,6 @@
  */
 package com.clueride.network.path;
 
-import java.util.List;
-
-import com.clueride.domain.course.Course;
-import com.clueride.domain.location.Location;
 import com.clueride.domain.path.Path;
 
 /**
@@ -33,18 +29,10 @@ public interface PathService {
      * by the pathId.
      *
      * A Path is an ordered sequence of Edge instances.
-     * @param pathId
+     * @param pathId unique identifier for the Path.
      * @return String formatted as a GeoJSON feature collection containing
      * the Geometry for an ordered array of LineString.
      */
     String getPathGeoJsonById(Integer pathId);
-
-    /**
-     * Retrieves the ordered list of {@link Location} IDs for the course identified
-     * by the courseId.
-     * @param courseId unique identifier for the {@link Course}.
-     * @return Ordered list of the Location IDs for the Course.
-     */
-    List<Integer> getLocationIds(Integer courseId);
 
 }

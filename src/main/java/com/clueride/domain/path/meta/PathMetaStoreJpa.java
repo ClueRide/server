@@ -36,8 +36,13 @@ public class PathMetaStoreJpa implements PathMetaStore {
     }
 
     @Override
-    public PathMetaEntity findSuitablePath(Integer startId, Integer endId) {
-        return null;
+    public PathMetaEntity findSuitablePath(Integer startNodeId, Integer endNodeId) {
+        return entityManager.createQuery("SELECT p from PathMetaEntity p " +
+                "where startNodeId = :startNodeId " +
+                "  and endNodeId = :endNodeId", PathMetaEntity.class)
+                .setParameter("startNodeId", startNodeId)
+                .setParameter("endNodeId", endNodeId)
+                .getSingleResult();
     }
 
 }
