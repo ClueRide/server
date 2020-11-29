@@ -211,7 +211,7 @@ public class PathServiceImpl implements PathService {
                 .withStartNodeId(startAttraction.getNodeId())
                 .withEndNodeId(endAttraction.getNodeId())
                 .withHasEdges(false)
-                .withName(name);
+                .withName(name.substring(0, Integer.min(49, name.length()-1)));
 
         return pathMetaStore.createNew(pathMetaEntity);
     }
