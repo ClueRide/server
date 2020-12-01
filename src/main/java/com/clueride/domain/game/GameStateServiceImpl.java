@@ -27,6 +27,8 @@ import com.clueride.domain.game.ssevent.SSEventService;
 import com.clueride.domain.location.Location;
 import com.clueride.domain.location.LocationService;
 import com.clueride.domain.outing.NoSessionOutingException;
+import com.clueride.domain.outing.OutingConstants;
+import com.clueride.domain.outing.OutingService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.puzzle.Puzzle;
 import com.clueride.domain.puzzle.PuzzleService;
@@ -61,14 +63,12 @@ public class GameStateServiceImpl implements GameStateService {
     private final BadgeEventService badgeEventService;
     private final CourseService courseService;
     private final LocationService locationService;
+    private final OutingService outingService;
     private final PuzzleService puzzleService;
     private final PuzzleStateService puzzleStateService;
     private final SSEventService ssEventService;
 
-    private final static Integer NO_OUTING = -1;
-
-    // TODO: How does this expire?
-    /** Cached copy of GameState TODO: Persist this via a service. */
+    /** Cached copy of GameState. */
     private final static Map<Integer, GameState.Builder> gameStateMap = new HashMap<>();
 
     @Inject
@@ -76,6 +76,7 @@ public class GameStateServiceImpl implements GameStateService {
             BadgeEventService badgeEventService,
             CourseService courseService,
             LocationService locationService,
+            OutingService outingService,
             PuzzleService puzzleService,
             PuzzleStateService puzzleStateService,
             SSEventService ssEventService
@@ -83,6 +84,7 @@ public class GameStateServiceImpl implements GameStateService {
         this.badgeEventService = badgeEventService;
         this.courseService = courseService;
         this.locationService = locationService;
+        this.outingService = outingService;
         this.puzzleService = puzzleService;
         this.puzzleStateService = puzzleStateService;
         this.ssEventService = ssEventService;
@@ -109,19 +111,12 @@ public class GameStateServiceImpl implements GameStateService {
             throw new NoSessionOutingException();
         }
 
-        Integer outingId = clueRideSessionDto.getOutingView().getId();
-        /* TODO: What to do if outingId is empty?  CA-330: Exception mapping. */
-        if (outingId == null) {
-            LOGGER.error("Unable to retrieve GameState when there is no Outing");
-            outingId = NO_OUTING;
-        }
+        Integer outingId = clueRideSessionDto.getOutingId();
 
         GameState.Builder gameStateBuilder = gameStateMap.get(outingId);
         if (gameStateBuilder == null) {
             LOGGER.info("Opening Game State for outing " + outingId);
-            gameStateBuilder = new GameState.Builder()
-            // TODO: Populate from session
-            ;
+            gameStateBuilder = new GameState.Builder();
             gameStateMap.put(outingId, gameStateBuilder);
         }
         return gameStateBuilder;
@@ -131,15 +126,15 @@ public class GameStateServiceImpl implements GameStateService {
     public PuzzleState getPuzzleStateForSession() {
         GameState.Builder gameStateBuilder = getBuilderForSession();
         return puzzleStateService.getPuzzleStateByLocationAndOuting(
-                clueRideSessionDto.getOutingView().getId(),
+                clueRideSessionDto.getOutingId(),
                 gameStateBuilder.getLocationId()
         );
     }
 
     @Override
     public GameState updateWithTeamAssembled() {
-        OutingView outingView = clueRideSessionDto.getOutingView();
-        int outingId = outingView.getId();
+        int outingId = clueRideSessionDto.getOutingId();
+        OutingView outingView = outingService.getViewById(outingId);
         Course course = courseService.getById(outingView.getCourseId());
         setupPuzzles(outingId, course);
         GameState.Builder gameStateBuilder = getBuilderForSession()
@@ -183,7 +178,7 @@ public class GameStateServiceImpl implements GameStateService {
             throw new IllegalStateException("Cannot Arrive if not yet rolling");
         }
 
-        int outingId = clueRideSessionDto.getOutingView().getId();
+        int outingId = clueRideSessionDto.getOutingId();
         LOGGER.info("Changing Game State for outing " + outingId + " to Arrival");
 
         gameStateBuilder.withRolling(false);
@@ -209,7 +204,7 @@ public class GameStateServiceImpl implements GameStateService {
      * @param badgeEventName specific Team Event.
      */
     private void recordTeamBadgeEvent(String badgeEventName) {
-        OutingView outingView = clueRideSessionDto.getOutingView();
+        OutingView outingView = outingService.getViewById(clueRideSessionDto.getOutingId());
         OutingPlusGameState outingPlusGameState = new OutingPlusGameState(
                 gameStateMap.get(outingView.getId()).build(),
                 outingView
@@ -219,7 +214,7 @@ public class GameStateServiceImpl implements GameStateService {
                 .withMethodName(badgeEventName)
                 .withMethodClass(this.getClass())
                 .withReturnValue(outingPlusGameState);
-        badgeEventService.sendToTeam(badgeEventEntity, clueRideSessionDto.getOutingView().getTeamId());
+        badgeEventService.sendToTeam(badgeEventEntity, outingView.getTeamId());
     }
 
     /**
@@ -235,7 +230,7 @@ public class GameStateServiceImpl implements GameStateService {
         requireNonNull(clueRideSessionDto, "expected Session to be established");
         requireNonNull(courseService, "expected courseService to be provided");
 
-        OutingView outingView = clueRideSessionDto.getOutingView();
+        OutingView outingView = outingService.getViewById(clueRideSessionDto.getOutingId());
         requireNonNull(outingView, "expected session to hold valid outing");
         Course course = requireNonNull(
                 courseService.getById(outingView.getCourseId()),
@@ -261,9 +256,9 @@ public class GameStateServiceImpl implements GameStateService {
     @Override
     public GameState updateOutingStateWithDeparture() {
         GameState.Builder gameStateBuilder = getBuilderForSession();
-        OutingView outingView = clueRideSessionDto.getOutingView();
-        int outingId = outingView.getId();
+        int outingId = clueRideSessionDto.getOutingId();
         LOGGER.info("Changing Game State for outing " + outingId + " to Departure");
+        OutingView outingView = outingService.getViewById(outingId);
 
         Course course = requireNonNull(
                 courseService.getById(outingView.getCourseId()),
@@ -322,11 +317,29 @@ public class GameStateServiceImpl implements GameStateService {
 
         synchronized (ssEventService) {
             ssEventService.sendAnswerSummaryEvent(
-                    clueRideSessionDto.getOutingView().getId(),
+                    clueRideSessionDto.getOutingId(),
                     answerSummary
             );
         }
         return answerSummary;
+    }
+
+    @Override
+    public GameState resetGameState(Integer outingId) {
+        GameState.Builder gameStateBuilder = GameState.Builder.builder();
+        gameStateMap.put(outingId, gameStateBuilder);
+        return gameStateBuilder.build();
+    }
+
+    @Override
+    public GameState resetDefaultOutingGameState() {
+        return resetGameState(OutingConstants.ETERNAL_OUTING_ID);
+    }
+
+    @Override
+    public GameState updateDefaultCourse(Integer courseId) {
+        courseService.makeDefault(courseId);
+        return resetGameState(OutingConstants.ETERNAL_OUTING_ID);
     }
 
     /**

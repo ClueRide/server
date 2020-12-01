@@ -21,7 +21,7 @@ import com.clueride.auth.identity.ClueRideIdentity;
 import com.clueride.domain.account.member.Member;
 import com.clueride.domain.account.principal.BadgeOsPrincipal;
 import com.clueride.domain.invite.Invite;
-import com.clueride.domain.outing.OutingView;
+import com.clueride.domain.outing.OutingConstants;
 import com.clueride.domain.puzzle.state.PuzzleState;
 
 import java.io.Serializable;
@@ -34,8 +34,8 @@ public class ClueRideSessionDto implements Serializable {
     private BadgeOsPrincipal badgeOsPrincipal = null;
     private Member member = null;
     private Invite invite = null;
-    private OutingView outingView = null;
     private PuzzleState puzzleState = null;
+    private Integer outingId = OutingConstants.NO_OUTING;
 
     public void setClueRideIdentity(ClueRideIdentity clueRideIdentity) {
         this.clueRideIdentity = clueRideIdentity;
@@ -69,14 +69,6 @@ public class ClueRideSessionDto implements Serializable {
         this.invite = invite;
     }
 
-    public OutingView getOutingView() {
-        return outingView;
-    }
-
-    public void setOutingView(OutingView outingView) {
-        this.outingView = outingView;
-    }
-
     public void setPuzzleState(PuzzleState puzzleState) {
         this.puzzleState = puzzleState;
     }
@@ -85,9 +77,17 @@ public class ClueRideSessionDto implements Serializable {
         return puzzleState;
     }
 
+    public Integer getOutingId() {
+        return outingId;
+    }
+
+    public void setOutingId(Integer outingId) {
+        this.outingId = outingId;
+    }
+
     /** Convenience method. */
     public boolean hasNoOuting() {
-        return (this.outingView == null);
+        return (this.outingId == OutingConstants.NO_OUTING);
     }
 
 }

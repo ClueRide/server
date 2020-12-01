@@ -69,7 +69,9 @@ public class CourseServiceImpl implements CourseService {
             throw new NoSessionOutingException();
         }
         return getById(
-                clueRideSessionDto.getOutingView().getCourseId()
+                outingService.getViewById(
+                        clueRideSessionDto.getOutingId()
+                ).getCourseId()
         );
     }
 
@@ -102,9 +104,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course makeDefault(CourseEntity courseEntity) {
+    public Course makeDefault(Integer courseId) {
+        CourseEntity courseEntity = courseStore.getCourseById(courseId);
         LOGGER.debug("Setting Course {} to be the Default", courseEntity.getName());
-        outingService.setCourseForEternalOuting(courseEntity.getId());
+        outingService.setCourseForEternalOuting(courseId);
         return courseEntity.build();
     }
 

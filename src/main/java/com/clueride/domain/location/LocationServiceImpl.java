@@ -28,6 +28,7 @@ import com.clueride.domain.location.latlon.LatLonService;
 import com.clueride.domain.location.loclink.LocLink;
 import com.clueride.domain.location.loclink.LocLinkEntity;
 import com.clueride.domain.location.loclink.LocLinkService;
+import com.clueride.domain.outing.OutingService;
 import com.clueride.domain.outing.OutingView;
 import com.clueride.domain.place.ScoredLocationService;
 import com.clueride.domain.puzzle.PuzzleService;
@@ -63,6 +64,7 @@ public class LocationServiceImpl implements LocationService {
     private final ImageStore imageStore;
     private final PuzzleService puzzleService;
     private final LocLinkService locLinkService;
+    private final OutingService outingService;
 
     @Inject
     public LocationServiceImpl(
@@ -72,7 +74,8 @@ public class LocationServiceImpl implements LocationService {
             ScoredLocationService scoredLocationService,
             ImageStore imageStore,
             PuzzleService puzzleService,
-            LocLinkService locLinkService
+            LocLinkService locLinkService,
+            OutingService outingService
     ) {
         this.courseService = courseService;
         this.locationStore = locationStore;
@@ -81,6 +84,7 @@ public class LocationServiceImpl implements LocationService {
         this.imageStore = imageStore;
         this.puzzleService = puzzleService;
         this.locLinkService = locLinkService;
+        this.outingService = outingService;
     }
 
     @Override
@@ -126,7 +130,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<Location> getSessionLocationsWithGeoJson() {
         List<Location> locations = new ArrayList<>();
-        OutingView outingView = clueRideSessionDto.getOutingView();
+        OutingView outingView = outingService.getViewById(clueRideSessionDto.getOutingId());
         List<Integer> locationIds = courseService.getAttractionIdsForCourse(outingView.getCourseId());
         for (Integer locationId : locationIds) {
             LocationEntity locationEntity = locationStore.getLocationBuilderById(locationId);
