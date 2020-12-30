@@ -110,13 +110,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 candidatePrincipalName = accessTokenService.getPrincipalString(token);
             } catch (RecordNotFoundException rnfe) {
                 LOGGER.info("Authorization Header (\"{}\") not validated by Identity Provider", token);
+                LOGGER.debug("Request URL: {}", requestContext.getUriInfo().getRequestUri().toString());
                 requestContext.abortWith(
                         Response.status(Response.Status.UNAUTHORIZED).build());
                 return;
             }
         }
 
-        LOGGER.debug("Logged in as {}", candidatePrincipalName);
+        LOGGER.trace("Logged in as {}", candidatePrincipalName);
         accessTokenEvent.fire(token);
     }
 
