@@ -97,6 +97,16 @@ public class FlagServiceImpl implements FlagService {
         return Arrays.asList(FlaggedAttribute.values());
     }
 
+    @Override
+    public Flag resolveFlag(FlagEntity flagEntity) {
+        validate(flagEntity);
+
+        flagStore.update(
+                flagEntity.withFlagResolution(FlagResolution.RESOLVED)
+        );
+        return flagEntity.build();
+    }
+
     private void validate(FlagEntity flagEntity) {
         LOGGER.info("Validating Flag against Attraction ID {}", flagEntity.getAttractionId());
 

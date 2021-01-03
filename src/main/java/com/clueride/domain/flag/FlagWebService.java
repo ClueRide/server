@@ -28,6 +28,14 @@ public class FlagWebService {
         return flagService.addNewFlag(flagEntity);
     }
 
+    @PUT
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Flag resolveFlag(FlagEntity flagEntity) {
+        return flagService.resolveFlag(flagEntity);
+    }
+
     @GET
     @Secured
     @Path("course/{id}")

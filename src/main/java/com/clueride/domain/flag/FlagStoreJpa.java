@@ -36,7 +36,14 @@ public class FlagStoreJpa implements FlagStore {
 
     @Override
     public FlagEntity update(FlagEntity flagEntity) {
-        return null;
+        try {
+            userTransaction.begin();
+            entityManager.merge(flagEntity);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
+        return flagEntity;
     }
 
     @Override
