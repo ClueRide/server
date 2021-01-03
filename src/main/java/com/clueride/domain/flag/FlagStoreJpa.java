@@ -49,9 +49,10 @@ public class FlagStoreJpa implements FlagStore {
     @Override
     public List<FlagEntity> getFlagsForAttractions(List<Integer> attractionIds) {
         return entityManager.createQuery(
-                "SELECT f from FlagEntity f WHERE attractionId in :ids",
+                "SELECT f from FlagEntity f WHERE attractionId in :ids and flagResolution != :resolved",
                 FlagEntity.class
         ).setParameter("ids", attractionIds)
+                .setParameter("resolved", FlagResolution.RESOLVED)
                 .getResultList();
     }
 
