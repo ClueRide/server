@@ -16,18 +16,20 @@ public class Flag {
     private Integer attractionId;
     private FlagReason reason;
     private String description;
-    private FlaggedAttribute attribute;
+    private FlaggedAttribute flaggedAttribute;
     private Integer openBadgeEventId;
     private Integer closeBadgeEventId;
+    private FlagResolution flagResolution;
 
     public Flag(FlagEntity builder) {
         this.id = builder.getId();
         this.attractionId = builder.getAttractionId();
         this.reason = builder.getReason();
         this.description = builder.getDescription();
-        this.attribute = builder.getFlaggedAttribute();
+        this.flaggedAttribute = builder.getFlaggedAttribute();
         this.openBadgeEventId = builder.getOpenBadgeEventId();
         this.closeBadgeEventId = builder.getCloseBadgeEventId();
+        this.flagResolution = builder.getFlagResolution();
     }
 
     public Integer getId() {
@@ -46,8 +48,8 @@ public class Flag {
         return description;
     }
 
-    public FlaggedAttribute getAttribute() {
-        return attribute;
+    public FlaggedAttribute getFlaggedAttribute() {
+        return flaggedAttribute;
     }
 
     public Integer getOpenBadgeEventId() {
@@ -56,6 +58,10 @@ public class Flag {
 
     public Integer getCloseBadgeEventId() {
         return closeBadgeEventId;
+    }
+
+    public FlagResolution getFlagResolution() {
+        return flagResolution;
     }
 
     @Override

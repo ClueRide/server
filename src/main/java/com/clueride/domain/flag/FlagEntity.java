@@ -39,6 +39,9 @@ public class FlagEntity {
     @Column(name="close_badge_event_id")
     private Integer closeBadgeEventId;
 
+    @Column(name="resolution")
+    private FlagResolution flagResolution;
+
     public Flag build() {
         return new Flag(this);
     }
@@ -52,7 +55,7 @@ public class FlagEntity {
                 .withId(flag.getId())
                 .withAttractionId(flag.getAttractionId())
                 .withReason(flag.getReason())
-                .withFlaggedAttribute(flag.getAttribute())
+                .withFlaggedAttribute(flag.getFlaggedAttribute())
                 .withDescription(flag.getDescription())
                 .withOpenBadgeEventId(flag.getOpenBadgeEventId())
                 .withCloseBadgeEventId(flag.getCloseBadgeEventId())
@@ -119,6 +122,15 @@ public class FlagEntity {
 
     public FlagEntity withCloseBadgeEventId(Integer closeBadgeEventId) {
         this.closeBadgeEventId = closeBadgeEventId;
+        return this;
+    }
+
+    public FlagResolution getFlagResolution() {
+        return flagResolution;
+    }
+
+    public FlagEntity withFlagResolution(FlagResolution flagResolution) {
+        this.flagResolution = flagResolution;
         return this;
     }
 

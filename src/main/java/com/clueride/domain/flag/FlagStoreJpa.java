@@ -36,15 +36,23 @@ public class FlagStoreJpa implements FlagStore {
 
     @Override
     public FlagEntity update(FlagEntity flagEntity) {
-        return null;
+        try {
+            userTransaction.begin();
+            entityManager.merge(flagEntity);
+            userTransaction.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
+        return flagEntity;
     }
 
     @Override
     public List<FlagEntity> getFlagsForAttractions(List<Integer> attractionIds) {
         return entityManager.createQuery(
-                "SELECT f from FlagEntity f WHERE attractionId in :ids",
+                "SELECT f from FlagEntity f WHERE attractionId in :ids and flagResolution != :resolved",
                 FlagEntity.class
         ).setParameter("ids", attractionIds)
+                .setParameter("resolved", FlagResolution.RESOLVED)
                 .getResultList();
     }
 

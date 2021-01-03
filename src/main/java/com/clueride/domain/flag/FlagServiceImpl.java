@@ -46,7 +46,17 @@ public class FlagServiceImpl implements FlagService {
     public Flag addNewFlag(FlagEntity flagEntity) throws AttractionNotFoundException {
         validate(flagEntity);
 
-        flagStore.addNew(flagEntity);
+        flagStore.addNew(flagEntity.withFlagResolution(FlagResolution.OPEN));
+        return flagEntity.build();
+    }
+
+    @Override
+    public Flag resolveFlag(FlagEntity flagEntity) {
+        validate(flagEntity);
+
+        flagStore.update(
+                flagEntity.withFlagResolution(FlagResolution.RESOLVED)
+        );
         return flagEntity.build();
     }
 

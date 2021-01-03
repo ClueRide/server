@@ -59,4 +59,12 @@ public interface FlagService {
      */
     List<FlaggedAttribute> getAttributes();
 
+    /**
+     * Once the flagged Attraction has been updated and the flag is no longer an issue,
+     * the flag should be marked as "resolved".
+     *
+     * @param flagEntity instance representing a specific flag on a specific Attraction.
+     * @return Updated FlagEntity reflecting resolution of the issue.
+     */
+    Flag resolveFlag(FlagEntity flagEntity);
 }
